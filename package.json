@@ -1,0 +1,26 @@
+{
+  "name": "jordan-home",
+  "version": "1.2.3",
+  "description": "blog",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": "https://github.com/jordan-home/jordan-home.github.io.git",
+  "author": "huanggang <huanggang@kezaihui.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vuepress dev docs",
+    "build": "vuepress build docs",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "bash deploy.sh"
+  },
+  "dependencies": {
+    "vuepress": "^1.3.1"
+  },
+  "devDependencies": {
+    "@vuepress/plugin-pwa": "1.2.0",
+    "vuepress-plugin-permalink-pinyin": "^1.0.0",
+    "vuepress-theme-reco": "^1.6.6"
+  }
+}
