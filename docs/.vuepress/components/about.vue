@@ -68,12 +68,6 @@
 
 <script>
   export default {
-    props: {
-      movies: {
-        type:  Array,
-        default: () => []
-      }
-    },
     data() {
       return {
         nav: [
