@@ -12,6 +12,10 @@ commitTime=`date +'%Y-%m-%d %H:%M:%S'`
 cd blog
 
 git init
+
+# 关键修复：将本地默认的main分支重命名为master（匹配远程分支）
+git checkout -b master
+
 git add -A
 git commit -m "build add delploy at $commitTime"
 
