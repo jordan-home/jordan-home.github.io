@@ -3,15 +3,26 @@ name: Build and Deploy to GitHub Pages
 on:
   push:
     branches:
-      - master
+      - dev   # push 到 dev 自动构建部署
   workflow_dispatch:
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout dev
         uses: actions/checkout@v4
+        with:
+          ref: dev
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -30,4 +41,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./blog
-          publish_branch: gh-pages
+          publish_branch: master
