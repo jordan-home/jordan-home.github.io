@@ -11,7 +11,15 @@
     </ul>
     <div class="aboutContent">
       <div v-show="cur === 'others'">
-        on the way to better...
+        <p>2026，正在做两件事：</p>
+        <ul>
+          <li>🚂 轨道 A：前端求职，准备跳槽</li>
+          <li>💰 轨道 B：小红书 + OpenClaw 探索副业</li>
+        </ul>
+        <p>目标：时间自由。</p>
+        <p style="margin-top:12px;font-size:13px;color:#888;">
+          「每一个不曾起舞的日子，都是对生命的辜负」
+        </p>
       </div>
       <div v-show="cur === 'tech'">
         <ul>
@@ -23,43 +31,26 @@
       </div>
       <div v-show="cur === 'work'">
         <ul>
-          <li>🏠 2018 ~ 2019：work at 汉得, position is FE & SQL</li>
-          <li>🏠 2020 ~ 2021：work at 再惠, position is FE</li>
+          <li>🏠 2018 ~ 2019：汉得，FE & SQL</li>
+          <li>🏠 2020 ~ 2021：再惠，FE</li>
+          <li>🏠 2022 ~ 现在：某公司，FE</li>
+          <li>🎯 2026：准备转型，探索副业</li>
         </ul>
       </div>
       <div v-show="cur === 'book'">
-        正在看
+        正在看（2026）
         <ul>
-          <li>🐎 奥古斯都/约翰·威廉斯</li>
-          <li>🐎 CSS揭秘/LEA VEROU</li>
-          <li>🐎 毛姆书单/毛姆</li>
-          <li>🐎 学习之道/芭芭拉·奥克利</li>
-          <li>🐎 昨日的世界/斯特凡·茨维格</li>
-          <li>🐎 哲学的故事/威尔·杜兰特</li>
-          <li>🐎 深入浅出React和Redux/程墨</li>
-          <li>🐎 认识自己，接纳自己/马丁·赛利格曼</li>
+          <li>📖 财务自由之路/博多·舍费尔</li>
+          <li>📖 设计模式的艺术</li>
+          <li>📖 马斯洛需求层次理论</li>
         </ul>
-        2021已读书单（更新中⌛️）
-        <ul>
-          <li>📖 CSS禅意花园</li>
-          <li>📖 动物农场/乔治·奥维尔</li>
-          <li>📖 生命最后的读书会/威尔·施瓦贝利</li>
-          <li>📖 像高手一样行动/丹尼尔·科伊尔</li>
-          <li>📖 ES6标准入门</li>
-          <li>📖 被讨厌的勇气</li>
-          <li>📖 你不知道的JavaScript中</li>
-          <li>📖 心理暗示力/埃米尔·库埃</li>
-          <li>📖 秘密/朗达·贝恩</li>
-          <li>📖 此生未完成/于娟</li>
-          <li>📖 情感勒索</li>
-          <li>📖 你不知道的JavaScript上</li>
-        </ul>
+        近期主题：财务自由、副业思维、心理学
       </div>
       <div v-show="cur === 'sports'">
-        运动
+        目标：80kg → 70kg（进行中🎯）
         <ul>
-          <li>💪健身</li>
-          <li>🥊拳击</li>
+          <li>💪 健身</li>
+          <li>🥊 拳击</li>
         </ul>
       </div>
     </div>
