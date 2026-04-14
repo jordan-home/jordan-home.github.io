@@ -21,9 +21,11 @@ module.exports = {
     huawei: false,
     nav: [
       { text: 'Home', link: '/', icon: 'reco-home' },
-      // { text: 'Notes', link: '/note/', icon: 'reco-document' },
+      { text: '技术笔记', link: '/technology/', icon: 'reco-code' },
+      { text: '心理认知', link: '/note/', icon: 'reco-document' },
+      { text: '健康养生', link: '/health/', icon: 'reco-home' },
+      { text: '项目作品', link: '/projects/', icon: 'reco-github' },
       { text: 'TimeLine', link: '/timeline/', icon: 'reco-date' },
-      // { text: '外链', link: '', icon: 'reco-blog'},
       { text: 'About', link: '/about/', icon: 'reco-account'},
       { text: 'GitHub', link: 'https://github.com/jordan-home', icon: 'reco-github' },
     ],
