@@ -21,7 +21,7 @@ module.exports = {
     huawei: false,
     nav: [
       { text: 'Home', link: '/', icon: 'reco-home' },
-      { text: '技术笔记', link: '/technology/', icon: 'reco-code' },
+      { text: '技术笔记', link: '/technology/', icon: 'reco-document' },
       { text: '心理认知', link: '/note/', icon: 'reco-document' },
       { text: '健康养生', link: '/health/', icon: 'reco-home' },
       { text: '项目作品', link: '/projects/', icon: 'reco-github' },
