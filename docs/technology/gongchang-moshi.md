@@ -7,7 +7,6 @@ tags:
 categories:
   - IT
 ---
-
 ## 前言
 
 工厂模式（Factory Pattern）是一种创建型设计模式，提供创建对象的接口而不指定具体类。

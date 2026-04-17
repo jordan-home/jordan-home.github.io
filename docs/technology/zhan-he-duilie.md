@@ -7,7 +7,6 @@ tags:
 categories:
   - IT
 ---
-
 ## 前言
 
 栈（Stack）和队列（Queue）是两种最基本的线性数据结构，广泛应用于算法和系统设计中。

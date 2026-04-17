@@ -6,7 +6,6 @@ tags:
 categories:
   - IT
 ---
-
 ## 前言
 
 观察者模式（Observer Pattern）是一种行为型设计模式，定义了对象间的一对多依赖关系。

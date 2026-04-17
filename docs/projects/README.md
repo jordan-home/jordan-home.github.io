@@ -1,32 +1,28 @@
 ---
 title: 项目作品
+date: 2026-04-16
+categories:
+  - 项目作品
 ---
 
 # 项目作品
 
-独立开发 / AI 工具 / 自动化系统
+可互动的工具和实验性作品。
 
 ---
 
-## OpenClaw 个人生产力系统
+## 🧪 互动工具
 
-> 2026 在建
-
-基于 OpenClaw 搭建的个人 AI 助手系统，包含：
-
-- **定时任务调度**：cron 管理小红书内容生成、读书提醒、B进度追踪
-- **飞书推送管道**：统一由 Feishu API 直发，带幂等键 + 3次重试
-- **HEARTBEAT 主动巡检**：每 30 分钟扫描健康/读书/变现/健身等多维度，发现异常主动通知
-- **Memory Dreaming**：睡眠记忆系统，持续将短期待记忆升级为长期记忆
-
-技术栈：OpenClaw + Python + Feishu API + cron + SQLite
+| 项目 | 说明 | 链接 |
+|------|------|------|
+| 📊 小红书标题 CES 评分器 | 好奇·情绪·自我三维评分，实时优化建议 | [打开](https://jordan-home.github.io/projects/xhs-ces-demo.html) |
+| 🔮 阿德勒自卑感测评 | 8道题3分钟，测出你的自卑应对模式 | [打开](https://jordan-home.github.io/projects/xhs-adler-quiz.html) |
+| 📘 阿德勒自我认知手册 | 约2万字实战手册，4章+2套自测+5分钟复盘模板 | [阅读](https://jordan-home.github.io/projects/ebook-adler.html) |
 
 ---
 
-## Jordan の Words
+## 📌 说明
 
-本博客本身也是一个项目——用 VuePress + GitHub Pages 托管的静态博客，已实现 CI/CD 自动部署。
+这些作品由 Jordan 和 OpenClaw 共同创作。
 
-仓库：[jordan-home/jordan-home.github.io](https://github.com/jordan-home/jordan-home.github.io)
-
----
+工具类作品免费使用。电子书可在 [小报童](https://xiaobot.net) 购买。

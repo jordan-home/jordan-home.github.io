@@ -8,7 +8,6 @@ tags:
 categories:
   - IT
 ---
-
 ## 前言
 
 Vue3 使用 Proxy 重写了响应式系统，相比 Vue2 的 Object.defineProperty，Proxy 提供了更强大和灵活的能力。

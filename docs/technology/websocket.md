@@ -7,7 +7,6 @@ tags:
 categories:
   - IT
 ---
-
 ## 前言
 
 WebSocket 是一种在单个 TCP 连接上进行全双工通信的协议，适用于实时聊天、游戏、股票行情等场景。

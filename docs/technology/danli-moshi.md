@@ -7,7 +7,6 @@ tags:
 categories:
   - IT
 ---
-
 ## 前言
 
 单例模式（Singleton Pattern）是最简单的创建型设计模式，确保一个类只有一个实例，并提供一个全局访问点。
