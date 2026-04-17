@@ -5,6 +5,7 @@ tags:
   - AI
   - Prompt
 categories:
+  - 技术笔记
   - IT
 ---
 

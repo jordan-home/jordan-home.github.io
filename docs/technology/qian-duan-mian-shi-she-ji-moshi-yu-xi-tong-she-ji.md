@@ -6,6 +6,7 @@ tags:
   - 面试
   - 设计模式
 categories:
+  - 技术笔记
   - IT
 ---
 ## 前言

@@ -5,6 +5,7 @@ tags:
   - 性能优化
   - 前端
 categories:
+  - 技术笔记
   - IT
 ---
 

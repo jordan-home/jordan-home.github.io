@@ -5,6 +5,7 @@ tags:
   - 设计模式
   - 前端
 categories:
+  - 技术笔记
   - IT
 ---
 ## 前言

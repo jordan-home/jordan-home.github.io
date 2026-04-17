@@ -6,6 +6,7 @@ tags:
   - API
   - OpenAI
 categories:
+  - 技术笔记
   - IT
 ---
 

@@ -5,6 +5,7 @@ tags:
   - TypeScript
   - 前端
 categories:
+  - 技术笔记
   - IT
 ---
 

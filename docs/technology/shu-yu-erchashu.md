@@ -5,6 +5,7 @@ tags:
   - 数据结构
   - 算法
 categories:
+  - 技术笔记
   - IT
 ---
 

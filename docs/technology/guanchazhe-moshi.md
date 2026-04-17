@@ -4,6 +4,7 @@ date: 2026-02-22
 tags:
   - 设计模式
 categories:
+  - 技术笔记
   - IT
 ---
 ## 前言

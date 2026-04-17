@@ -6,6 +6,7 @@ tags:
   - 编程
   - 效率
 categories:
+  - 技术笔记
   - IT
 ---
 
