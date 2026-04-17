@@ -2,7 +2,7 @@ module.exports = {
   dest: 'blog',
   theme: 'reco',
   title: "Jordan の Words",
-  description: '每一个不曾起舞的日子，都是对生命的辜负',
+  description: '每一个不曾起舞的日子,都是对生命的辜负',
   head: [
     ['link', { rel: 'icon', href: '/favicon.ico' }],
     ['meta', { name: 'viewport', content: 'width=device-width,initial-scale=1,user-scalable=no' }],
@@ -47,12 +47,15 @@ module.exports = {
     blogConfig: {
       category: {
         location: 2, // 在导航栏菜单中所占的位置，默认2
-        text: 'Category' // 默认 “分类”
+        text: 'Category' // 默认 "分类"
       },
       tag: {
         location: 3, // 在导航栏菜单中所占的位置，默认3
-        text: 'Tag' // 默认 “标签”
-      }
+        text: 'Tag' // 默认 "标签"
+      },
+      directories: [
+        { dirname: 'technology', path: '/technology/' }
+      ]
     },
     logo: '/head.jpeg',
     // 搜索设置
