@@ -1,12 +1,26 @@
 ---
 title: GraphQL初探
 date: 2021-03-10
-categories:
-  - 技术笔记
+description: GraphQL 入门教程：查询语言、Schema 定义、Resolver 实现，以及 REST 与 GraphQL 的对比分析，快速构建现代 API。
+meta:
+  - name: og:title
+    content: GraphQL初探
+  - name: og:description
+    content: GraphQL 入门教程：查询语言、Schema 定义、Resolver 实现，以及 REST 与 GraphQL 的对比分析，快速构建现代 API。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: GraphQL初探
+  - name: twitter:description
+    content: GraphQL 入门教程：查询语言、Schema 定义、Resolver 实现，以及 REST 与 GraphQL 的对比分析，快速构建现代 API。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - GraphQL
   - API
   - HTTP
+categories:
+  - 技术笔记
 ---
 
 ## 1 互联网永恒的主题

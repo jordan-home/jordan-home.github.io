@@ -18,6 +18,9 @@ importers:
       vuepress-plugin-permalink-pinyin:
         specifier: ^1.0.0
         version: 1.1.0
+      vuepress-plugin-seo:
+        specifier: ^0.2.0
+        version: 0.2.0
       vuepress-theme-reco:
         specifier: ^1.6.6
         version: 1.6.17(chalk@4.1.2)(commander@2.20.3)(esm@3.2.25)(vue-class-component@7.2.6(vue@2.7.16))(vuepress@1.9.10(@vue/compiler-sfc@3.5.30)(hogan.js@3.0.2)(lodash@4.17.23)(underscore@1.13.8))
@@ -5327,6 +5330,9 @@ packages:
 
   vuepress-plugin-permalink-pinyin@1.1.0:
     resolution: {integrity: sha512-hzrZRwt/qBZLsE7+9JdS1m0r+AdII6im8qJjLStVcV2ZXDguYzeSh6qlWZMOBTkX/nJZBN3WlTuZbLXuka+lJg==}
+
+  vuepress-plugin-seo@0.2.0:
+    resolution: {integrity: sha512-/Rqul20UTL30mZyCbNwkfAfP50Yr7jzWlavQ92OVzZ8PcpZGXoDc+eoKQyKLQKL3G96dqvuCCbIMbW7RRs7Bhw==}
 
   vuepress-plugin-sitemap@2.3.1:
     resolution: {integrity: sha512-n+8lbukhrKrsI9H/EX0EBgkE1pn85LAQFvQ5dIvrZP4Kz6JxPOPPNTQmZMhahQV1tXbLZQCEN7A1WZH4x+arJQ==}
@@ -12009,6 +12015,8 @@ snapshots:
   vuepress-plugin-permalink-pinyin@1.1.0:
     dependencies:
       transliteration: 2.6.1
+
+  vuepress-plugin-seo@0.2.0: {}
 
   vuepress-plugin-sitemap@2.3.1(chalk@4.1.2)(commander@2.20.3)(esm@3.2.25):
     dependencies:

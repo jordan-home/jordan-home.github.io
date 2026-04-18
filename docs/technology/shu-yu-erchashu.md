@@ -1,6 +1,20 @@
 ---
 title: 树与二叉树完全指南
 date: 2026-03-20
+description: 数据结构核心：从树的定义、遍历、二叉搜索树到平衡二叉树，掌握树形数据结构的所有关键知识点与算法实现。
+meta:
+  - name: og:title
+    content: 树与二叉树完全指南
+  - name: og:description
+    content: 数据结构核心：从树的定义、遍历、二叉搜索树到平衡二叉树，掌握树形数据结构的所有关键知识点与算法实现。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: 树与二叉树完全指南
+  - name: twitter:description
+    content: 数据结构核心：从树的定义、遍历、二叉搜索树到平衡二叉树，掌握树形数据结构的所有关键知识点与算法实现。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - 数据结构
   - 算法

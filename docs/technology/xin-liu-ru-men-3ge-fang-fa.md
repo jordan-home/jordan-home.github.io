@@ -1,6 +1,20 @@
 ---
 title: 心流入门：如何在高压状态下进入最佳表现
 date: 2026-04-14
+description: 心流（Flow）状态完全指南：心理学家的研究成果，如何在工作、学习中进入高度专注、高效产出的最佳心理状态。
+meta:
+  - name: og:title
+    content: 心流入门：如何在高压状态下进入最佳表现
+  - name: og:description
+    content: 心流（Flow）状态完全指南：心理学家的研究成果，如何在工作、学习中进入高度专注、高效产出的最佳心理状态。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: 心流入门：如何在高压状态下进入最佳表现
+  - name: twitter:description
+    content: 心流（Flow）状态完全指南：心理学家的研究成果，如何在工作、学习中进入高度专注、高效产出的最佳心理状态。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - 效率
   - 心理学

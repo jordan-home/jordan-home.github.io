@@ -1,6 +1,20 @@
 ---
 title: 栈与队列：数据结构基础
 date: 2026-01-26
+description: 栈（Stack）和队列（Queue）两种基础线性数据结构的完整指南：LIFO 与 FIFO 原理、JavaScript 实现、应用场景与算法题解。
+meta:
+  - name: og:title
+    content: 栈与队列：数据结构基础
+  - name: og:description
+    content: 栈（Stack）和队列（Queue）两种基础线性数据结构的完整指南：LIFO 与 FIFO 原理、JavaScript 实现、应用场景与算法题解。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: 栈与队列：数据结构基础
+  - name: twitter:description
+    content: 栈（Stack）和队列（Queue）两种基础线性数据结构的完整指南：LIFO 与 FIFO 原理、JavaScript 实现、应用场景与算法题解。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - 数据结构
   - 算法

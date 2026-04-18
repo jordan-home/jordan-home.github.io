@@ -1,6 +1,20 @@
 ---
 title: 前端性能优化实战指南
 date: 2026-03-16
+description: 全方位前端性能优化方案：资源压缩、懒加载、代码分割、CDN、浏览器渲染优化，提升首屏加载速度 50% 以上。
+meta:
+  - name: og:title
+    content: 前端性能优化实战指南
+  - name: og:description
+    content: 全方位前端性能优化方案：资源压缩、懒加载、代码分割、CDN、浏览器渲染优化，提升首屏加载速度 50% 以上。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: 前端性能优化实战指南
+  - name: twitter:description
+    content: 全方位前端性能优化方案：资源压缩、懒加载、代码分割、CDN、浏览器渲染优化，提升首屏加载速度 50% 以上。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - 性能优化
   - 前端

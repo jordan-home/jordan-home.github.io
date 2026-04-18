@@ -2,6 +2,7 @@
 title: 技术笔记
 date: 2026-04-14
 permalink: /technology/
+description: 技术笔记分类页面：前端开发、算法数据结构、设计模式、AI 工具、性能优化等编程技术文章合集。
 ---
 
 # 技术笔记

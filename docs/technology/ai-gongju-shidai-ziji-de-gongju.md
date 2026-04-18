@@ -1,6 +1,7 @@
 ---
 title: AI 工具时代：如何用 AI 自动化你的日常工作
 date: 2026-04-14
+description: 利用 AI 工具（ChatGPT、Claude、Notion AI）自动化处理文档、代码、邮件、会议等重复���工作，提升个人效率 10 倍。
 tags:
   - AI
   - 效率

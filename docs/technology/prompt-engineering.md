@@ -1,6 +1,20 @@
 ---
 title: Prompt Engineering 基础指南
 date: 2026-02-18
+description: Prompt 工程入门指南：如何与 AI 对话获得高质量答案，掌握角色设定、few-shot、思维链等核心技巧，释放 ChatGPT、Claude 等大模型潜力。
+meta:
+  - name: og:title
+    content: Prompt Engineering 基础指南
+  - name: og:description
+    content: Prompt 工程入门指南：如何与 AI 对话获得高质量答案，掌握角色设定、few-shot、思维链等核心技巧，释放 ChatGPT、Claude 等大模型潜力。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: Prompt Engineering 基础指南
+  - name: twitter:description
+    content: Prompt 工程入门指南：如何与 AI 对话获得高质量答案，掌握角色设定、few-shot、思维链等核心技巧，释放 ChatGPT、Claude 等大模型潜力。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - AI
   - Prompt

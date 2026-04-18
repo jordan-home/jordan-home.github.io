@@ -1,6 +1,20 @@
 ---
 title: HTTP 缓存机制详解
 date: 2026-02-14
+description: HTTP 缓存策略完整解析：强缓存（Expires/Cache-Control）、协商缓存（ETag/Last-Modified）、Service Worker 缓存，提升网站性能。
+meta:
+  - name: og:title
+    content: HTTP 缓存机制详解
+  - name: og:description
+    content: HTTP 缓存策略完整解析：强缓存（Expires/Cache-Control）、协商缓存（ETag/Last-Modified）、Service Worker 缓存，提升网站性能。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: HTTP 缓存机制详解
+  - name: twitter:description
+    content: HTTP 缓存策略完整解析：强缓存（Expires/Cache-Control）、协商缓存（ETag/Last-Modified）、Service Worker 缓存，提升网站性能。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - HTTP
   - 性能优化

@@ -1,6 +1,20 @@
 ---
 title: 设计模式之单例模式
 date: 2026-01-15
+description: 单例模式详解：确保类只有一个实例，全局访问点实现，适用于配置管理、日志器、数据库连接池等场景。
+meta:
+  - name: og:title
+    content: 设计模式之单例模式
+  - name: og:description
+    content: 单例模式详解：确保类只有一个实例，全局访问点实现，适用于配置管理、日志器、数据库连接池等场景。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: 设计模式之单例模式
+  - name: twitter:description
+    content: 单例模式详解：确保类只有一个实例，全局访问点实现，适用于配置管理、日志器、数据库连接池等场景。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - 设计模式
   - 前端

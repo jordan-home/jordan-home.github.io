@@ -1,6 +1,20 @@
 ---
 title: 设计模式之观察者模式
 date: 2026-02-22
+description: 观察者模式（发布-订阅模式）详解：实现对象间一对多依赖，常用于事件总线、Vue 响应式、前端状态管理。
+meta:
+  - name: og:title
+    content: 设计模式之观察者模式
+  - name: og:description
+    content: 观察者模式（发布-订阅模式）详解：实现对象间一对多依赖，常用于事件总线、Vue 响应式、前端状态管理。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: 设计模式之观察者模式
+  - name: twitter:description
+    content: 观察者模式（发布-订阅模式）详解：实现对象间一对多依赖，常用于事件总线、Vue 响应式、前端状态管理。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - 设计模式
 categories:

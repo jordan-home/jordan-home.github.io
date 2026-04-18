@@ -1,6 +1,20 @@
 ---
 title: TypeScript高级类型
 date: 2026-01-08
+description: TypeScript 高级类型系统详解：泛型、条件类型、映射类型、类型推断，写出更安全、更灵活的 TypeScript 代码。
+meta:
+  - name: og:title
+    content: TypeScript高级类型
+  - name: og:description
+    content: TypeScript 高级类型系统详解：泛型、条件类型、映射类型、类型推断，写出更安全、更灵活的 TypeScript 代码。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: TypeScript高级类型
+  - name: twitter:description
+    content: TypeScript 高级类型系统详解：泛型、条件类型、映射类型、类型推断，写出更安全、更灵活的 TypeScript 代码。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - TypeScript
   - 前端

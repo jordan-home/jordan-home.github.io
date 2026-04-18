@@ -1,6 +1,13 @@
 module.exports = {
   dest: 'blog',
   base: '/',
+  locales: {
+    '/': {
+      lang: 'zh-CN',
+      title: "Jordan の Words",
+      description: '每一个不曾起舞的日子,都是对生命的辜负'
+    }
+  },
   theme: 'reco',
   title: "Jordan の Words",
   description: '每一个不曾起舞的日子,都是对生命的辜负',
@@ -145,6 +152,18 @@ module.exports = {
       {
         lowercase: true,
         separator: '-'
+      }
+    ],
+    [
+      'vuepress-plugin-seo',
+      {
+        hostname: 'https://jordan-home.github.io',
+        title: $page => $page.title,
+        description: $page => $page.description,
+        image: $page => $page.frontmatter.image || 'https://jordan-home.github.io/head.jpeg',
+        twitterCard: 'summary_large_image',
+        twitterSite: '@jordan_home',
+        twitterCreator: '@jordan_home'
       }
     ]
   ]

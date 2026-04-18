@@ -1,6 +1,20 @@
 ---
 title: AI 辅助编程实践指南
 date: 2026-03-08
+description: AI 编程工具（GitHub Copilot、Cursor、Claude）实战指南：如何高效使用 AI 写代码、调试、重构，提升 10 倍开发效率。
+meta:
+  - name: og:title
+    content: AI 辅助编程实践指南
+  - name: og:description
+    content: AI 编程工具（GitHub Copilot、Cursor、Claude）实战指南：如何高效使用 AI 写代码、调试、重构，提升 10 倍开发效率。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: AI 辅助编程实践指南
+  - name: twitter:description
+    content: AI 编程工具（GitHub Copilot、Cursor、Claude）实战指南：如何高效使用 AI 写代码、调试、重构，提升 10 倍开发效率。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - AI
   - 编程

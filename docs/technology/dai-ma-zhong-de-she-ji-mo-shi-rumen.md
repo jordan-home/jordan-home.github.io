@@ -1,6 +1,20 @@
 ---
 title: 代码中的设计模式：那些面试和工作都用得上的东西
 date: 2026-04-14
+description: 前端工程师必备设计模式精讲：创建型、结构型、行为型模式的实际应用场景，提升代码质量与面试竞争力。
+meta:
+  - name: og:title
+    content: 代码中的设计模式：那些面试和工作都用得上的东西
+  - name: og:description
+    content: 前端工程师必备设计模式精讲：创建型、结构型、行为型模式的实际应用场景���提升代码质量与面试竞争力。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: 代码中的设计模式：那些面试和工作都用得上的东西
+  - name: twitter:description
+    content: 前端工程师必备设计模式精讲：创建型、结构型、行为型模式的实际应用场景，提升代码质量与面试竞争力。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - 设计模式
   - JavaScript

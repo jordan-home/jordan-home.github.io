@@ -1,6 +1,20 @@
 ---
 title: 浏览器渲染原理详解
 date: 2026-01-18
+description: 从 HTML 到像素的完整流程：解析 DOM 树、构建 CSSOM、布局计算、图层合成与绘制，前端性能优化的核心基础。
+meta:
+  - name: og:title
+    content: 浏览器渲染原理详解
+  - name: og:description
+    content: 从 HTML 到像素的完整流程：解析 DOM 树、构建 CSSOM、布局计算、图层合成与绘制，前端性能优化的核心基础。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: 浏览器渲染原理详解
+  - name: twitter:description
+    content: 从 HTML 到像素的完整流程：解析 DOM 树、构建 CSSOM、布局计算、图层合成与绘制，前端性能优化的核心基础。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - 浏览器
   - 性能优化

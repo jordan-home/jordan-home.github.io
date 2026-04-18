@@ -1,3 +1,4 @@
 node_modules
 blog
+.pnpm-store
 package-lock.json

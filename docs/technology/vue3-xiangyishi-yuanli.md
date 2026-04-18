@@ -1,6 +1,20 @@
 ---
 title: Vue3 响应式原理深度解析
 date: 2026-02-06
+description: 深入解析 Vue3 使用 Proxy 实现的响应式系统原理，对比 Vue2 Object.defineProperty 的缺陷，理解 reactive/ref 底层机制。
+meta:
+  - name: og:title
+    content: Vue3 响应式原理深度解析
+  - name: og:description
+    content: 深入解析 Vue3 使用 Proxy 实现的响应式系统原理，对比 Vue2 Object.defineProperty 的缺陷，理解 reactive/ref 底层机制。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: Vue3 响应式原理深度解析
+  - name: twitter:description
+    content: 深入解析 Vue3 使用 Proxy 实现的响应式系统原理，对比 Vue2 Object.defineProperty 的缺陷，理解 reactive/ref 底层机制。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - Vue
   - 响应式

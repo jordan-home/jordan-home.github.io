@@ -1,6 +1,20 @@
 ---
 title: BFS 与 DFS 算法详解
 date: 2026-03-05
+description: 深度解析广度优先搜索（BFS）和深度优先搜索（DFS）算法原理、实现方式及实战应用，包含最短路径、拓扑排序、岛屿数量等JavaScript案例。
+meta:
+  - name: og:title
+    content: BFS 与 DFS 算法详解
+  - name: og:description
+    content: 深度解析广度优先搜索（BFS）和深度优先搜索（DFS）算法原理、实现方式及实战应用，包含最短路径、拓扑排序、岛屿数量等JavaScript案例。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: BFS 与 DFS 算法详解
+  - name: twitter:description
+    content: 深度解析广度优先搜索（BFS）和深度优先搜索（DFS）算法原理、实现方式及实战应用，包含最短路径、拓扑排序、岛屿数量等JavaScript案例。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - 算法
   - BFS

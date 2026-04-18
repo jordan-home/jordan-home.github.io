@@ -1,6 +1,20 @@
 ---
 title: WebSocket 实时通信详解
 date: 2026-03-01
+description: WebSocket 协议深度解析：全双工通信原理、连接建立、心跳机制、断线重连，以及聊天室、实时通知等实战应用。
+meta:
+  - name: og:title
+    content: WebSocket 实时通信详解
+  - name: og:description
+    content: WebSocket 协议深度解析：全双工通信原理、连接建立、心跳机制、断线重连，以及聊天室、实时通知等实战应用。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: WebSocket 实时通信详解
+  - name: twitter:description
+    content: WebSocket 协议深度解析：全双工通信原理、连接建立、心跳机制、断线重连，以及聊天室、实时通知等实战应用。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - WebSocket
   - 实时通信

@@ -1,6 +1,20 @@
 ---
 title: 《财务自由之路》读书笔记：致富不是运气，是系统
 date: 2026-04-14
+description: 德国理财大师博多·舍费尔《财务自由之路》读书笔记：如何通过构建资产系统实现财务自由，包括储蓄策略、风险分散和被动收入打造。
+meta:
+  - name: og:title
+    content: 《财务自由之路》读书笔记：致富不是运气，是系统
+  - name: og:description
+    content: 德国理财大师博多·舍费尔《财务自由之路》读书笔记：如何通过构建资产系统实现财务自由，包括储蓄策略、风险分散和被动收入打造。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: 《财务自由之路》读书笔记：致富不是运气，是系统
+  - name: twitter:description
+    content: 德国理财大师博多·舍费尔《财务自由之路》读书笔记：如何通过构建资产系统实现财务自由，包括储蓄策略、风险分散和被动收入打造。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - 读书笔记
   - 财务

@@ -1,6 +1,7 @@
 ---
 title: ChatGPT API 调用入门
 date: 2026-01-22
+description: OpenAI ChatGPT API 完整调用指南：获取 API Key、构建请求参数、流式响应处理、成本控制与最佳实践。
 tags:
   - AI
   - API

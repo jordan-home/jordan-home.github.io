@@ -1,6 +1,20 @@
 ---
 title: React Hooks深入理解
 date: 2026-01-05
+description: React Hooks 核心原理与最佳实践：useState、useEffect、useContext、自定义 Hook，掌握函数式组件状态管理与副作用处理。
+meta:
+  - name: og:title
+    content: React Hooks深入理解
+  - name: og:description
+    content: React Hooks 核心原理与最佳实践：useState、useEffect、useContext、自定义 Hook，掌握函数式组件状态管理与副作用处理。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: React Hooks深入理解
+  - name: twitter:description
+    content: React Hooks 核心原理与最佳实践：useState、useEffect、useContext、自定义 Hook，掌握函数式组件状态管理与副作用处理。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - React
   - Hooks

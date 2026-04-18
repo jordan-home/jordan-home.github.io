@@ -1,6 +1,20 @@
 ---
 title: 前端面试进阶：设计模式与系统设计实战指南
 date: 2026-04-14
+description: 前端面试准备：设计模式（单例、工厂、观察者等）与系统设计（高并发、微服务、分布式）核心概念与实战案例解析。
+meta:
+  - name: og:title
+    content: 前端面试进阶：设计模式与系统设计实战指南
+  - name: og:description
+    content: 前端面试准备：设计模式（单例、工厂、观察者等）与系统设计（高并发、微服务、分布式）核心概念与实战案例解析。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: 前端面试进阶：设计模式与系统设计实战指南
+  - name: twitter:description
+    content: 前端面试准备：设计模式（单例、工厂、观察者等）与系统设计（高并发、微服务、分布式）核心概念与实战案例解析。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - 前端
   - 面试

@@ -1,6 +1,20 @@
 ---
 title: 设计模式之工厂模式
 date: 2026-02-02
+description: 工厂模式详解：简单工厂、工厂方法、抽象工厂三种实现方式，解耦对象创建与使用，提升代码可维护性与扩展性。
+meta:
+  - name: og:title
+    content: 设计模式之工厂模式
+  - name: og:description
+    content: 工厂模式详解：简单工厂、工厂方法、抽象工厂三种实现方式，解耦对象创建与使用，提升代码可维护性与扩展性。
+  - name: og:image
+    content: https://jordan-home.github.io/head.jpeg
+  - name: twitter:title
+    content: 设计模式之工厂模式
+  - name: twitter:description
+    content: 工厂模式详解：简单工厂、工厂方法、抽象工厂三种实现方式，解耦对象创建与使用，提升代码可维护性与扩展性。
+  - name: twitter:image
+    content: https://jordan-home.github.io/head.jpeg
 tags:
   - 设计模式
   - 前端
