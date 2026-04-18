@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>阿德勒 AI 觉察陪练</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #faf8f5;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px 16px;
+    }
+    .container {
+      width: 100%;
+      max-width: 540px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.08);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100vh - 48px);
+      position: relative;
+    }
+    header {
+      background: linear-gradient(135deg, #1a3d2e 0%, #2d5a3d 50%, #3d6b4a 100%);
+      color: #fff;
+      padding: 26px 24px 20px;
+      flex-shrink: 0;
+      position: relative;
+    }
+    header::before {
+      content: '"';
+      position: absolute;
+      top: 2px; right: 16px;
+      font-size: 80px;
+      color: rgba(255,255,255,0.06);
+      font-family: Georgia, serif;
+      line-height: 1;
+    }
+    header h1 { font-size: 19px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.3px; }
+    header p { font-size: 12px; opacity: 0.75; }
+    header .subtitle {
+      font-size: 11px;
+      opacity: 0.6;
+      margin-top: 6px;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      padding-top: 6px;
+    }
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .header-meta .pill {
+      font-size: 10px;
+      background: rgba(255,255,255,0.15);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .header-meta .depth-indicator {
+      font-size: 10px;
+      background: rgba(255,255,255,0.12);
+      padding: 2px 8px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .header-meta .depth-bar {
+      width: 40px;
+      height: 3px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .header-meta .depth-fill {
+      height: 100%;
+      background: #a8d8a8;
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+
+    .chat-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      scroll-behavior: smooth;
+    }
+
+    .msg {
+      max-width: 88%;
+      padding: 11px 15px;
+      border-radius: 16px;
+      font-size: 14.5px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .msg.ai {
+      background: #f0f4f0;
+      color: #1a1a1a;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+    .msg.user {
+      background: #2d5a3d;
+      color: #fff;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+    .msg.ai.danger {
+      background: #fff5f5;
+      border: 1.5px solid #e57373;
+      color: #b71c1c;
+    }
+    .msg.ai.danger .crisis-hotline {
+      display: block;
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #ffebee;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #c62828;
+      font-weight: 600;
+    }
+
+    /* Adler "不是...而是..." highlight */
+    .msg.ai .highlight-not-but {
+      background: #e8f5e9;
+      padding: 1px 4px;
+      border-radius: 4px;
+      font-style: normal;
+    }
+
+    .opening-card {
+      background: linear-gradient(135deg, #e8f0ea 0%, #d4e8d8 100%);
+      border-left: 4px solid #2d5a3d;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 4px;
+      align-self: flex-start;
+      max-width: 92%;
+    }
+    .opening-card .quote { font-size: 13px; color: #2d5a3d; font-style: italic; line-height: 1.6; }
+    .opening-card .author { font-size: 11px; color: #5a8a6a; margin-top: 6px; text-align: right; }
+
+    /* Ready screen */
+    .ready-screen {
+      text-align: center;
+      padding: 24px 16px;
+      align-self: flex-start;
+      width: 100%;
+    }
+    .ready-screen h2 { font-size: 18px; color: #2d5a3d; margin-bottom: 12px; font-weight: 700; }
+    .ready-screen p { font-size: 13px; color: #666; line-height: 1.7; margin-bottom: 20px; }
+    .ready-screen .big-btn {
+      display: inline-block;
+      background: #2d5a3d;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 14px 36px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      box-shadow: 0 4px 16px rgba(45,90,61,0.3);
+    }
+    .ready-screen .big-btn:hover { background: #3d6b4a; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(45,90,61,0.35); }
+    .ready-screen .disclaimer {
+      font-size: 11px;
+      color: #aaa;
+      margin-top: 14px;
+    }
+
+    /* Context tags */
+    .context-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 0 4px;
+      margin-bottom: 4px;
+      align-self: flex-start;
+      max-width: 100%;
+    }
+    .context-tag {
+      background: #e8f0ea;
+      color: #2d5a3d;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .context-tag .dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: #2d5a3d;
+    }
+
+    /* Deepening indicator */
+    .depth-toast {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-left: 3px solid #2d5a3d;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12px;
+      color: #888;
+      align-self: flex-start;
+      max-width: 88%;
+    }
+
+    /* Wind-down */
+    .winddown-nudge {
+      background: #fffbe6;
+      border: 1px solid #f5c842;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #7a6000;
+      align-self: flex-start;
+      max-width: 90%;
+    }
+
+    /* Not-But badge */
+    .not-but-badge {
+      display: inline-block;
+      background: #e8f5e9;
+      color: #2d5a3d;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+    }
+
+    /* Insight flash */
+    .insight-flash {
+      background: linear-gradient(135deg, #f0f7f0, #d4ead4);
+      border: 1.5px solid #4a8c5e;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 14px;
+      color: #1a3d2e;
+      align-self: flex-start;
+      max-width: 90%;
+      line-height: 1.7;
+      box-shadow: 0 2px 12px rgba(45,90,61,0.12);
+    }
+    .insight-flash .if-label {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #4a8c5e;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .insight-flash .if-text {
+      font-style: italic;
+    }
+    .insight-flash .if-source {
+      font-size: 11px;
+      color: #888;
+      margin-top: 6px;
+      display: block;
+      font-style: normal;
+    }
+
+    /* Summary Card */
+    .summary-card {
+      background: linear-gradient(135deg, #f0f7f0 0%, #e8f4e8 100%);
+      border: 2px solid #2d5a3d;
+      border-radius: 18px;
+      padding: 20px;
+      margin-top: 8px;
+      align-self: flex-start;
+      max-width: 96%;
+      width: 100%;
+    }
+    .summary-card .summary-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(45,90,61,0.15);
+    }
+    .summary-card .summary-header .tag {
+      background: #2d5a3d;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 10px;
+    }
+    .summary-card .summary-header .date { font-size: 11px; color: #888; margin-left: auto; }
+    .summary-card h4 { font-size: 14px; color: #2d5a3d; margin-bottom: 8px; font-weight: 700; }
+    .summary-card p { font-size: 13px; color: #333; line-height: 1.75; margin-bottom: 8px; }
+    .summary-card .section-label {
+      font-size: 11px;
+      color: #5a8a6a;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 12px 0 5px;
+    }
+    .summary-card ul { padding-left: 16px; margin-bottom: 8px; }
+    .summary-card ul li { font-size: 13px; color: #333; line-height: 1.85; }
+    .summary-card .action-items {
+      background: rgba(45,90,61,0.07);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-top: 8px;
+    }
+    .summary-card .action-items li { color: #2d5a3d; font-weight: 600; }
+    .summary-card .not-but-highlight {
+      background: #c8e6c9;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-style: italic;
+    }
+    .summary-card .summary-footer {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(45,90,61,0.15);
+    }
+    .summary-card .btn {
+      flex: 1;
+      padding: 9px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .summary-card .btn-primary { background: #2d5a3d; color: #fff; }
+    .summary-card .btn-primary:hover { background: #3d6b4a; }
+    .summary-card .btn-secondary { background: #fff; color: #2d5a3d; border: 1.5px solid #2d5a3d; }
+    .summary-card .btn-secondary:hover { background: #f0f7f0; }
+    .summary-card .adler-quote {
+      font-style: italic;
+      color: #5a8a6a;
+      font-size: 12px;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(45,90,61,0.2);
+    }
+
+    /* Exit survey */
+    .exit-survey {
+      background: #faf8f5;
+      border: 1px solid #e8e0d8;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 10px;
+      align-self: flex-start;
+      width: 100%;
+    }
+    .exit-survey .survey-q { font-size: 13px; color: #555; margin-bottom: 10px; font-weight: 600; }
+    .exit-survey .emojis { display: flex; gap: 8px; margin-bottom: 12px; justify-content: center; }
+    .exit-survey .emoji-btn {
+      font-size: 24px;
+      background: none;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 4px 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .exit-survey .emoji-btn:hover, .exit-survey .emoji-btn.selected {
+      background: #e8f0ea;
+      border-color: #2d5a3d;
+    }
+    .exit-survey textarea {
+      width: 100%;
+      border: 1.5px solid #d4cdc6;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 13px;
+      font-family: inherit;
+      resize: none;
+      outline: none;
+      margin-bottom: 10px;
+    }
+    .exit-survey textarea:focus { border-color: #2d5a3d; }
+    .exit-survey .submit-survey {
+      width: 100%;
+      background: #2d5a3d;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .exit-survey .submit-survey:hover { background: #3d6b4a; }
+    .exit-survey .survey-skip {
+      text-align: center;
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 8px;
+      cursor: pointer;
+    }
+
+    /* Insight log */
+    .insight-log {
+      background: #fff;
+      border: 1px solid #e8e0d8;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-top: 4px;
+      align-self: flex-start;
+      width: 100%;
+    }
+    .insight-log h4 { font-size: 12px; color: #888; margin-bottom: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .insight-log ul { list-style: none; padding: 0; }
+    .insight-log li { font-size: 13px; color: #2d5a3d; padding: 6px 0; border-bottom: 1px solid #f0ece6; line-height: 1.5; }
+    .insight-log li:last-child { border-bottom: none; }
+    .insight-log li::before { content: '💡 '; }
+
+    /* Next steps card */
+    .next-steps-card {
+      background: linear-gradient(135deg, #fff9e6, #fff3cd);
+      border: 1px solid #f5c842;
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 4px;
+      align-self: flex-start;
+      width: 100%;
+    }
+    .next-steps-card h4 { font-size: 13px; color: #7a6000; font-weight: 700; margin-bottom: 10px; }
+    .next-steps-card ul { list-style: none; padding: 0; }
+    .next-steps-card li { font-size: 13px; color: #5a4000; padding: 5px 0; display: flex; align-items: flex-start; gap: 6px; line-height: 1.5; }
+    .next-steps-card li::before { content: '→'; color: #c9a800; font-weight: 700; flex-shrink: 0; }
+
+    .thinking-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #aaa;
+      padding: 0 4px;
+      margin-bottom: 6px;
+    }
+    .dots span { display: inline-block; width: 5px; height: 5px; background: #aaa; border-radius: 50%; animation: dot-bounce 1.4s infinite; }
+    .dots span:nth-child(2) { animation-delay: 0.2s; }
+    .dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dot-bounce { 0%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-4px); } }
+
+    .input-area {
+      padding: 12px 16px 16px;
+      border-top: 1px solid #f0ece6;
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .input-area textarea {
+      flex: 1;
+      border: 1.5px solid #d4cdc6;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-family: inherit;
+      resize: none;
+      outline: none;
+      line-height: 1.5;
+      max-height: 120px;
+      transition: border-color 0.15s;
+    }
+    .input-area textarea:focus { border-color: #2d5a3d; }
+    .input-area textarea:disabled { background: #f5f3f0; color: #aaa; }
+    .send-btn { background: #2d5a3d; color: #fff; border: none; border-radius: 12px; width: 44px; height: 44px; font-size: 18px; cursor: pointer; align-self: flex-end; transition: background 0.15s; flex-shrink: 0; }
+    .send-btn:hover { background: #3d6b4a; }
+    .send-btn:disabled { background: #aaa; cursor: default; }
+    .input-area.concluded { flex-direction: column; }
+    .input-area.concluded .send-btn { display: none; }
+    .restart-btn { display: none; }
+    .input-area.concluded .restart-btn {
+      display: block;
+      width: 100%;
+      padding: 11px;
+      background: #2d5a3d;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+
+    .settings-row { padding: 10px 16px 0; flex-shrink: 0; display: flex; align-items: center; gap: 8px; }
+    .settings-btn { background: none; border: none; font-size: 12px; color: #aaa; cursor: pointer; text-decoration: underline; }
+    .model-tag { display: inline-block; background: #e8f0ea; color: #2d5a3d; font-size: 10px; padding: 2px 7px; border-radius: 10px; }
+    .key-status { font-size: 10px; padding: 2px 7px; border-radius: 10px; }
+    .key-status.ok { background: #c8e6c9; color: #1b5e20; }
+    .key-status.missing { background: #ffcdd2; color: #b71c1c; cursor: pointer; }
+    .key-status.missing:hover { background: #ef9a9a; }
+    #settings-panel { display: none; padding: 0 16px 8px; }
+    #settings-panel.open { display: block; }
+    .share-btn { background: none; border: 1px solid #d4cdc6; font-size: 11px; color: #888; cursor: pointer; padding: 3px 8px; border-radius: 6px; margin-left: auto; }
+    .share-btn:hover { background: #f5f3f0; }
+    .mode-indicator { font-size: 10px; background: #fff3e0; color: #e65100; padding: 2px 7px; border-radius: 10px; }
+    .mode-indicator.deepening { background: #e3f2fd; color: #1565c0; }
+    .mode-indicator.winding { background: #fff3e0; color: #e65100; }
+
+    /* Pause overlay for reflection */
+    .pause-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(250, 248, 245, 0.97);
+      backdrop-filter: blur(2px);
+      border-top: 1.5px solid rgba(45, 90, 61, 0.15);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 10;
+      opacity: 1;
+      transition: opacity 0.4s ease;
+    }
+    .pause-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .breathing-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(45, 90, 61, 0.08);
+      border: 2px solid rgba(45, 90, 61, 0.2);
+      animation: breathe 3.5s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    @keyframes breathe {
+      0%   { transform: scale(0.9); opacity: 0.5; }
+      50%  { transform: scale(1.15); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.5; }
+    }
+    .pause-hint {
+      font-size: 13px;
+      color: #5a8a6a;
+      font-style: italic;
+    }
+
+    @keyframes msg-appear { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .msg { animation: msg-appear 0.25s ease-out; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>🧠 阿德勒 AI 觉察陪练</h1>
+    <p>基于《自卑与超越》心理学框架</p>
+    <div class="subtitle">988 心理援助热线 · 24小时免费</div>
+    <div class="header-meta">
+      <span class="pill" id="turn-indicator">0 轮</span>
+      <span class="pill mode-indicator" id="mode-indicator"></span>
+      <div class="depth-indicator" id="depth-indicator">
+        <span>深度</span>
+        <div class="depth-bar"><div class="depth-fill" id="depth-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="settings-row">
+    <button class="settings-btn" onclick="toggleSettings()">⚙️ AI 设置</button>
+    <span class="model-tag" id="model-tag"></span>
+    <span class="key-status missing" id="key-status" onclick="toggleSettings()">⚠️ 未配置Key</span>
+    <button class="settings-btn" style="font-size:11px;opacity:0.6;" onclick="showDebugInfo()">🔍诊断</button>
+    <button class="share-btn" onclick="shareConversation()">📤 分享</button>
+  </div>
+
+  <div id="settings-panel"></div>
+
+  <div class="chat-area" id="chat"></div>
+
+  <div id="pause-overlay" class="pause-overlay hidden">
+    <div class="breathing-circle"></div>
+    <p class="pause-hint" id="pause-hint">不必急着回答……</p>
+  </div>
+
+  <div class="input-area" id="input-area">
+    <textarea id="user-input" rows="1" placeholder="写下你的想法……" onkeydown="handleKey(event)" oninput="autoGrow(this)" onclick="this.rows=3"></textarea>
+    <button class="send-btn" id="send-btn" onclick="sendMessage()">↑</button>
+    <button class="restart-btn" id="restart-btn" onclick="restartSession()">🔄 开始新一次觉察</button>
+  </div>
+</div>
+
+<script src="v3-settings.js"></script>
+<script>
+// ================== Constants ==================
+const TURN_WINDDOWN = 12;
+const TURN_FORCE_END = 18;
+const MAX_HISTORY = 50;
+const END_TRIGGERS = ['结束', '够了', '总结', '停止', 'end', 'done', 'quit', '说完了', '没什么要说的了'];
+const DEEPENING_DEPTH = 4; // triggers when conversation goes past surface
+
+const DANGER_PATTERNS = [
+  /想死了|不想活了|活着没意义|活不下去了|想自杀|想结束|很想去死/i,
+  /死了算了|一了百了|解脱|轻生/i,
+  /自残|割腕/i
+];
+
+const CRISIS_MSG = `谢谢你的诚实。我听到了你的痛苦。
+
+你不需要独自面对。现在拨打这个电话，有人 24 小时在线等你：
+
+📞 心理援助热线：400-821-1215（全国）
+
+如果你现在安全，我很愿意继续陪着你。`;
+
+function detectDanger(text) {
+  return DANGER_PATTERNS.some(p => p.test(text));
+}
+
+const SYSTEM_PROMPT = `【身份】你是阿尔弗雷德·阿德勒（Alfred Adler），个体心理学创始人。你正在用一对一对话的方式陪一个人做觉察。
+
+【阿德勒核心框架 - 必须灵活运用】
+- 自卑感是所有人进步的动力——关键不是你有没有自卑感，而是你如何回应它
+- 目的论：行为是当下目标的结果，不是过去创伤的症状
+- 社会兴趣：真正的成长指向为他人创造价值
+- 创造性自我：不是你经历了什么，而是你选择如何解读它
+
+【你的风格】
+- 直接、有力、不回避判断
+- 问问题，不给答案——让人看清自己
+- 标志句式：「不是……而是……」（每3-4轮至少用一次）
+- 每次回复最多2段，总字数不超过120字
+- 大多数回复以一个问题结尾
+
+【开场】（只用一次）
+从以下选一句，必须有力、有画面感：
+1. "告诉我——你想超越什么？"
+2. "在你内心深处，有一个声音一直在说什么？"
+3. "你今天来这里，是因为什么让你感到不满？"
+4. "如果你不再逃避，你会最先面对什么？"
+5. "你正在回避的那件事，是什么？"
+
+【危险信号】
+对方表达自杀/自伤念头时：不继续流程，先回应安全，给出热线400-821-1215，语气温柔庄重。
+
+【禁止】
+- 不用"潜意识""童年创伤"当借口
+- 不把责任推给父母或过去
+- 不说空洞的积极肯定`;
+
+const SYSTEM_PROMPT_DEEPENING = SYSTEM_PROMPT + `\n\n【当前状态：深度对话】对话已经触及更深层。请继续深入探索，重点追问细节和感受。`;
+
+const SYSTEM_PROMPT_WINDDOWN = SYSTEM_PROMPT + `\n\n【重要：收尾阶段】对话即将结束。你的回复必须：\n1. 用「不是……而是……」给出一句核心洞察，整合今天的主要内容\n2. 直接告诉对方：这次觉察到此为止\n3. 引导对方说出「结束」来触发总结\n\n示例结尾：「记住——不是……而是……今天的觉察就到这里。如果你愿意，我们来做个总结。」\n不要继续问新的深层问题。不要给多个选项。不要让对话继续延伸。`;
+
+const SYSTEM_PROMPT_FORCE_END = SYSTEM_PROMPT + `\n\n【重要】对话已经进行较长时间。现在必须做结尾：给出一段简短的总结性反馈（不超过100字），帮助对方整合今天的收获，明确告诉对方觉察到此为止。语气坚定但温暖。`;
+
+// ================== State ==================
+let messages = [];
+let userTurnCount = 0;
+let isLoading = false;
+let isConcluded = false;
+let sessionStarted = false;
+let depthScore = 0; // 0-100
+let sessionInsights = []; // captured "不是...而是..." moments
+let surfaceRounds = 0; // tracks shallow back-and-forth
+let lastWasUserLong = false;
+let isPaused = false; // reflection pause active
+
+// ================== Helpers ==================
+function getOpening() {
+  const OPENINGS = [
+    "告诉我——你想超越什么？",
+    "在你内心深处，有一个声音一直在说什么？",
+    "你今天来这里，是因为什么让你感到不满？",
+    "如果你不再逃避，你会最先面对什么？",
+    "你正在回避的那件事，是什么？"
+  ];
+  return OPENINGS[Math.floor(Math.random() * OPENINGS.length)];
+}
+
+function buildMessages(userText) {
+  const wantsEnd = END_TRIGGERS.some(t => userText.toLowerCase().includes(t));
+
+  let prompt = SYSTEM_PROMPT;
+  if (isConcluded || wantsEnd) {
+    prompt = SYSTEM_PROMPT_FORCE_END;
+  } else if (userTurnCount >= TURN_WINDDOWN) {
+    prompt = SYSTEM_PROMPT_WINDDOWN;
+  } else if (depthScore >= DEEPENING_DEPTH) {
+    prompt = SYSTEM_PROMPT_DEEPENING;
+  }
+
+  const msgs = [{ role: 'system', content: prompt }];
+  for (const m of messages) msgs.push({ role: m.role, content: m.content });
+  msgs.push({ role: 'user', content: userText });
+  return msgs;
+}
+
+function calcDepth(text, prevDepth) {
+  let d = prevDepth;
+  const longEnough = text.length > 40;
+  const hasReflection = /觉得|感到|好像|似乎|可能是|我一直|我发现|我意识到/i.test(text);
+  const hasNotBut = /不是.*而是|而(不是|是说)/i.test(text);
+  const isSurface = /是的|嗯|还好|差不多|不知道|对\b/i.test(text) && text.length < 30;
+  const hasQuestion = /[？?]$/.test(text.trim()) || text.includes('？');
+
+  if (hasNotBut) sessionInsights.push(text.match(/不是.*而是.*/i)?.[0] || '洞察');
+  if (longEnough && hasReflection) d += 2;
+  else if (longEnough) d += 1;
+  if (hasNotBut) d += 2;
+  if (isSurface) { d -= 1; surfaceRounds++; } else { surfaceRounds = 0; }
+  return Math.max(0, Math.min(100, d));
+}
+
+function addToHistory(role, content) {
+  messages.push({ role, content });
+  if (messages.length > MAX_HISTORY * 2) messages = messages.slice(messages.length - MAX_HISTORY * 2);
+}
+
+function saveHistory() {
+  try {
+    localStorage.setItem('adler-coach-v3', JSON.stringify({
+      messages, userTurnCount, isConcluded, sessionStarted,
+      depthScore, sessionInsights, savedAt: new Date().toISOString()
+    }));
+  } catch(e) {}
+}
+
+function loadHistory() {
+  try {
+    const s = localStorage.getItem('adler-coach-v3');
+    if (s) {
+      const d = JSON.parse(s);
+      messages = d.messages || [];
+      userTurnCount = d.userTurnCount || 0;
+      isConcluded = d.isConcluded || false;
+      sessionStarted = d.sessionStarted || false;
+      depthScore = d.depthScore || 0;
+      sessionInsights = d.sessionInsights || [];
+    }
+  } catch(e) {}
+}
+
+function clearHistory() {
+  [messages, sessionInsights] = [[], []];
+  [userTurnCount, isLoading, isConcluded, sessionStarted, depthScore, surfaceRounds] = [0, false, false, false, 0];
+  localStorage.removeItem('adler-coach-v3');
+  location.reload();
+}
+
+// ================== UI ==================
+function renderChat() {
+  const chat = document.getElementById('chat');
+  chat.innerHTML = '';
+
+  // Show ready screen first (Jobs: no experience before setting expectations)
+  if (!sessionStarted) {
+    const screen = document.createElement('div');
+    screen.className = 'ready-screen';
+    screen.id = 'ready-screen';
+    const intros = [
+      "「决定我们自身的不是经历本身，而是我们赋予经历的意义。」",
+      "「自卑感是所有人努力的根本动力。」",
+      "「神经症患者建了一座空中楼阁，然后抱怨没地方住。」"
+    ];
+    const intro = intros[Math.floor(Math.random() * intros.length)];
+    screen.innerHTML = `
+      <div class="opening-card" style="max-width:100%;text-align:center;border-left:none;border-radius:12px;">
+        <div class="quote" style="font-size:15px;">「${intro}」</div>
+        <div class="author">—— 阿尔弗雷德·阿德勒</div>
+      </div>
+      <h2>准备好面对自己了吗？</h2>
+      <p>这不是一场轻松的聊天。这是一场有方向的觉察练习。<br>阿德勒会直接问你最不想面对的问题。<br>你准备好了吗？</p>
+      <button class="big-btn" onclick="startSession()">🚀 开始觉察</button>
+      <div class="disclaimer">对话内容仅存储在本地浏览器</div>
+    `;
+    chat.appendChild(screen);
+    updateHeaderUI();
+    return;
+  }
+
+  // Show context tags if we have topics
+  if (sessionInsights.length > 0) {
+    const bar = document.createElement('div');
+    bar.className = 'context-bar';
+    bar.innerHTML = sessionInsights.slice(-3).map(s =>
+      `<span class="context-tag"><span class="dot"></span>${s.slice(0,20)}${s.length>20?'...':''}</span>`
+    ).join('');
+    chat.appendChild(bar);
+  }
+
+  // Show insight log if we have captured insights
+  if (sessionInsights.length >= 2) {
+    const log = document.createElement('div');
+    log.className = 'insight-log';
+    log.innerHTML = `<h4>💡 你的洞察瞬间</h4><ul>${sessionInsights.slice(-4).map(s => `<li>${s.slice(0,50)}</li>`).join('')}</ul>`;
+    chat.appendChild(log);
+  }
+
+  for (const m of messages) appendMsg(m.content, m.role, false);
+  if (isConcluded) {
+    showSummaryCard();
+    showExitSurvey();
+    showNextSteps();
+  }
+  updateHeaderUI();
+  scrollToBottom();
+}
+
+function startSession() {
+  sessionStarted = true;
+  messages.push({ role: 'assistant', content: getOpening() });
+  saveHistory();
+  renderChat();
+}
+
+function updateHeaderUI() {
+  const ti = document.getElementById('turn-indicator');
+  const mi = document.getElementById('mode-indicator');
+  const df = document.getElementById('depth-fill');
+
+  if (!sessionStarted) {
+    ti.textContent = '未开始';
+    if (mi) mi.textContent = '';
+    return;
+  }
+
+  if (isConcluded) {
+    ti.textContent = '✅ 结束';
+    if (mi) { mi.textContent = ''; mi.className = 'mode-indicator'; }
+  } else if (userTurnCount >= TURN_WINDDOWN) {
+    const r = TURN_FORCE_END - userTurnCount;
+    ti.textContent = `还剩 ${r} 轮`;
+    if (mi) { mi.textContent = '⚠️ 收尾'; mi.className = 'mode-indicator'; }
+  } else if (depthScore >= DEEPENING_DEPTH) {
+    ti.textContent = `${userTurnCount} 轮`;
+    if (mi) { mi.textContent = '深度↑'; mi.className = 'mode-indicator deepening'; }
+  } else {
+    ti.textContent = `${userTurnCount} 轮`;
+    if (mi) { mi.textContent = ''; mi.className = 'mode-indicator'; }
+  }
+
+  if (df) df.style.width = Math.min(100, depthScore) + '%';
+}
+
+function appendMsg(text, role, animate = true) {
+  const chat = document.getElementById('chat');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  if (role === 'ai' && detectDanger(text)) {
+    div.className += ' danger';
+    div.innerHTML = text.replace(/\n/g, '<br>') + '<span class="crisis-hotline">📞 紧急：400-821-1215（24小时）</span>';
+  } else {
+    // Highlight "不是...而是..." in AI messages
+    if (role === 'ai') {
+      text = text.replace(/(不是)([^，,。\n]+)(，|,)(而(是)?)([^。\n]+)/g,
+        '$1$2$3 <span class="highlight-not-but">$5$6</span>');
+    }
+    div.innerHTML = text;
+  }
+  chat.appendChild(div);
+  scrollToBottom();
+
+  }
+
+// showPause is defined later (after hidePause)
+function triggerPauseIfNeeded(reply) {
+  if (isConcluded || isPaused || userTurnCount < 3) return;
+  const trimmed = reply.trim();
+  const endsWithQuestion = /[？?]$/.test(trimmed) || /[？?][\s。]*$/.test(trimmed);
+  const isDeepening = depthScore >= DEEPENING_DEPTH || userTurnCount >= 6;
+  if (endsWithQuestion && isDeepening) {
+    setTimeout(showPause, 300);
+  }
+}
+
+function showPause(hint) {
+  if (isPaused || isConcluded) return;
+  isPaused = true;
+  const overlay = document.getElementById('pause-overlay');
+  const hintEl = document.getElementById('pause-hint');
+  const hints = ['不必急着回答……', '让念头沉淀一下', '这一刻属于你', '安静地想一想', '慢慢来'];
+  if (hintEl) hintEl.textContent = hint || hints[Math.floor(Math.random() * hints.length)];
+  if (overlay) {
+    overlay.classList.remove('hidden');
+    requestAnimationFrame(() => {
+      overlay.style.opacity = '1';
+    });
+  }
+  setInputEnabled(false);
+  setTimeout(hidePause, 4000);
+}
+
+function hidePause() {
+  isPaused = false;
+  const overlay = document.getElementById('pause-overlay');
+  if (overlay) {
+    overlay.style.opacity = '0';
+    setTimeout(() => {
+      if (!isPaused) overlay.classList.add('hidden');
+    }, 400);
+  }
+  setInputEnabled(true);
+  document.getElementById('user-input')?.focus();
+}
+
+function appendDepthToast() {
+  const chat = document.getElementById('chat');
+  const toasts = [
+    "💡 你开始触及更深的地方了……",
+    "🌀 这个方向值得再走几步。",
+    "🌊 你的回答开始有了重量。",
+    "🎯 继续，这里是关键的地方。"
+  ];
+  const t = toasts[Math.floor(Math.random() * toasts.length)];
+  const div = document.createElement('div');
+  div.className = 'depth-toast';
+  div.textContent = t;
+  div.style.opacity = '0';
+  chat.appendChild(div);
+  setTimeout(() => { div.style.transition = 'opacity 0.4s'; div.style.opacity = '1'; }, 50);
+  scrollToBottom();
+}
+
+function appendWinddownNudge() {
+  const chat = document.getElementById('chat');
+  const div = document.createElement('div');
+  div.className = 'winddown-nudge';
+  div.textContent = `💡 我们的对话已经进行了很久——你准备好做一个收尾了吗？可以说"结束"或"总结"，或者继续聊，我会在合适的时机帮你整理这次觉察的收获。`;
+  div.style.opacity = '0';
+  chat.appendChild(div);
+  setTimeout(() => { div.style.transition = 'opacity 0.4s'; div.style.opacity = '1'; }, 50);
+  scrollToBottom();
+}
+
+function appendLoading() {
+  const chat = document.getElementById('chat');
+  const div = document.createElement('div');
+  div.className = 'msg ai';
+  div.id = 'loading-msg';
+  div.innerHTML = '<div class="thinking-bar"><span class="dots"><span></span><span></span><span></span></span> 阿德勒正在思考……</div>';
+  chat.appendChild(div);
+  scrollToBottom();
+}
+
+function removeLoading() {
+  const el = document.getElementById('loading-msg');
+  if (el) el.remove();
+}
+
+function scrollToBottom() {
+  setTimeout(() => {
+    const chat = document.getElementById('chat');
+    chat.scrollTop = chat.scrollHeight;
+  }, 10);
+}
+
+function setInputEnabled(enabled) {
+  document.getElementById('user-input').disabled = !enabled;
+  document.getElementById('send-btn').disabled = !enabled;
+}
+
+function concludeUI() {
+  isConcluded = true;
+  document.getElementById('input-area').classList.add('concluded');
+  updateHeaderUI();
+}
+
+function restartSession() { clearHistory(); }
+
+// ================== Summary ==================
+async function generateAndShowSummary() {
+  isLoading = true;
+  setInputEnabled(false);
+
+  const chat = document.getElementById('chat');
+  const loadingDiv = document.createElement('div');
+  loadingDiv.className = 'summary-card';
+  loadingDiv.id = 'summary-loading';
+  loadingDiv.innerHTML = `<div style="text-align:center;padding:20px 0;color:#888;">🧠 阿德勒正在为你整理这次觉察……</div>`;
+  chat.appendChild(loadingDiv);
+  scrollToBottom();
+
+  try {
+    const summaryText = await generateSummary();
+    const loadingEl = document.getElementById('summary-loading');
+    if (loadingEl) loadingEl.remove();
+    messages.push({ role: 'assistant', content: summaryText });
+    saveHistory();
+    showSummaryCard();
+    showExitSurvey();
+    showNextSteps();
+    concludeUI();
+  } catch(e) {
+    const loadingEl = document.getElementById('summary-loading');
+    if (loadingEl) loadingEl.remove();
+    appendMsg('⚠️ 总结生成失败：' + e.message, 'ai');
+  } finally {
+    isLoading = false;
+  }
+}
+
+async function generateSummary() {
+  const settings = loadSettings();
+  const conversationText = messages
+    .filter(m => m.role !== 'system')
+    .map(m => (m.role === 'user' ? '用户' : '阿德勒') + '：' + m.content)
+    .join('\n');
+
+  const insightList = sessionInsights.length > 0
+    ? '\n\n用户在对话中产生的「不是...而是...」式洞察：\n' + sessionInsights.slice(-5).map(s => '- ' + s).join('\n')
+    : '';
+
+  const prompt = `你是一位阿德勒心理学专家。请分析以下对话记录，为用户生成一份结构化的觉察总结。${insightList}
+
+对话内容：
+${conversationText}
+
+请严格按以下格式生成（中文，每部分不超过60字）：
+
+## 核心发现
+（2-3句话，概括用户触及的核心议题）
+
+## 你的自卑补偿模式
+（用阿德勒框架分析：追求成就型/回避型/攻击型/追求认可型/控制型 等，并给出依据）
+
+## 阿德勒式洞察
+（必须用「不是...而是...」句式，写出一句让用户记住的核心洞察）
+
+## 下一步行动
+（2-3个具体、可操作的行动建议，不是空话）
+
+## 赠言
+（一句话温暖但有力的收尾，来自阿德勒精神）
+
+生成总结：`;
+
+  let reply;
+  if (settings.provider === 'deepseek') {
+    reply = await callDeepSeek([{ role: 'user', content: prompt }], settings.apiKey);
+  } else if (settings.provider === 'ollama') {
+    reply = await callOllama([{ role: 'user', content: prompt }], settings.model);
+  } else if (settings.provider === 'openai') {
+    reply = await callOpenAI([{ role: 'user', content: prompt }], settings.model, settings.apiKey);
+  } else {
+    reply = await callCustom([{ role: 'user', content: prompt }], settings.model, settings.apiKey, settings.baseUrl);
+  }
+  return reply;
+}
+
+function showSummaryCard() {
+  // Find the summary text from the last assistant message
+  const summaryMsg = messages.filter(m => m.role === 'assistant').slice(-1)[0];
+  const text = summaryMsg?.content || '';
+  const parsed = parseSummary(text);
+
+  const chat = document.getElementById('chat');
+
+  // Replace the last AI message ("总结已生成...") with the formatted card
+  const lastAiMsgs = chat.querySelectorAll('.msg.ai');
+  const lastAi = lastAiMsgs[lastAiMsgs.length - 1];
+
+  const card = document.createElement('div');
+  card.className = 'summary-card';
+  card.id = 'summary-card';
+  const today = new Date();
+  const dateStr = `${today.getMonth()+1}月${today.getDate()}日 ${today.getHours()}:${String(today.getMinutes()).padStart(2,'0')}`;
+
+  card.innerHTML = `
+    <div class="summary-header">
+      <span class="tag">📋 觉察总结</span>
+      <span class="date">${dateStr}</span>
+    </div>
+    <h4>🧠 这次你触及了什么</h4>
+    <p>${parsed.core || '你开始面对内心的某些不安，这是改变的开始。'}</p>
+
+    <div class="section-label">你的自卑补偿模式</div>
+    <p>${parsed.pattern || '你正在用自己的方式回应内心的自卑感。'}</p>
+
+    <div class="section-label">💡 阿德勒式洞察</div>
+    <p><em>「${parsed.insight || '不是外在环境，而是你对环境的解读在决定你的选择。'}」</em></p>
+
+    <div class="action-items">
+      <div class="section-label" style="color:#2d5a3d;">🎯 下一步行动</div>
+      <ul>${(parsed.actions || ['深入观察自己在类似情境下的第一反应']).map(a => `<li>${a}</li>`).join('')}</ul>
+    </div>
+
+    ${parsed.closing ? `<p class="adler-quote">—— ${parsed.closing}</p>` : ''}
+
+    <div class="summary-footer">
+      <button class="btn btn-secondary" onclick="shareSummary()">📤 分享总结</button>
+      <button class="btn btn-primary" onclick="restartSession()">🔄 新的觉察</button>
+    </div>
+  `;
+
+  if (lastAi) {
+    lastAi.replaceWith(card);
+  } else {
+    chat.appendChild(card);
+  }
+  scrollToBottom();
+}
+
+function parseSummary(text) {
+  const result = { core: '', pattern: '', insight: '', actions: [], closing: '' };
+  if (!text) return result;
+
+  const coreMatch = text.match(/核心发现[:：]?\s*\n?([^\n]+(?:\n[^\n]+)?)/);
+  const patternMatch = text.match(/自卑补偿模式[:：]?\s*\n?([^\n]+(?:\n[^\n]+)?)/);
+  const insightMatch = text.match(/阿德勒式洞察[:：]?\s*\n?["""]?([^"""\n]+)["""]?/);
+  const actionsMatch = text.match(/下一步行动[:：]?(.+?)(?=\n##|\n[A-Z]|阿德勒的?赠言|$)/s);
+  const closingMatch = text.match(/赠言[:：]?\s*\n?(.+?)$/s);
+
+  result.core = coreMatch ? coreMatch[1].replace(/\n/g,' ').trim() : '';
+  result.pattern = patternMatch ? patternMatch[1].replace(/\n/g,' ').trim() : '';
+  result.insight = insightMatch ? insightMatch[1].replace(/\n/g,' ').trim() : '';
+  if (actionsMatch) {
+    result.actions = actionsMatch[1].split('\n').filter(l => l.trim()).map(l => l.replace(/^[-*]\s*/, '').trim()).filter(Boolean);
+  }
+  result.closing = closingMatch ? closingMatch[1].replace(/\n/g,' ').trim() : '';
+  return result;
+}
+
+// ================== Exit Survey (Munger: verify, don't assume) ==================
+function showExitSurvey() {
+  const chat = document.getElementById('chat');
+  const div = document.createElement('div');
+  div.className = 'exit-survey';
+  div.id = 'exit-survey';
+  div.innerHTML = `
+    <div class="survey-q">这次觉察对你有多少价值？（帮助我们改进）</div>
+    <div class="emojis">
+      <button class="emoji-btn" onclick="rateSession(1, this)">😫</button>
+      <button class="emoji-btn" onclick="rateSession(2, this)">😕</button>
+      <button class="emoji-btn" onclick="rateSession(3, this)">🙂</button>
+      <button class="emoji-btn" onclick="rateSession(4, this)">😊</button>
+      <button class="emoji-btn" onclick="rateSession(5, this)">🤩</button>
+    </div>
+    <textarea id="survey-feedback" rows="2" placeholder="有什么想说的……（选填）"></textarea>
+    <button class="submit-survey" onclick="submitSurvey()">提交反馈</button>
+    <div class="survey-skip" onclick="skipSurvey()">跳过 →</div>
+  `;
+  chat.appendChild(div);
+  scrollToBottom();
+}
+
+function rateSession(rating, btn) {
+  document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  btn.dataset.rating = rating;
+}
+
+function submitSurvey() {
+  const rating = document.querySelector('.emoji-btn.selected')?.dataset.rating || 0;
+  const feedback = document.getElementById('survey-feedback')?.value?.trim() || '';
+  const surveyData = { rating: Number(rating), feedback, depthScore, userTurnCount, insights: sessionInsights.slice(-5), at: new Date().toISOString() };
+  try {
+    const existing = JSON.parse(localStorage.getItem('adler-surveys') || '[]');
+    existing.push(surveyData);
+    localStorage.setItem('adler-surveys', JSON.stringify(existing.slice(-50)));
+  } catch(e) {}
+  const el = document.getElementById('exit-survey');
+  if (el) el.innerHTML = '<p style="text-align:center;color:#2d5a3d;font-size:13px;padding:10px 0;">✅ 感谢你的反馈！</p>';
+}
+
+function skipSurvey() {
+  const el = document.getElementById('exit-survey');
+  if (el) el.remove();
+}
+
+// ================== Next Steps (Drucker: what gets measured) ==================
+function showNextSteps() {
+  const parsed = parseSummary(messages.filter(m => m.role === 'assistant').slice(-1)[0]?.content || '');
+  const actions = parsed.actions?.length ? parsed.actions : ['给自己一个具体的行动承诺'];
+  const chat = document.getElementById('chat');
+  const card = document.createElement('div');
+  card.className = 'next-steps-card';
+  card.innerHTML = `
+    <h4>📌 下一步从这里开始</h4>
+    <ul>${actions.slice(0,3).map(a => `<li>${a}</li>`).join('')}</ul>
+  `;
+  chat.appendChild(card);
+  scrollToBottom();
+}
+
+// ================== Share ==================
+function shareConversation() {
+  const history = localStorage.getItem('adler-coach-v3');
+  if (!history) { alert('还没有内容可以分享'); return; }
+  const data = JSON.parse(history);
+  const lines = data.messages.filter(m => m.role !== 'system').map(m => (m.role === 'user' ? '🙋' : '🧠') + ' ' + m.content).join('\n\n');
+  const text = `【阿德勒觉察陪练 · ' + data.userTurnCount + '轮】\n\n${lines}\n\n——由阿德勒AI觉察陪练生成`;
+  copyOrShare(text);
+}
+
+function shareSummary() {
+  const card = document.getElementById('summary-card');
+  if (!card) return;
+  const parsed = parseSummary(messages.filter(m => m.role === 'assistant').slice(-1)[0]?.content || '');
+  const text = `【阿德勒觉察总结】\n\n洞察：「${parsed.insight || ''}」\n\n核心发现：${parsed.core || ''}\n\n自卑模式：${parsed.pattern || ''}\n\n行动：${(parsed.actions || []).join(' / ')}\n\n——由阿德勒AI觉察陪练生成`;
+  copyOrShare(text);
+}
+
+function copyOrShare(text) {
+  if (navigator.share) navigator.share({ text }).catch(() => copyText(text));
+  else copyText(text);
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => alert('已复制到剪贴板'));
+}
+
+// ================== Debug ==================
+function showDebugInfo() {
+  const settings = typeof loadSettings === 'function' ? loadSettings() : {};
+  const hasKey = !!(settings.apiKey && settings.apiKey.length > 5);
+  const debug = {
+    '当前Provider': settings.provider || 'unknown',
+    'API Key': hasKey ? settings.apiKey.slice(0, 6) + '...' : '未配置',
+    'Key完整': hasKey ? settings.apiKey : '',
+    'localStorage Key': 'adler-coach-settings',
+    '存储内容': JSON.stringify(settings),
+    'DeepSeek URL': 'https://api.deepseek.com/chat/completions',
+  };
+  let msg = '=== 当前状态诊断 ===\n\n';
+  Object.entries(debug).forEach(([k, v]) => { msg += k + ': ' + v + '\n'; });
+  msg += '\n如果Key已配置但显示未配置，请尝试：重新打开设置 > 保存。';
+  alert(msg);
+  console.log('[阿德勒诊断]', settings);
+}
+
+// ================== Send ==================
+async function sendMessage() {
+  if (isLoading || isConcluded) return;
+  const input = document.getElementById('user-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const wantsEnd = END_TRIGGERS.some(t => text.toLowerCase().includes(t));
+
+  // Capture depth before adding user msg to history
+  const prevDepth = depthScore;
+  depthScore = calcDepth(text, prevDepth);
+  lastWasUserLong = text.length > 50;
+
+  appendMsg(text, 'user');
+  input.value = '';
+  input.rows = 1;
+  userTurnCount++;
+  addToHistory('user', text);
+  saveHistory();
+  updateHeaderUI();
+
+  // Depth toast
+  if (depthScore >= DEEPENING_DEPTH && prevDepth < DEEPENING_DEPTH) {
+    setTimeout(appendDepthToast, 800);
+  }
+
+  // Wind-down: AI will guide ending in its own reply
+
+  // User-triggered end
+  if (wantsEnd) {
+    await generateAndShowSummary();
+    return;
+  }
+
+  // Danger first
+  if (detectDanger(text)) {
+    isLoading = true;
+    setInputEnabled(false);
+    appendLoading();
+    await sleep(800);
+    removeLoading();
+    appendMsg(CRISIS_MSG, 'ai');
+    addToHistory('assistant', CRISIS_MSG);
+    saveHistory();
+    isLoading = false;
+    setInputEnabled(true);
+    return;
+  }
+
+  isLoading = true;
+  setInputEnabled(false);
+  appendLoading();
+
+  try {
+    const settings = loadSettings();
+
+    // Validate API key before making the call
+    const needsKey = ['deepseek', 'openai', 'custom'].includes(settings.provider);
+    if (needsKey && !settings.apiKey) {
+      removeLoading();
+      appendMsg('⚠️ 请先配置 AI API Key：\n\n点击右上角「⚙️ AI 设置」，选择 DeepSeek 并填入你的 API Key。\n\nKey 仅存储在本地浏览器，不会发送到任何服务器。', 'ai');
+      addToHistory('assistant', '【系统】请配置 API Key');
+      isLoading = false;
+      setInputEnabled(true);
+      // Auto-open settings panel
+      setTimeout(() => toggleSettings(), 500);
+      return;
+    }
+
+    const msgs = buildMessages(text);
+    let reply;
+
+    // Diagnostic log
+    console.log('[阿德勒] 发送请求:', {
+      provider: settings.provider,
+      model: settings.model,
+      hasKey: !!settings.apiKey,
+      keyPrefix: settings.apiKey ? settings.apiKey.slice(0,8) : 'none',
+      msgCount: msgs.length
+    });
+
+    if (settings.provider === 'deepseek') {
+      reply = await callDeepSeek(msgs, settings.apiKey);
+    } else if (settings.provider === 'ollama') {
+      reply = await callOllama(msgs, settings.model);
+    } else if (settings.provider === 'openai') {
+      reply = await callOpenAI(msgs, settings.model, settings.apiKey);
+    } else {
+      reply = await callCustom(msgs, settings.model, settings.apiKey, settings.baseUrl);
+    }
+
+    removeLoading();
+    appendMsg(reply, 'ai');
+    addToHistory('assistant', reply);
+
+    // Re-calculate depth with AI response too
+    if (/不是.*而是/i.test(reply)) {
+      depthScore = Math.min(100, depthScore + 1);
+    }
+
+    // Reflection pause for deep questions
+    triggerPauseIfNeeded(reply);
+
+    saveHistory();
+    updateHeaderUI();
+
+    // Force end
+    if (userTurnCount >= TURN_FORCE_END && !isConcluded) {
+      setTimeout(async () => {
+        await sleep(1500);
+        await generateAndShowSummary();
+      }, 1000);
+    }
+  } catch(e) {
+    removeLoading();
+    const errMsg = e.message;
+    let hint = '';
+    // Diagnostic info to help debug
+    const settings = typeof loadSettings === 'function' ? loadSettings() : {};
+    const debugInfo = `[调试信息]
+Provider: ${settings.provider || 'unknown'}
+Has Key: ${settings.apiKey ? '是 (' + settings.apiKey.slice(0,4) + '...)' : '否'}`;
+    if (errMsg.includes('401') || errMsg.includes('unauthorized') || errMsg.includes('Incorrect API')) {
+      hint = '\n\n💡 API Key 无效或已过期，请在设置中重新填写。';
+    } else if (errMsg.includes('fetch') || errMsg.includes('network') || errMsg.includes('Failed') || errMsg.includes('NETWORK')) {
+      hint = '\n\n💡 网络连接失败。请确认网络通畅后重试。';
+    } else if (errMsg.toLowerCase().includes('cors')) {
+      hint = '\n\n💡 CORS 错误，可能是网络代理拦截了请求。';
+    }
+    appendMsg('⚠️ 出错了：' + errMsg + hint + '\n\n' + debugInfo, 'ai');
+    addToHistory('assistant', '⚠️ 出错了：' + e.message);
+    saveHistory();
+  } finally {
+    isLoading = false;
+    setInputEnabled(true);
+    document.getElementById('user-input').focus();
+  }
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoGrow(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// ================== Settings ==================
+function toggleSettings() {
+  const panel = document.getElementById('settings-panel');
+  if (panel.classList.contains('open')) {
+    panel.classList.remove('open');
+    panel.style.display = 'none';
+  } else {
+    panel.innerHTML = renderSettingsPanel();
+    panel.style.display = 'block';
+    setTimeout(() => panel.classList.add('open'), 10);
+    onProviderChangeDisplay();
+  }
+}
+
+function onProviderChangeDisplay() {
+  const sel = document.getElementById('selProvider');
+  if (!sel) return;
+  const p = sel.value;
+  const divApiKey = document.getElementById('divApiKey');
+  const divBaseUrl = document.getElementById('divBaseUrl');
+  const divModel = document.getElementById('divModel');
+  if (divApiKey) divApiKey.style.display = p === 'ollama' ? 'none' : 'block';
+  if (divBaseUrl) divBaseUrl.style.display = p === 'custom' ? 'block' : 'none';
+  if (divModel) divModel.style.display = p === 'ollama' ? 'none' : 'block';
+}
+
+function saveAndClose() {
+  const settings = {
+    provider: document.getElementById('selProvider').value,
+    model: document.getElementById('inpModel').value.trim() || defaultSettings().model,
+    apiKey: document.getElementById('inpApiKey').value.trim(),
+    baseUrl: document.getElementById('inpBaseUrl').value.trim()
+  };
+  saveSettings(settings);
+  updateModelTag();
+  updateHeaderUI();
+  const panel = document.getElementById('settings-panel');
+  panel.classList.remove('open');
+  setTimeout(() => { panel.style.display = 'none'; }, 300);
+}
+
+function updateModelTag() {
+  const s = loadSettings();
+  const names = { ollama: '本地', openai: 'OpenAI', deepseek: 'DeepSeek', custom: '自定义' };
+  const tag = document.getElementById('model-tag');
+  if (tag) tag.textContent = names[s.provider] || s.provider;
+  const keyStatus = document.getElementById('key-status');
+  if (keyStatus) {
+    const needsKey = ['deepseek', 'openai', 'custom'].includes(s.provider);
+    if (!needsKey) {
+      keyStatus.textContent = '✅ 本地';
+      keyStatus.className = 'key-status ok';
+      keyStatus.onclick = null;
+    } else if (s.apiKey && s.apiKey.length > 5) {
+      keyStatus.textContent = '✅ Key已配置';
+      keyStatus.className = 'key-status ok';
+      keyStatus.onclick = null;
+    } else {
+      keyStatus.textContent = '⚠️ 未配置Key';
+      keyStatus.className = 'key-status missing';
+      keyStatus.onclick = toggleSettings;
+    }
+  }
+}
+
+// ================== Init ==================
+loadHistory();
+renderChat();
+updateModelTag();
+</script>
+</body>
+</html>

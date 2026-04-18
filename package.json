@@ -1,14 +1,14 @@
 {
   "name": "jordan-home",
   "version": "1.2.3",
-  "description": "blog",
-  "main": "index.js",
+  "description": "A personal blog built with VuePress",
   "directories": {
     "doc": "docs"
   },
   "repository": "https://github.com/jordan-home/jordan-home.github.io.git",
   "author": "huanggang <huanggang@kezaihui.com>",
   "license": "MIT",
+  "packageManager": "pnpm@9.0.0",
   "scripts": {
     "dev": "vuepress dev docs",
     "build": "vuepress build docs",

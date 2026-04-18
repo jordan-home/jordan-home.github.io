@@ -13,9 +13,10 @@ categories:
 
 | 项目 | 说明 |
 |------|------|
-| 📊 [小红书标题 CES 评分器](/projects/xhs-ces-demo.html) | 好奇·情绪·自我三维评分，实时优化建议 |
-| 🔮 [阿德勒自卑感测评](/projects/xhs-adler-quiz.html) | 8道题3分钟，测出你的自卑应对模式 |
-| 📘 [阿德勒自我认知手册落地页](/projects/ebook-adler.html) | 约2万字实战手册，含导航和购买引导 |
+| 📊 <a href="/projects/xhs-ces-demo.html" target="_blank">小红书标题 CES 评分器</a> | 好奇·情绪·自我三维评分，实时优化建议 |
+| 🔮 <a href="/projects/xhs-adler-quiz.html" target="_blank">阿德勒自卑感测评</a> | 8道题3分钟，测出你的自卑应对模式 |
+| 📘 <a href="/projects/ebook-adler.html" target="_blank">阿德勒自我认知手册落地页</a> | 约2万字实战手册，含导航和购买引导 |
+| 🧠 <a href="/projects/adler-coach.html" target="_blank">阿德勒 AI 觉察陪练</a> | 基于阿德勒心理学的深度自我对话教练 |
 
 > 以上工具永久免费使用。
 

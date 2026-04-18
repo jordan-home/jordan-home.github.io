@@ -1,5 +1,6 @@
 module.exports = {
   dest: 'blog',
+  base: '/',
   theme: 'reco',
   title: "Jordan の Words",
   description: '每一个不曾起舞的日子,都是对生命的辜负',
@@ -103,29 +104,29 @@ module.exports = {
     lineNumbers: true
   },
   plugins: [
-    [
-      require('./plugins/KanBanNiang'),
-      {
-        theme: ['haruto'],
-        width: 200,
-        height: 400,
-        modelStyle: {
-          position: 'fixed',
-          left: '70px',
-          bottom: '50px',
-          opacity: '0.9'
-        },
-        messageStyle: {
-          position: 'fixed',
-          left: '70px',
-          bottom: '380px'
-        },
-        btnStyle: {
-          bottom: '60px',
-          left: '80px'
-        }
-      }
-    ],
+    // [
+    //   require('./plugins/KanBanNiang'),
+    //   {
+    //     theme: ['haruto'],
+    //     width: 200,
+    //     height: 400,
+    //     modelStyle: {
+    //       position: 'fixed',
+    //       left: '70px',
+    //       bottom: '50px',
+    //       opacity: '0.9'
+    //     },
+    //     messageStyle: {
+    //       position: 'fixed',
+    //       left: '70px',
+    //       bottom: '380px'
+    //     },
+    //     btnStyle: {
+    //       bottom: '60px',
+    //       left: '80px'
+    //     }
+    //   }
+    // ],
     // [
     //   require('./plugins/BgMusic'),
     //   {
