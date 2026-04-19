@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>md2pdf · Markdown 文件夹变电子书</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #fafaf8;
+      --surface: #ffffff;
+      --border: #e8e8e4;
+      --accent: #c0392b;
+      --accent-light: #fdf0ef;
+      --text: #1a1a1a;
+      --muted: #888;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1rem;
+    }
+
+    .container { width: 100%; max-width: 640px; }
+
+    header { text-align: center; margin-bottom: 2.5rem; }
+    .logo { font-size: 2rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .logo span { color: var(--accent); }
+    .tagline { color: var(--muted); font-size: 0.95rem; }
+
+    /* Drop Zone */
+    .drop-zone {
+      background: var(--surface);
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 3rem 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--accent);
+      background: var(--accent-light);
+    }
+    .drop-zone h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .drop-zone p { color: var(--muted); font-size: 0.85rem; }
+    .drop-zone-icon { font-size: 3rem; margin-bottom: 0.8rem; }
+
+    /* Hidden file input */
+    #fileInput { display: none; }
+
+    /* File list */
+    .file-list {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+    .file-list.visible { display: block; }
+    .file-list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+    }
+    .file-list-header h3 { font-size: 0.9rem; color: var(--muted); font-weight: 500; }
+    .file-count {
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.2em 0.7em;
+      border-radius: 20px;
+    }
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--border);
+      color: #555;
+    }
+    .file-item:last-child { border-bottom: none; }
+    .file-item::before { content: '📄'; }
+
+    /* Options */
+    .options {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+    .options.visible { display: block; }
+    .option-group { margin-bottom: 1rem; }
+    .option-group:last-child { margin-bottom: 0; }
+    .option-label { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; }
+
+    /* Template grid */
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.6rem;
+    }
+    .template-card {
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 0.7rem 0.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s;
+      font-size: 0.8rem;
+    }
+    .template-card:hover { border-color: #bbb; }
+    .template-card.selected { border-color: var(--accent); background: var(--accent-light); }
+    .template-card .t-icon { font-size: 1.4rem; display: block; margin-bottom: 0.3rem; }
+    .template-card .t-name { font-weight: 600; }
+
+    /* Inputs */
+    input[type="text"] {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: var(--bg);
+    }
+    input[type="text"]:focus { outline: none; border-color: var(--accent); }
+
+    /* Author input */
+    .author-row {
+      display: flex;
+      gap: 0.8rem;
+    }
+    .author-row .flex-1 { flex: 1; }
+
+    /* Convert button */
+    .convert-btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      display: none;
+      margin-bottom: 1rem;
+    }
+    .convert-btn.visible { display: block; }
+    .convert-btn:hover { background: #a93226; }
+    .convert-btn:active { transform: scale(0.98); }
+    .convert-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+    /* Status */
+    .status {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      display: none;
+    }
+    .status.visible { display: block; }
+    .status.success { color: #27ae60; }
+    .status.error { color: var(--accent); }
+
+    /* How it works */
+    .how {
+      margin-top: 2rem;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+    }
+    .how h3 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .how-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .how-step { text-align: center; }
+    .step-num {
+      width: 28px; height: 28px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .step-text { font-size: 0.8rem; color: #666; line-height: 1.4; }
+
+    /* Tip box */
+    .tip {
+      margin-top: 1.5rem;
+      background: #f9f9f7;
+      border: 1px solid #e8e8d8;
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      font-size: 0.82rem;
+      color: #666;
+      line-height: 1.5;
+    }
+    .tip strong { color: var(--text); }
+
+    /* Spinner */
+    .spinner {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 0.4rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    footer {
+      margin-top: 2.5rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">md<span>2</span>pdf</div>
+      <p class="tagline">拖入 Markdown 文件夹，生成一本电子书</p>
+    </header>
+
+    <div class="drop-zone" id="dropZone">
+      <div class="drop-zone-icon">📚</div>
+      <h2>拖入文件夹到这里</h2>
+      <p>支持 .md 文件按名称自动排序合并 · 点击也可选择</p>
+    </div>
+    <input type="file" id="fileInput" webkitdirectory multiple />
+
+    <div class="file-list" id="fileList">
+      <div class="file-list-header">
+        <h3>检测到以下文件</h3>
+        <span class="file-count" id="fileCount">0 个</span>
+      </div>
+      <div id="fileItems"></div>
+    </div>
+
+    <div class="options" id="options">
+      <div class="option-group">
+        <div class="option-label">书名</div>
+        <input type="text" id="bookTitle" placeholder="输入书名，将显示在封面" />
+      </div>
+      <div class="option-group author-row">
+        <div class="flex-1">
+          <div class="option-label">作者</div>
+          <input type="text" id="bookAuthor" placeholder="作者名（选填）" />
+        </div>
+        <div class="flex-1">
+          <div class="option-label">日期</div>
+          <input type="text" id="bookDate" placeholder="如 2026-04" />
+        </div>
+      </div>
+      <div class="option-group">
+        <div class="option-label">选择模板</div>
+        <div class="template-grid">
+          <div class="template-card selected" data-template="clean">
+            <span class="t-icon">📖</span>
+            <span class="t-name">简洁</span>
+          </div>
+          <div class="template-card" data-template="classic">
+            <span class="t-icon">📜</span>
+            <span class="t-name">经典</span>
+          </div>
+          <div class="template-card" data-template="warm">
+            <span class="t-icon">🌿</span>
+            <span class="t-name">温暖</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="convert-btn" id="convertBtn">📥 生成并下载 PDF</button>
+
+    <div class="status" id="status"></div>
+
+    <div class="how">
+      <h3>使用步骤</h3>
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="step-num">1</div>
+          <div class="step-text">准备一个含 .md 文件的文件夹</div>
+        </div>
+        <div class="how-step">
+          <div class="step-num">2</div>
+          <div class="step-text">拖入上方框口，填写信息</div>
+        </div>
+        <div class="how-step">
+          <div class="step-num">3</div>
+          <div class="step-text">点击下载，用浏览器"另存为 PDF"</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <strong>提示：</strong>macOS 推荐用 Safari 浏览器获得最佳 PDF 效果。<br>
+      Windows/macOS 按 <kbd>Ctrl</kbd>+<kbd>P</kbd>（Windows）或 <kbd>⌘</kbd>+<kbd>P</kbd>（Mac）打开打印，选择<strong>另存为 PDF</strong>。
+    </div>
+
+    <footer>md2pdf · A5 便携格式 · 完全本地处理，不上传任何文件</footer>
+  </div>
+
+  <!-- Turndown (MD → HTML) -->
+  <script src="https://cdn.jsdelivr.net/npm/turndown@7.1.2/dist/turndown.min.js"></script>
+
+  <script>
+    // State
+    let selectedFiles = [];
+    let selectedTemplate = 'clean';
+
+    // Elements
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileList = document.getElementById('fileList');
+    const fileItems = document.getElementById('fileItems');
+    const fileCount = document.getElementById('fileCount');
+    const options = document.getElementById('options');
+    const convertBtn = document.getElementById('convertBtn');
+    const status = document.getElementById('status');
+    const bookTitleInput = document.getElementById('bookTitle');
+    const bookAuthorInput = document.getElementById('bookAuthor');
+    const bookDateInput = document.getElementById('bookDate');
+
+    // Set default date
+    const now = new Date();
+    bookDateInput.value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+
+    // Click to open file picker
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    // Template selection
+    document.querySelectorAll('.template-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedTemplate = card.dataset.template;
+      });
+    });
+
+    // Drag & drop
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      const items = e.dataTransfer.items;
+      if (!items) return;
+      const files = [];
+      for (const item of items) {
+        if (item.kind === 'file') {
+          const file = item.getAsFile();
+          if (file && file.name.endsWith('.md')) files.push(file);
+        }
+      }
+      handleFiles(files);
+    });
+
+    fileInput.addEventListener('change', e => {
+      handleFiles(Array.from(e.target.files).filter(f => f.name.endsWith('.md')));
+    });
+
+    function handleFiles(files) {
+      selectedFiles = files.sort((a, b) => a.name.localeCompare(b.name));
+
+      if (selectedFiles.length === 0) {
+        showStatus('没有找到 .md 文件', 'error');
+        return;
+      }
+
+      fileCount.textContent = selectedFiles.length + ' 个';
+      fileItems.innerHTML = selectedFiles.map(f =>
+        `<div class="file-item">${f.webkitRelativePath || f.name}</div>`
+      ).join('');
+
+      fileList.classList.add('visible');
+      options.classList.add('visible');
+      convertBtn.classList.add('visible');
+      status.classList.remove('visible');
+
+      // Auto-fill book title from folder name
+      const firstPath = selectedFiles[0].webkitRelativePath || selectedFiles[0].name;
+      const folderOrFile = firstPath.split('/')[0];
+      if (!bookTitleInput.value) {
+        bookTitleInput.value = folderOrFile.replace(/\.md$/i, '');
+      }
+    }
+
+    // Convert
+    convertBtn.addEventListener('click', async () => {
+      if (selectedFiles.length === 0) return;
+
+      convertBtn.disabled = true;
+      convertBtn.innerHTML = '<span class="spinner"></span>正在生成预览…';
+      status.classList.remove('visible');
+
+      try {
+        // Read all MD files
+        const mdContents = await Promise.all(selectedFiles.map(f => f.text()));
+
+        const bookTitle = bookTitleInput.value || '我的电子书';
+        const bookAuthor = bookAuthorInput.value;
+        const bookDate = bookDateInput.value;
+
+        // Build combined MD content
+        let bodyMd = '';
+        mdContents.forEach((content, i) => {
+          bodyMd += content + '\n\n---\n\n';
+        });
+
+        // Use Turndown to convert MD → HTML
+        const td = new window.TurndownService({
+          headingStyle: 'atx',
+          codeBlockStyle: 'fenced'
+        });
+
+        // Add table support
+        td.addRule('table', {
+          filter: function(node) {
+            return node.nodeName === 'TABLE';
+          },
+          replacement: function(content, node) {
+            const headers = [];
+            const rows = [];
+            node.querySelectorAll('thead th').forEach(th => headers.push(th.textContent.trim()));
+            node.querySelectorAll('tbody tr').forEach(tr => {
+              const row = [];
+              tr.querySelectorAll('td').forEach(td => row.push(td.textContent.trim()));
+              rows.push(row);
+            });
+            if (headers.length === 0) return '';
+            let html = '<table><thead><tr>';
+            headers.forEach(h => html += `<th>${h}</th>`);
+            html += '</tr></thead><tbody>';
+            rows.forEach(row => {
+              html += '<tr>';
+              row.forEach(cell => html += `<td>${cell}</td>`);
+              html += '</tr>';
+            });
+            html += '</tbody></table>';
+            return html;
+          }
+        });
+
+        const bodyHtml = td.turndown(bodyMd);
+
+        // Build full HTML with cover page
+        const coverHtml = `
+          <div class="cover">
+            <div class="cover-title">${bookTitle}</div>
+            ${bookAuthor ? `<div class="cover-author">${bookAuthor}</div>` : ''}
+            ${bookDate ? `<div class="cover-date">${bookDate}</div>` : ''}
+          </div>
+          <div class="toc">
+            <h2>目录</h2>
+            <ul>
+              ${selectedFiles.map((f, i) => {
+                const name = f.name.replace(/\.md$/i, '').replace(/^\d+[-_.]?\s*/, '');
+                return `<li><a href="#ch${i+1}">${name}</a></li>`;
+              }).join('\n              ')}
+            </ul>
+          </div>
+        `;
+
+        // Add IDs to body for TOC links
+        const bodyWithIds = bodyHtml.replace(/<h([1-6])>/g, function(match, level) {
+          return match;
+        });
+
+        // Add section anchors
+        let sectionIndex = 0;
+        const bodyWithAnchors = bodyHtml.replace(/<h([1-6])([^>]*)>(.*?)<\/h\1>/gi, function(match, level, attrs, text) {
+          sectionIndex++;
+          return `<h${level}${attrs} id="ch${sectionIndex}">${text}</h${level}>`;
+        });
+
+        const fullHtml = `
+          <!DOCTYPE html>
+          <html lang="zh-CN">
+          <head>
+            <meta charset="UTF-8">
+            <title>${bookTitle}</title>
+            <link href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css" rel="stylesheet">
+            <style>
+              @page { size: A5; margin: 1.8cm 2cm; }
+              @media print {
+                body { font-family: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif; }
+                .cover { page-break-after: always; text-align: center; padding-top: 35%; }
+                .cover-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.8em; color: #1a1a1a; }
+                .cover-author { font-size: 1rem; color: #666; margin-bottom: 0.3em; }
+                .cover-date { font-size: 0.85rem; color: #999; }
+                .toc { page-break-after: always; padding: 1cm 0; }
+                .toc h2 { font-size: 1.1rem; margin-bottom: 0.8em; color: #333; }
+                .toc ul { list-style: none; padding: 0; }
+                .toc li { margin: 0.4em 0; }
+                .toc a { color: #555; text-decoration: none; font-size: 0.9rem; }
+                body { font-size: 10.5pt; line-height: 1.9; color: #333; max-width: 100%; margin: 0; padding: 0; }
+                h1 { font-size: 15pt; margin-top: 1.5em; margin-bottom: 0.5em; color: #1a1a1a; page-break-after: avoid; }
+                h2 { font-size: 13pt; margin-top: 1.3em; margin-bottom: 0.4em; color: #333; page-break-after: avoid; }
+                h3 { font-size: 11pt; margin-top: 1em; margin-bottom: 0.3em; color: #444; }
+                p { margin: 0.6em 0; text-align: justify; }
+                blockquote { border-left: 3px solid #c0392b; margin: 1em 0; padding: 0.4em 1em; background: #fafafa; color: #555; font-style: italic; }
+                ul, ol { margin: 0.6em 0; padding-left: 1.5em; }
+                li { margin: 0.3em 0; }
+                code { background: #f4f4f4; padding: 0.1em 0.3em; border-radius: 3px; font-size: 0.88em; }
+                pre { background: #f4f4f4; padding: 0.8em; border-radius: 4px; overflow-x: auto; page-break-inside: avoid; font-size: 8.5pt; }
+                hr { border: none; border-top: 1px solid #ddd; margin: 1.5em 0; }
+                table { width: 100%; border-collapse: collapse; margin: 0.8em 0; font-size: 9pt; }
+                th { background: #c0392b; color: white; padding: 0.5em; text-align: left; font-size: 9pt; }
+                td { padding: 0.4em; border-bottom: 1px solid #eee; font-size: 9pt; }
+                tr:nth-child(even) { background: #fafafa; }
+                strong { color: #c0392b; }
+                img { max-width: 100%; page-break-inside: avoid; }
+              }
+            </style>
+          </head>
+          <body>
+            ${coverHtml}
+            <div class="content">
+              ${bodyWithAnchors}
+            </div>
+          </body>
+          </html>
+        `;
+
+        // Open in new window and trigger print
+        const printWin = window.open('', '_blank');
+        printWin.document.write(fullHtml);
+        printWin.document.close();
+
+        // Wait for fonts/resources then print
+        printWin.onload = function() {
+          setTimeout(() => {
+            printWin.print();
+            showStatus('PDF 生成完成，请在打印对话框中选择"另存为 PDF"', 'success');
+          }, 500);
+        };
+
+        // Safari fallback - print immediately
+        setTimeout(() => {
+          if (!printWin.closed) {
+            printWin.print();
+            showStatus('PDF 生成完成，请在打印对话框中选择"另存为 PDF"', 'success');
+          }
+        }, 1000);
+
+      } catch (err) {
+        console.error(err);
+        showStatus('生成失败: ' + err.message, 'error');
+      } finally {
+        convertBtn.disabled = false;
+        convertBtn.innerHTML = '📥 生成并下载 PDF';
+      }
+    });
+
+    function showStatus(msg, type) {
+      status.textContent = msg;
+      status.className = 'status visible ' + type;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../adler-coach_副本"
+		}
+	],
+	"settings": {
+		"git.ignoreLimitWarning": true
+	}
+}
