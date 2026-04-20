@@ -2,9 +2,8 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>404 - Page Not Found</title>
+  <title>404 - Jordan の Words</title>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #fafafa; }
     .container { text-align: center; padding: 2rem; }
@@ -22,31 +21,14 @@
   <script>
     (function() {
       var path = window.location.pathname;
-      // Try to find matching .html file
-      // e.g. /technology/Vue3-xiang-ying-shi-yuan-li-pou-xi -> /technology/Vue3-xiang-ying-shi-yuan-li-pou-xi.html
-      var base = path.endsWith('.html') ? path : path + '.html';
-      var redirectTo = base + window.location.search;
-
-      // Fetch the .html version to verify it exists
-      var req = new XMLHttpRequest();
-      req.open('HEAD', redirectTo, true);
-      req.onload = function() {
-        if (req.status === 200 || path.endsWith('.html')) {
-          // Found the .html file directly or via extension addition
-          // Use hash routing: /technology/article.html -> /technology/#/technology/article
-          // But for VuePress SPA, we need: /technology/article.html -> /technology/#/technology/article
-          // Actually VuePress with hash routing needs: /blog/technology/article.html or /
-          // Let's use the simplest: if the .html exists, redirect to it
-          window.location.replace(redirectTo);
-        } else {
-          // Fallback to home
-          window.location.replace('/');
-        }
-      };
-      req.onerror = function() {
-        window.location.replace('/');
-      };
-      req.send();
+      // Strip the .html if present, then redirect to VuePress hash route
+      // e.g. /technology/graphqlchu-tan.html -> /#/technology/graphqlchu-tan
+      // e.g. /technology/GraphQL-ru-men-shi-zhan -> /#/technology/graphqlchu-tan
+      // Since we can't know the mapping, just redirect to root and let Vue handle it
+      // OR: try adding .html and redirect to hash
+      var normalizedPath = path.endsWith('.html') ? path.slice(0, -5) : path;
+      var hashRoute = normalizedPath + window.location.search;
+      window.location.replace('/#' + (hashRoute.startsWith('/') ? hashRoute : '/' + hashRoute));
     })();
   </script>
 </body>
