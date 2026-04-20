@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Prompt Engineering 基础指南 | Jordan の Words</title>
+    <meta name="generator" content="VuePress 1.9.10">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icons/LatteAndCat.png">
+    <link rel="mask-icon" href="/icons/LatteAndCat.svg" color="#66CDAA">
+    <meta name="description" content="Prompt 工程入门指南：如何与 AI 对话获得高质量答案，掌握角色设定、few-shot、思维链等核心技巧，释放 ChatGPT、Claude 等大模型潜力。">
+    <meta name="og:title" content="Prompt Engineering 基础指南">
+    <meta name="og:description" content="Prompt 工程入门指南：如何与 AI 对话获得高质量答案，掌握角色设定、few-shot、思维链等核心技巧，释放 ChatGPT、Claude 等大模型潜力。">
+    <meta name="og:image" content="https://jordan-home.github.io/head.jpeg">
+    <meta name="twitter:title" content="Prompt Engineering 基础指南">
+    <meta name="twitter:description" content="Prompt 工程入门指南：如何与 AI 对话获得高质量答案，掌握角色设定、few-shot、思维链等核心技巧，释放 ChatGPT、Claude 等大模型潜力。">
+    <meta name="twitter:image" content="https://jordan-home.github.io/head.jpeg">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <meta name="theme-color" content="#66CDAA">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="msapplication-TileImage" content="/icons/LatteAndCat.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    
+    <link rel="preload" href="/assets/css/0.styles.aec792fa.css" as="style"><link rel="preload" href="/assets/js/app.24e5ff95.js" as="script"><link rel="preload" href="/assets/js/4.c29a8574.js" as="script"><link rel="preload" href="/assets/js/3.434aaa1b.js" as="script"><link rel="preload" href="/assets/js/2.44b748c9.js" as="script"><link rel="preload" href="/assets/js/1.080e4e43.js" as="script"><link rel="preload" href="/assets/js/73.734aa636.js" as="script"><link rel="prefetch" href="/assets/js/10.1f44b190.js"><link rel="prefetch" href="/assets/js/11.9915dcdd.js"><link rel="prefetch" href="/assets/js/14.9ad65add.js"><link rel="prefetch" href="/assets/js/15.73ab2193.js"><link rel="prefetch" href="/assets/js/16.9720288d.js"><link rel="prefetch" href="/assets/js/17.8ca9b3a2.js"><link rel="prefetch" href="/assets/js/18.1b0c19ff.js"><link rel="prefetch" href="/assets/js/19.18e5f93e.js"><link rel="prefetch" href="/assets/js/20.39dd7147.js"><link rel="prefetch" href="/assets/js/21.66e6f7d7.js"><link rel="prefetch" href="/assets/js/22.d89f9c40.js"><link rel="prefetch" href="/assets/js/23.bb0b31ed.js"><link rel="prefetch" href="/assets/js/24.a1dcc664.js"><link rel="prefetch" href="/assets/js/25.13bcdcd1.js"><link rel="prefetch" href="/assets/js/26.a9173e4e.js"><link rel="prefetch" href="/assets/js/27.aeaa7a1f.js"><link rel="prefetch" href="/assets/js/28.9aae17fb.js"><link rel="prefetch" href="/assets/js/29.f0b7ebc4.js"><link rel="prefetch" href="/assets/js/30.8dc2f14f.js"><link rel="prefetch" href="/assets/js/31.d4841b7c.js"><link rel="prefetch" href="/assets/js/32.65bcf392.js"><link rel="prefetch" href="/assets/js/33.167e85db.js"><link rel="prefetch" href="/assets/js/34.cfb8bd82.js"><link rel="prefetch" href="/assets/js/35.799561cd.js"><link rel="prefetch" href="/assets/js/36.26107770.js"><link rel="prefetch" href="/assets/js/37.909ff8c7.js"><link rel="prefetch" href="/assets/js/38.8bb54aa5.js"><link rel="prefetch" href="/assets/js/39.6f2a8e24.js"><link rel="prefetch" href="/assets/js/40.8c15d229.js"><link rel="prefetch" href="/assets/js/41.8fac2b08.js"><link rel="prefetch" href="/assets/js/42.01b1589d.js"><link rel="prefetch" href="/assets/js/43.05d8ff69.js"><link rel="prefetch" href="/assets/js/44.cd0cf3b4.js"><link rel="prefetch" href="/assets/js/45.c7f5de06.js"><link rel="prefetch" href="/assets/js/46.f5769997.js"><link rel="prefetch" href="/assets/js/47.bae1fe73.js"><link rel="prefetch" href="/assets/js/48.44775710.js"><link rel="prefetch" href="/assets/js/49.f3ead975.js"><link rel="prefetch" href="/assets/js/5.e757da35.js"><link rel="prefetch" href="/assets/js/50.99cf60b6.js"><link rel="prefetch" href="/assets/js/51.4f086719.js"><link rel="prefetch" href="/assets/js/52.4418ccf7.js"><link rel="prefetch" href="/assets/js/53.047ea7f7.js"><link rel="prefetch" href="/assets/js/54.ff7e93d3.js"><link rel="prefetch" href="/assets/js/55.7321a378.js"><link rel="prefetch" href="/assets/js/56.7b63d39a.js"><link rel="prefetch" href="/assets/js/57.2c1eff65.js"><link rel="prefetch" href="/assets/js/58.6e7853d2.js"><link rel="prefetch" href="/assets/js/59.731a273f.js"><link rel="prefetch" href="/assets/js/6.2141ff46.js"><link rel="prefetch" href="/assets/js/60.9b3d4351.js"><link rel="prefetch" href="/assets/js/61.c47db087.js"><link rel="prefetch" href="/assets/js/62.b5d48aaa.js"><link rel="prefetch" href="/assets/js/63.94c2a9ce.js"><link rel="prefetch" href="/assets/js/64.3f60ccb4.js"><link rel="prefetch" href="/assets/js/65.49bec182.js"><link rel="prefetch" href="/assets/js/66.76cf5229.js"><link rel="prefetch" href="/assets/js/67.d5e100ba.js"><link rel="prefetch" href="/assets/js/68.b7870179.js"><link rel="prefetch" href="/assets/js/69.56f20924.js"><link rel="prefetch" href="/assets/js/7.fdccbaf7.js"><link rel="prefetch" href="/assets/js/70.5af2bf48.js"><link rel="prefetch" href="/assets/js/71.6306cd98.js"><link rel="prefetch" href="/assets/js/72.9d6a74d5.js"><link rel="prefetch" href="/assets/js/74.a3878e96.js"><link rel="prefetch" href="/assets/js/75.cf982f43.js"><link rel="prefetch" href="/assets/js/76.23159cae.js"><link rel="prefetch" href="/assets/js/77.1f7fd4ee.js"><link rel="prefetch" href="/assets/js/78.c8ac8d27.js"><link rel="prefetch" href="/assets/js/79.d3ff9832.js"><link rel="prefetch" href="/assets/js/8.9fd618cb.js"><link rel="prefetch" href="/assets/js/80.1ca16481.js"><link rel="prefetch" href="/assets/js/81.f5dbf277.js"><link rel="prefetch" href="/assets/js/82.c7f36d52.js"><link rel="prefetch" href="/assets/js/9.598a6141.js"><link rel="prefetch" href="/assets/js/vendors~docsearch.2502547b.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.aec792fa.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container no-sidebar" data-v-ca5f9994><div data-v-ca5f9994><div class="password-shadow password-wrapper-out" style="display:none;" data-v-b7190096 data-v-ca5f9994 data-v-ca5f9994><h3 class="title" data-v-b7190096>Jordan の Words</h3> <p class="description" data-v-b7190096>每一个不曾起舞的日子,都是对生命的辜负</p> <label id="box" class="inputBox" data-v-b7190096><input type="password" value="" data-v-b7190096> <span data-v-b7190096>Konck! Knock!</span> <button data-v-b7190096>OK</button></label> <div class="footer" data-v-b7190096><span data-v-b7190096><i class="iconfont reco-theme" data-v-b7190096></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-b7190096>vuePress-theme-reco</a></span> <span data-v-b7190096><i class="iconfont reco-copyright" data-v-b7190096></i> <a data-v-b7190096><span data-v-b7190096>Jordan</span>
+          
+        <span data-v-b7190096>2020 - </span>
+        2026
+      </a></span></div></div> <div class="hide" data-v-ca5f9994><header class="navbar" data-v-ca5f9994><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><img src="/head.jpeg" alt="Jordan の Words" class="logo"> <span class="site-name">Jordan の Words</span></a> <div class="links"><div class="color-picker"><a class="color-button"><i class="iconfont reco-color"></i></a> <div class="color-picker-menu" style="display:none;"><div class="mode-options"><h4 class="title">Choose mode</h4> <ul class="color-mode-options"><li class="dark">dark</li><li class="auto active">auto</li><li class="light">light</li></ul></div></div></div> <div class="search-box"><i class="iconfont reco-search"></i> <input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link"><i class="iconfont reco-home"></i>
+  Home
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-category"></i>
+      Category
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/健康养生/" class="nav-link"><i class="undefined"></i>
+  健康养生
+</a></li><li class="dropdown-item"><!----> <a href="/categories/人文/" class="nav-link"><i class="undefined"></i>
+  人文
+</a></li><li class="dropdown-item"><!----> <a href="/categories/心理认知/" class="nav-link"><i class="undefined"></i>
+  心理认知
+</a></li><li class="dropdown-item"><!----> <a href="/categories/技术笔记/" class="nav-link"><i class="undefined"></i>
+  技术笔记
+</a></li><li class="dropdown-item"><!----> <a href="/categories/项目作品/" class="nav-link"><i class="undefined"></i>
+  项目作品
+</a></li></ul></div></div><div class="nav-item"><a href="/tag/" class="nav-link"><i class="iconfont reco-tag"></i>
+  Tag
+</a></div><div class="nav-item"><a href="/technology/" class="nav-link router-link-active"><i class="iconfont reco-document"></i>
+  技术笔记
+</a></div><div class="nav-item"><a href="/note/" class="nav-link"><i class="iconfont reco-document"></i>
+  心理认知
+</a></div><div class="nav-item"><a href="/health/" class="nav-link"><i class="iconfont reco-home"></i>
+  健康养生
+</a></div><div class="nav-item"><a href="/projects/" class="nav-link"><i class="iconfont reco-github"></i>
+  项目作品
+</a></div><div class="nav-item"><a href="/timeline/" class="nav-link"><i class="iconfont reco-date"></i>
+  TimeLine
+</a></div><div class="nav-item"><a href="/about/" class="nav-link"><i class="iconfont reco-account"></i>
+  About
+</a></div><div class="nav-item"><a href="https://github.com/jordan-home" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont reco-github"></i>
+  GitHub
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask" data-v-ca5f9994></div> <aside class="sidebar" data-v-ca5f9994><div class="personal-info-wrapper" data-v-5a8a7e68 data-v-ca5f9994><img src="/head.jpeg" alt="author-avatar" class="personal-img" data-v-5a8a7e68> <h3 class="name" data-v-5a8a7e68>
+    Jordan
+  </h3> <div class="num" data-v-5a8a7e68><div data-v-5a8a7e68><h3 data-v-5a8a7e68>41</h3> <h6 data-v-5a8a7e68>文章</h6></div> <div data-v-5a8a7e68><h3 data-v-5a8a7e68>58</h3> <h6 data-v-5a8a7e68>标签</h6></div></div> <ul class="social-links" data-v-5a8a7e68></ul> <hr data-v-5a8a7e68></div> <nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link"><i class="iconfont reco-home"></i>
+  Home
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-category"></i>
+      Category
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/健康养生/" class="nav-link"><i class="undefined"></i>
+  健康养生
+</a></li><li class="dropdown-item"><!----> <a href="/categories/人文/" class="nav-link"><i class="undefined"></i>
+  人文
+</a></li><li class="dropdown-item"><!----> <a href="/categories/心理认知/" class="nav-link"><i class="undefined"></i>
+  心理认知
+</a></li><li class="dropdown-item"><!----> <a href="/categories/技术笔记/" class="nav-link"><i class="undefined"></i>
+  技术笔记
+</a></li><li class="dropdown-item"><!----> <a href="/categories/项目作品/" class="nav-link"><i class="undefined"></i>
+  项目作品
+</a></li></ul></div></div><div class="nav-item"><a href="/tag/" class="nav-link"><i class="iconfont reco-tag"></i>
+  Tag
+</a></div><div class="nav-item"><a href="/technology/" class="nav-link router-link-active"><i class="iconfont reco-document"></i>
+  技术笔记
+</a></div><div class="nav-item"><a href="/note/" class="nav-link"><i class="iconfont reco-document"></i>
+  心理认知
+</a></div><div class="nav-item"><a href="/health/" class="nav-link"><i class="iconfont reco-home"></i>
+  健康养生
+</a></div><div class="nav-item"><a href="/projects/" class="nav-link"><i class="iconfont reco-github"></i>
+  项目作品
+</a></div><div class="nav-item"><a href="/timeline/" class="nav-link"><i class="iconfont reco-date"></i>
+  TimeLine
+</a></div><div class="nav-item"><a href="/about/" class="nav-link"><i class="iconfont reco-account"></i>
+  About
+</a></div><div class="nav-item"><a href="https://github.com/jordan-home" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont reco-github"></i>
+  GitHub
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav> <!----> </aside> <div class="password-shadow password-wrapper-in" style="display:none;" data-v-b7190096 data-v-ca5f9994><h3 class="title" data-v-b7190096>Prompt Engineering 基础指南</h3> <!----> <label id="box" class="inputBox" data-v-b7190096><input type="password" value="" data-v-b7190096> <span data-v-b7190096>Konck! Knock!</span> <button data-v-b7190096>OK</button></label> <div class="footer" data-v-b7190096><span data-v-b7190096><i class="iconfont reco-theme" data-v-b7190096></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-b7190096>vuePress-theme-reco</a></span> <span data-v-b7190096><i class="iconfont reco-copyright" data-v-b7190096></i> <a data-v-b7190096><span data-v-b7190096>Jordan</span>
+          
+        <span data-v-b7190096>2020 - </span>
+        2026
+      </a></span></div></div> <div data-v-ca5f9994><div data-v-ca5f9994><main class="page"><section style="display:;"><div class="page-title"><h1 class="title">Prompt Engineering 基础指南</h1> <div data-v-411646db><i class="iconfont reco-account" data-v-411646db><span data-v-411646db>Jordan</span></i> <i class="iconfont reco-date" data-v-411646db><span data-v-411646db>2026/2/18</span></i> <!----> <i class="tags iconfont reco-tag" data-v-411646db><span class="tag-item" data-v-411646db>AI</span><span class="tag-item" data-v-411646db>Prompt</span></i></div></div> <div class="theme-reco-content content__default"><h2 id="前言"><a href="#前言" class="header-anchor">#</a> 前言</h2> <p>Prompt Engineering（提示工程）是与 AI 模型高效对话的艺术。本文介绍如何编写高质量的 Prompt。</p> <h2 id="核心原则"><a href="#核心原则" class="header-anchor">#</a> 核心原则</h2> <h3 id="_1-明确具体"><a href="#_1-明确具体" class="header-anchor">#</a> 1. 明确具体</h3> <div class="language-python line-numbers-mode"><pre class="language-python"><code><span class="token comment"># ❌ 模糊</span>
+<span class="token string">&quot;写关于编程的&quot;</span>
+
+<span class="token comment"># ✅ 具体</span>
+<span class="token string">&quot;写一篇500字的文章，介绍JavaScript闭包的应用场景&quot;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><h3 id="_2-提供上下文"><a href="#_2-提供上下文" class="header-anchor">#</a> 2. 提供上下文</h3> <div class="language-python line-numbers-mode"><pre class="language-python"><code><span class="token comment"># ❌ 无上下文</span>
+<span class="token string">&quot;如何修复bug?&quot;</span>
+
+<span class="token comment"># ✅ 有上下文</span>
+<span class="token string">&quot;作为Vue3开发者，遇到组件间数据不同步问题，provide/inject和mitt三种方案各有什么优缺点?&quot;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><h3 id="_3-指定格式"><a href="#_3-指定格式" class="header-anchor">#</a> 3. 指定格式</h3> <div class="language-python line-numbers-mode"><pre class="language-python"><code><span class="token comment"># ❌ 未指定格式</span>
+<span class="token string">&quot;列出学习资源&quot;</span>
+
+<span class="token comment"># ✅ 指定格式</span>
+<span class="token string">&quot;用Markdown表格列出前端学习资源，包含：课程名称、平台、免费/付费、推荐理由&quot;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><h2 id="常用技巧"><a href="#常用技巧" class="header-anchor">#</a> 常用技巧</h2> <h3 id="_1-few-shot-prompting"><a href="#_1-few-shot-prompting" class="header-anchor">#</a> 1. Few-Shot Prompting</h3> <div class="language-python line-numbers-mode"><pre class="language-python"><code><span class="token comment"># 示例学习</span>
+任务：将句子转换为JSON格式
+
+示例：
+输入：今天天气真好
+输出：<span class="token punctuation">{</span><span class="token string">&quot;情绪&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;positive&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;主题&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;天气&quot;</span><span class="token punctuation">}</span>
+
+请转换：
+输入：路上堵车迟到
+输出：
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div></div><h3 id="_2-chain-of-thought"><a href="#_2-chain-of-thought" class="header-anchor">#</a> 2. Chain of Thought</h3> <div class="language-python line-numbers-mode"><pre class="language-python"><code><span class="token comment"># 让模型展示推理过程</span>
+<span class="token string">&quot;请分步骤思考：如何从零开始学习机器学习？每一步说明目标和所需时间&quot;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><h3 id="_3-role-prompting"><a href="#_3-role-prompting" class="header-anchor">#</a> 3. Role Prompting</h3> <div class="language-python line-numbers-mode"><pre class="language-python"><code><span class="token string">&quot;你是一位有10年经验的前端架构师，精通React、Vue、性能优化。请评价这个代码的架构设计：\n\n[代码]&quot;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h3 id="_4-限制输出格式"><a href="#_4-限制输出格式" class="header-anchor">#</a> 4. 限制输出格式</h3> <div class="language-python line-numbers-mode"><pre class="language-python"><code>&quot;用JSON格式返回，禁止其他文字：
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;name&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;string&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;age&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;number&quot;</span><span class="token punctuation">,</span> 
+  <span class="token string">&quot;skills&quot;</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">&quot;string&quot;</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span>&quot;
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><h2 id="结构化-prompt"><a href="#结构化-prompt" class="header-anchor">#</a> 结构化 Prompt</h2> <div class="language- line-numbers-mode"><pre class="language-text"><code># 角色
+你是一位专业的技术博主
+
+# 任务
+写一篇关于React hooks最佳实践的文章
+
+# 要求
+1. 包含代码示例
+2. 面向中级开发者
+3. 包含常见错误和解决方案
+
+# 格式
+- 使用Markdown
+- 代码块要有注释
+- 结尾要有总结
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br></div></div><h2 id="实战案例"><a href="#实战案例" class="header-anchor">#</a> 实战案例</h2> <h3 id="_1-代码审查"><a href="#_1-代码审查" class="header-anchor">#</a> 1. 代码审查</h3> <div class="language- line-numbers-mode"><pre class="language-text"><code>作为资深前端工程师，审查以下代码：
+1. 性能问题
+2. 安全问题  
+3. 可维护性
+4. 最佳实践
+
+[代码]
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><h3 id="_2-学习规划"><a href="#_2-学习规划" class="header-anchor">#</a> 2. 学习规划</h3> <div class="language- line-numbers-mode"><pre class="language-text"><code>我是一名有1年经验的前端开发者，想在6个月后找到React相关工作。
+请制定学习计划，包含：
+- 每周目标
+- 每日学习时间安排
+- 实战项目建议
+- 面试准备建议
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><h3 id="_3-内容生成"><a href="#_3-内容生成" class="header-anchor">#</a> 3. 内容生成</h3> <div class="language- line-numbers-mode"><pre class="language-text"><code>生成5个关于&quot;前端性能优化&quot;的博客标题，要求：
+- 吸引点击
+- 包含具体数字
+- 面向初级开发者
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><h2 id="常见错误"><a href="#常见错误" class="header-anchor">#</a> 常见错误</h2> <ol><li><strong>过于笼统</strong>：模型无法准确理解需求</li> <li><strong>信息不足</strong>：缺少关键上下文</li> <li><strong>期望过高</strong>：单次 Prompt 完不成复杂任务</li> <li><strong>格式混乱</strong>：输出难以解析</li></ol> <h2 id="高级技巧"><a href="#高级技巧" class="header-anchor">#</a> 高级技巧</h2> <h3 id="_1-react-推理-行动"><a href="#_1-react-推理-行动" class="header-anchor">#</a> 1. ReAct（推理+行动）</h3> <p>让模型先思考再行动：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>问题：北京明天天气如何？
+
+思考：我需要先查询北京的天气API或搜索天气信息。
+行动：搜索&quot;北京天气 明天&quot;
+观察：搜索结果显示明天晴转多云，15-25度。
+回答：北京明天晴转多云，气温15-25度。
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><h3 id="_2-self-consistency-自一致性"><a href="#_2-self-consistency-自一致性" class="header-anchor">#</a> 2. self-consistency（自一致性）</h3> <p>让模型生成多个答案，取多数一致的结果：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>问题：100以内有多少个质数？
+
+请生成3个不同的答案，然后分析哪个最准确。
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><h3 id="_3-tree-of-thought-思维树"><a href="#_3-tree-of-thought-思维树" class="header-anchor">#</a> 3. Tree of Thought（思维树）</h3> <p>多路径思考：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>问题：如何优化首页加载速度？
+
+分支1 - 资源优化：
+- 压缩图片
+- 代码分割
+- CDN加速
+
+分支2 - 缓存策略：
+- 浏览器缓存
+- Service Worker
+- SSR
+
+请比较两个方向的优缺点。
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br></div></div><h3 id="_4-xml-json-结构化输出"><a href="#_4-xml-json-结构化输出" class="header-anchor">#</a> 4. XML/JSON 结构化输出</h3> <div class="language- line-numbers-mode"><pre class="language-text"><code>请用以下XML格式返回，不要有其他内容：
+&lt;article&gt;
+  &lt;title&gt;标题&lt;/title&gt;
+  &lt;content&gt;正文&lt;/content&gt;
+  &lt;tags&gt;
+    &lt;tag&gt;标签1&lt;/tag&gt;
+    &lt;tag&gt;标签2&lt;/tag&gt;
+  &lt;/tags&gt;
+&lt;/article&gt;
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br></div></div><h2 id="常见错误-2"><a href="#常见错误-2" class="header-anchor">#</a> 常见错误</h2> <ol><li><strong>过于笼统</strong>：模型无法准确理解需求</li> <li><strong>信息不足</strong>：缺少关键上下文</li> <li><strong>期望过高</strong>：单次 Prompt 完不成复杂任务</li> <li><strong>格式混乱</strong>：输出难以解析</li> <li><strong>忽略限制</strong>：未说明输出长度、语言等限制</li></ol> <h2 id="最佳实践-checklist"><a href="#最佳实践-checklist" class="header-anchor">#</a> 最佳实践 Checklist</h2> <div class="language- line-numbers-mode"><pre class="language-text"><code>□ 明确任务目标
+□ 提供必要上下文
+□ 指定输出格式
+□ 说明长度限制
+□ 包含示例（如需要）
+□ 设定角色（如适用）
+□ 检查是否可执行
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><h2 id="总结"><a href="#总结" class="header-anchor">#</a> 总结</h2> <ul><li>明确具体，提供上下文</li> <li>使用示例，指定格式</li> <li>复杂任务分步骤</li> <li>高级技巧：ReAct、self-consistency、ToT</li> <li>持续迭代优化 Prompt</li></ul></div></section> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">Last Updated: </span> <span class="time">2026/4/20 16:47:27</span></div></footer> <!----> <div class="comments-wrapper"><!----></div></main></div> <!----></div> <ul class="sub-sidebar sub-sidebar-wrapper" style="width:12rem;" data-v-63827e8a data-v-ca5f9994><li class="level-2" data-v-63827e8a><a href="/technology/prompt-engineering.html#前言" class="sidebar-link reco-side-前言" data-v-63827e8a>前言</a></li><li class="level-2" data-v-63827e8a><a href="/technology/prompt-engineering.html#核心原则" class="sidebar-link reco-side-核心原则" data-v-63827e8a>核心原则</a></li><li class="level-3" data-v-63827e8a><a href="/technology/prompt-engineering.html#_1-明确具体" class="sidebar-link reco-side-_1-明确具体" data-v-63827e8a>1. 明确具体</a></li><li class="level-3" data-v-63827e8a><a href="/technology/prompt-engineering.html#_2-提供上下文" class="sidebar-link reco-side-_2-提供上下文" data-v-63827e8a>2. 提供上下文</a></li><li class="level-3" data-v-63827e8a><a href="/technology/prompt-engineering.html#_3-指定格式" class="sidebar-link reco-side-_3-指定格式" data-v-63827e8a>3. 指定格式</a></li><li class="level-2" data-v-63827e8a><a href="/technology/prompt-engineering.html#常用技巧" class="sidebar-link reco-side-常用技巧" data-v-63827e8a>常用技巧</a></li><li class="level-3" data-v-63827e8a><a href="/technology/prompt-engineering.html#_1-few-shot-prompting" class="sidebar-link reco-side-_1-few-shot-prompting" data-v-63827e8a>1. Few-Shot Prompting</a></li><li class="level-3" data-v-63827e8a><a href="/technology/prompt-engineering.html#_2-chain-of-thought" class="sidebar-link reco-side-_2-chain-of-thought" data-v-63827e8a>2. Chain of Thought</a></li><li class="level-3" data-v-63827e8a><a href="/technology/prompt-engineering.html#_3-role-prompting" class="sidebar-link reco-side-_3-role-prompting" data-v-63827e8a>3. Role Prompting</a></li><li class="level-3" data-v-63827e8a><a href="/technology/prompt-engineering.html#_4-限制输出格式" class="sidebar-link reco-side-_4-限制输出格式" data-v-63827e8a>4. 限制输出格式</a></li><li class="level-2" data-v-63827e8a><a href="/technology/prompt-engineering.html#结构化-prompt" class="sidebar-link reco-side-结构化-prompt" data-v-63827e8a>结构化 Prompt</a></li><li class="level-2" data-v-63827e8a><a href="/technology/prompt-engineering.html#实战案例" class="sidebar-link reco-side-实战案例" data-v-63827e8a>实战案例</a></li><li class="level-3" data-v-63827e8a><a href="/technology/prompt-engineering.html#_1-代码审查" class="sidebar-link reco-side-_1-代码审查" data-v-63827e8a>1. 代码审查</a></li><li class="level-3" data-v-63827e8a><a href="/technology/prompt-engineering.html#_2-学习规划" class="sidebar-link reco-side-_2-学习规划" data-v-63827e8a>2. 学习规划</a></li><li class="level-3" data-v-63827e8a><a href="/technology/prompt-engineering.html#_3-内容生成" class="sidebar-link reco-side-_3-内容生成" data-v-63827e8a>3. 内容生成</a></li><li class="level-2" data-v-63827e8a><a href="/technology/prompt-engineering.html#常见错误" class="sidebar-link reco-side-常见错误" data-v-63827e8a>常见错误</a></li><li class="level-2" data-v-63827e8a><a href="/technology/prompt-engineering.html#高级技巧" class="sidebar-link reco-side-高级技巧" data-v-63827e8a>高级技巧</a></li><li class="level-3" data-v-63827e8a><a href="/technology/prompt-engineering.html#_1-react-推理-行动" class="sidebar-link reco-side-_1-react-推理-行动" data-v-63827e8a>1. ReAct（推理+行动）</a></li><li class="level-3" data-v-63827e8a><a href="/technology/prompt-engineering.html#_2-self-consistency-自一致性" class="sidebar-link reco-side-_2-self-consistency-自一致性" data-v-63827e8a>2. self-consistency（自一致性）</a></li><li class="level-3" data-v-63827e8a><a href="/technology/prompt-engineering.html#_3-tree-of-thought-思维树" class="sidebar-link reco-side-_3-tree-of-thought-思维树" data-v-63827e8a>3. Tree of Thought（思维树）</a></li><li class="level-3" data-v-63827e8a><a href="/technology/prompt-engineering.html#_4-xml-json-结构化输出" class="sidebar-link reco-side-_4-xml-json-结构化输出" data-v-63827e8a>4. XML/JSON 结构化输出</a></li><li class="level-2" data-v-63827e8a><a href="/technology/prompt-engineering.html#常见错误-2" class="sidebar-link reco-side-常见错误-2" data-v-63827e8a>常见错误</a></li><li class="level-2" data-v-63827e8a><a href="/technology/prompt-engineering.html#最佳实践-checklist" class="sidebar-link reco-side-最佳实践-checklist" data-v-63827e8a>最佳实践 Checklist</a></li><li class="level-2" data-v-63827e8a><a href="/technology/prompt-engineering.html#总结" class="sidebar-link reco-side-总结" data-v-63827e8a>总结</a></li></ul></div></div></div><div class="global-ui"><div class="back-to-ceiling" style="right:1rem;bottom:6rem;width:2.5rem;height:2.5rem;border-radius:.25rem;line-height:2.5rem;display:none;" data-v-2a01419c data-v-2a01419c><svg t="1574745035067" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5404" class="icon" data-v-2a01419c><path d="M526.60727968 10.90185116a27.675 27.675 0 0 0-29.21455937 0c-131.36607665 82.28402758-218.69155461 228.01873535-218.69155402 394.07834331a462.20625001 462.20625001 0 0 0 5.36959153 69.94390903c1.00431239 6.55289093-0.34802892 13.13561351-3.76865779 18.80351572-32.63518765 54.11355614-51.75690182 118.55860487-51.7569018 187.94566865a371.06718723 371.06718723 0 0 0 11.50484808 91.98906777c6.53300375 25.50556257 41.68394495 28.14064038 52.69160883 4.22606766 17.37162448-37.73630017 42.14135425-72.50938081 72.80769204-103.21549295 2.18761121 3.04276886 4.15646224 6.24463696 6.40373557 9.22774369a1871.4375 1871.4375 0 0 0 140.04691725 5.34970492 1866.36093723 1866.36093723 0 0 0 140.04691723-5.34970492c2.24727335-2.98310674 4.21612437-6.18497483 6.3937923-9.2178004 30.66633723 30.70611158 55.4360664 65.4791928 72.80769147 103.21549355 11.00766384 23.91457269 46.15860503 21.27949489 52.69160879-4.22606768a371.15156223 371.15156223 0 0 0 11.514792-91.99901164c0-69.36717486-19.13165746-133.82216804-51.75690182-187.92578088-3.42062944-5.66790279-4.76302748-12.26056868-3.76865837-18.80351632a462.20625001 462.20625001 0 0 0 5.36959269-69.943909c-0.00994388-166.08943902-87.32547796-311.81420293-218.6915546-394.09823051zM605.93803103 357.87693858a93.93749974 93.93749974 0 1 1-187.89594924 6.1e-7 93.93749974 93.93749974 0 0 1 187.89594924-6.1e-7z" p-id="5405" data-v-2a01419c></path><path d="M429.50777625 765.63860547C429.50777625 803.39355007 466.44236686 1000.39046097 512.00932183 1000.39046097c45.56695499 0 82.4922232-197.00623328 82.5015456-234.7518555 0-37.75494459-36.9345906-68.35043303-82.4922232-68.34111062-45.57627738-0.00932239-82.52019037 30.59548842-82.51086798 68.34111062z" p-id="5406" data-v-2a01419c></path></svg></div></div></div>
+    <script src="/assets/js/app.24e5ff95.js" defer></script><script src="/assets/js/4.c29a8574.js" defer></script><script src="/assets/js/3.434aaa1b.js" defer></script><script src="/assets/js/2.44b748c9.js" defer></script><script src="/assets/js/1.080e4e43.js" defer></script><script src="/assets/js/73.734aa636.js" defer></script>
+  </body>
+</html>
