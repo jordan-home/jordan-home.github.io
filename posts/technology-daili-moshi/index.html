@@ -1,0 +1,268 @@
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="代理模式详解：为其他对象提供代理以控制访问，应用场景包括缓存代理、虚拟代理、保护代理，提升系统性能与安全性。"><meta name="theme-color" content="#F5EFE0"><link rel="icon" type="image/png" href="/favicon.png"><link rel="manifest" href="/manifest.json"><meta property="og:title" content="设计模式之代理模式 · Jordan の Words"><meta property="og:description" content="代理模式详解：为其他对象提供代理以控制访问，应用场景包括缓存代理、虚拟代理、保护代理，提升系统性能与安全性。"><meta property="og:image" content="/illustrations/hero-shanhui.png"><meta property="og:type" content="website"><title>设计模式之代理模式 · Jordan の Words</title><!-- 字体：衬线中文 + 衬线英文 + 题花 --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Ma+Shan+Zheng&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"><script>
+      // 主题持久化
+      (function () {
+        const t = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script><link rel="stylesheet" href="/assets/about.D9jOoOgW.css">
+<style>.post[data-astro-cid-egg7nqdx]{padding:var(--sp-8) 0}.post__head[data-astro-cid-egg7nqdx]{text-align:center;margin-bottom:var(--sp-7)}.post__meta[data-astro-cid-egg7nqdx]{display:flex;gap:var(--sp-4);justify-content:center;font-size:var(--fs-xs);color:var(--ink-fade);margin:0 0 var(--sp-5)}.post__cat[data-astro-cid-egg7nqdx]{padding:2px 10px;background:var(--cinnabar);color:var(--paper);border-radius:var(--r-sm)}.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-3xl);line-height:var(--lh-tight);margin:0 0 var(--sp-5);letter-spacing:.02em}.post__desc[data-astro-cid-egg7nqdx]{font-size:var(--fs-md);color:var(--ink-soft);line-height:var(--lh-loose);margin:0}.post__rule[data-astro-cid-egg7nqdx]{width:80px;height:24px;margin:var(--sp-6) auto 0;background:url(/illustrations/divider-cloud.svg) no-repeat center / contain;border:none}.post__body[data-astro-cid-egg7nqdx] p{line-height:var(--lh-loose)}.post__body[data-astro-cid-egg7nqdx] h2{margin-top:var(--sp-7);padding-top:var(--sp-4);border-top:1px solid var(--line);font-size:var(--fs-xl)}.post__body[data-astro-cid-egg7nqdx] h2:before{content:"· ";color:var(--cinnabar)}.post__body[data-astro-cid-egg7nqdx] h3{margin-top:var(--sp-6);color:var(--ink);font-size:var(--fs-lg)}.post__body[data-astro-cid-egg7nqdx] img{margin:var(--sp-6) auto;border-radius:var(--r-md);box-shadow:var(--sh-1)}.post__body[data-astro-cid-egg7nqdx] ul,.post__body[data-astro-cid-egg7nqdx] ol{line-height:var(--lh-loose);padding-left:var(--sp-5)}.post__tags[data-astro-cid-egg7nqdx]{margin-top:var(--sp-7);padding-top:var(--sp-5);border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:var(--sp-3)}.tag[data-astro-cid-egg7nqdx]{font-size:var(--fs-xs);color:var(--ink-soft);padding:4px 10px;border:1px solid var(--line);border-radius:var(--r-sm)}.post-nav[data-astro-cid-egg7nqdx]{margin:var(--sp-8) auto var(--sp-7);display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-5)}.post-nav__link[data-astro-cid-egg7nqdx]{display:block;padding:var(--sp-5);background:var(--paper-warm);border-radius:var(--r-md);color:var(--ink);border:1px solid var(--line)}.post-nav__link[data-astro-cid-egg7nqdx]:hover{border-color:var(--cinnabar)}.post-nav__link--next[data-astro-cid-egg7nqdx]{text-align:right}.post-nav__kicker[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-xs);color:var(--ink-fade);margin-bottom:var(--sp-2)}.post-nav__title[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-sm);font-weight:500}@media(max-width:640px){.post-nav[data-astro-cid-egg7nqdx]{grid-template-columns:1fr}}
+</style></head> <body data-astro-cid-37fxchfa> <a class="skip-link" href="#main" data-astro-cid-37fxchfa>跳到正文</a> <header class="site-header" data-astro-cid-37fxchfa> <div class="container site-header__inner" data-astro-cid-37fxchfa> <a href="/" class="brand" aria-label="Jordan の Words" data-astro-cid-37fxchfa> <img src="/illustrations/seal-red.png" alt="" class="brand__seal" width="36" height="36" data-astro-cid-37fxchfa> <span class="brand__name" data-astro-cid-37fxchfa>Jordan <span class="brand__name-aux" data-astro-cid-37fxchfa>の</span> Words</span> </a> <nav class="nav" aria-label="主导航" data-astro-cid-37fxchfa> <ul data-astro-cid-37fxchfa> <li data-astro-cid-37fxchfa> <a href="/" class="nav__link" data-astro-cid-37fxchfa> 首页 </a> </li><li data-astro-cid-37fxchfa> <a href="/posts" class="nav__link is-active" data-astro-cid-37fxchfa> 文字 </a> </li><li data-astro-cid-37fxchfa> <a href="/projects" class="nav__link" data-astro-cid-37fxchfa> 作品 </a> </li><li data-astro-cid-37fxchfa> <a href="/about" class="nav__link" data-astro-cid-37fxchfa> 关于 </a> </li><li data-astro-cid-37fxchfa> <a href="/contact" class="nav__link" data-astro-cid-37fxchfa> 联系 </a> </li> </ul> </nav> <button class="theme-toggle" type="button" aria-label="切换主题" data-theme-toggle data-astro-cid-37fxchfa> <span class="theme-toggle__icon" data-theme-icon data-astro-cid-37fxchfa>☾</span> </button> </div> </header> <main id="main" data-astro-cid-37fxchfa>  <article class="post" data-astro-cid-egg7nqdx> <header class="post__head container container--narrow" data-astro-cid-egg7nqdx> <p class="post__meta" data-astro-cid-egg7nqdx> <span class="post__cat" data-astro-cid-egg7nqdx>技术</span> <time datetime="2026-03-12T00:00:00.000Z" data-astro-cid-egg7nqdx>2026年3月12日</time> </p> <h1 class="post__title" data-astro-cid-egg7nqdx>设计模式之代理模式</h1> <p class="post__desc deco" data-astro-cid-egg7nqdx>代理模式详解：为其他对象提供代理以控制访问，应用场景包括缓存代理、虚拟代理、保护代理，提升系统性能与安全性。</p> <hr class="post__rule" data-astro-cid-egg7nqdx> </header> <div class="post__body container container--narrow prose" data-astro-cid-egg7nqdx> <h2 id="前言">前言</h2>
+<p>代理模式（Proxy Pattern）为其他对象提供一种代理以控制对这个对象的访问。</p>
+<h2 id="概念">概念</h2>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Client → Proxy → RealSubject</span></span></code></pre>
+<p>代理对象在客户端和真实对象之间起到中介作用。</p>
+<h2 id="javascript-实现">JavaScript 实现</h2>
+<h3 id="1-基础代理">1. 基础代理</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">class</span><span style="color:#6F42C1"> RealSubject</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#6F42C1">  request</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#032F62"> 'RealSubject: 处理请求'</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">class</span><span style="color:#6F42C1"> Proxy</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#D73A49">  constructor</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.realSubject </span><span style="color:#D73A49">=</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> RealSubject</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  request</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#6A737D">    // 可以在调用前后添加额外逻辑</span></span>
+<span class="line"><span style="color:#24292E">    console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(</span><span style="color:#032F62">'Proxy: 调用前处理'</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#D73A49">    const</span><span style="color:#005CC5"> result</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.realSubject.</span><span style="color:#6F42C1">request</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">    console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(</span><span style="color:#032F62">'Proxy: 调用后处理'</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#24292E"> result;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 使用</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> proxy</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> Proxy</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">proxy.</span><span style="color:#6F42C1">request</span><span style="color:#24292E">();</span></span></code></pre>
+<h3 id="2-es6-proxy">2. ES6 Proxy</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> target</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#24292E">  name: </span><span style="color:#032F62">'Jordan'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  age: </span><span style="color:#005CC5">25</span></span>
+<span class="line"><span style="color:#24292E">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> handler</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#6F42C1">  get</span><span style="color:#24292E">(</span><span style="color:#E36209">target</span><span style="color:#24292E">, </span><span style="color:#E36209">property</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#24292E">    console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(</span><span style="color:#032F62">`访问 ${</span><span style="color:#24292E">property</span><span style="color:#032F62">}`</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#24292E"> target[property];</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  set</span><span style="color:#24292E">(</span><span style="color:#E36209">target</span><span style="color:#24292E">, </span><span style="color:#E36209">property</span><span style="color:#24292E">, </span><span style="color:#E36209">value</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#24292E">    console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(</span><span style="color:#032F62">`设置 ${</span><span style="color:#24292E">property</span><span style="color:#032F62">} = ${</span><span style="color:#24292E">value</span><span style="color:#032F62">}`</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#24292E">    target[property] </span><span style="color:#D73A49">=</span><span style="color:#24292E"> value;</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#005CC5"> true</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> proxy</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> Proxy</span><span style="color:#24292E">(target, handler);</span></span>
+<span class="line"><span style="color:#24292E">proxy.name;      </span><span style="color:#6A737D">// 触发 get</span></span>
+<span class="line"><span style="color:#24292E">proxy.age </span><span style="color:#D73A49">=</span><span style="color:#005CC5"> 30</span><span style="color:#24292E">;  </span><span style="color:#6A737D">// 触发 set</span></span></code></pre>
+<h2 id="实际应用">实际应用</h2>
+<h3 id="1-保护代理权限控制">1. 保护代理（权限控制）</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">class</span><span style="color:#6F42C1"> User</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#D73A49">  constructor</span><span style="color:#24292E">(</span><span style="color:#E36209">role</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.role </span><span style="color:#D73A49">=</span><span style="color:#24292E"> role;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  request</span><span style="color:#24292E">(</span><span style="color:#E36209">method</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#032F62"> `执行 ${</span><span style="color:#24292E">method</span><span style="color:#032F62">}`</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">class</span><span style="color:#6F42C1"> ProtectedResource</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#D73A49">  constructor</span><span style="color:#24292E">(</span><span style="color:#E36209">user</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.user </span><span style="color:#D73A49">=</span><span style="color:#24292E"> user;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  request</span><span style="color:#24292E">(</span><span style="color:#E36209">method</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">    if</span><span style="color:#24292E"> (</span><span style="color:#005CC5">this</span><span style="color:#24292E">.user.role </span><span style="color:#D73A49">!==</span><span style="color:#032F62"> 'admin'</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">      return</span><span style="color:#032F62"> '权限不足'</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> User</span><span style="color:#24292E">(</span><span style="color:#005CC5">this</span><span style="color:#24292E">.user.role).</span><span style="color:#6F42C1">request</span><span style="color:#24292E">(method);</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> admin</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> User</span><span style="color:#24292E">(</span><span style="color:#032F62">'admin'</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> guest</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> User</span><span style="color:#24292E">(</span><span style="color:#032F62">'guest'</span><span style="color:#24292E">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(</span><span style="color:#D73A49">new</span><span style="color:#6F42C1"> ProtectedResource</span><span style="color:#24292E">(admin).</span><span style="color:#6F42C1">request</span><span style="color:#24292E">(</span><span style="color:#032F62">'delete'</span><span style="color:#24292E">)); </span><span style="color:#6A737D">// 执行 delete</span></span>
+<span class="line"><span style="color:#24292E">console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(</span><span style="color:#D73A49">new</span><span style="color:#6F42C1"> ProtectedResource</span><span style="color:#24292E">(guest).</span><span style="color:#6F42C1">request</span><span style="color:#24292E">(</span><span style="color:#032F62">'delete'</span><span style="color:#24292E">)); </span><span style="color:#6A737D">// 权限不足</span></span></code></pre>
+<h3 id="2-虚拟代理懒加载">2. 虚拟代理（懒加载）</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">class</span><span style="color:#6F42C1"> HeavyImage</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#D73A49">  constructor</span><span style="color:#24292E">(</span><span style="color:#E36209">url</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.url </span><span style="color:#D73A49">=</span><span style="color:#24292E"> url;</span></span>
+<span class="line"><span style="color:#24292E">    console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(</span><span style="color:#032F62">`加载图片: ${</span><span style="color:#24292E">url</span><span style="color:#032F62">}`</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  display</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#24292E">    console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(</span><span style="color:#032F62">'显示图片'</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">class</span><span style="color:#6F42C1"> ImageProxy</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#D73A49">  constructor</span><span style="color:#24292E">(</span><span style="color:#E36209">url</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.url </span><span style="color:#D73A49">=</span><span style="color:#24292E"> url;</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.image </span><span style="color:#D73A49">=</span><span style="color:#005CC5"> null</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  display</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">    if</span><span style="color:#24292E"> (</span><span style="color:#D73A49">!</span><span style="color:#005CC5">this</span><span style="color:#24292E">.image) {</span></span>
+<span class="line"><span style="color:#005CC5">      this</span><span style="color:#24292E">.image </span><span style="color:#D73A49">=</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> HeavyImage</span><span style="color:#24292E">(</span><span style="color:#005CC5">this</span><span style="color:#24292E">.url);</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.image.</span><span style="color:#6F42C1">display</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 使用 - 真正显示时才加载</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> img</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> ImageProxy</span><span style="color:#24292E">(</span><span style="color:#032F62">'big-photo.jpg'</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#24292E">img.</span><span style="color:#6F42C1">display</span><span style="color:#24292E">(); </span><span style="color:#6A737D">// 第一次调用才加载</span></span>
+<span class="line"><span style="color:#24292E">img.</span><span style="color:#6F42C1">display</span><span style="color:#24292E">(); </span><span style="color:#6A737D">// 第二次直接使用缓存</span></span></code></pre>
+<h3 id="3-缓存代理">3. 缓存代理</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">class</span><span style="color:#6F42C1"> Calculate</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#6F42C1">  factorial</span><span style="color:#24292E">(</span><span style="color:#E36209">n</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#24292E">    console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(</span><span style="color:#032F62">`计算 ${</span><span style="color:#24292E">n</span><span style="color:#032F62">} 的阶乘`</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#D73A49">    if</span><span style="color:#24292E"> (n </span><span style="color:#D73A49">&#x3C;=</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">) </span><span style="color:#D73A49">return</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#24292E"> n </span><span style="color:#D73A49">*</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.</span><span style="color:#6F42C1">factorial</span><span style="color:#24292E">(n </span><span style="color:#D73A49">-</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">class</span><span style="color:#6F42C1"> CacheProxy</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#D73A49">  constructor</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.calculate </span><span style="color:#D73A49">=</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> Calculate</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.cache </span><span style="color:#D73A49">=</span><span style="color:#24292E"> {};</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  factorial</span><span style="color:#24292E">(</span><span style="color:#E36209">n</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">    if</span><span style="color:#24292E"> (</span><span style="color:#005CC5">this</span><span style="color:#24292E">.cache[n] </span><span style="color:#D73A49">!==</span><span style="color:#005CC5"> undefined</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#24292E">      console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(</span><span style="color:#032F62">`使用缓存: ${</span><span style="color:#24292E">n</span><span style="color:#032F62">}! = ${</span><span style="color:#005CC5">this</span><span style="color:#032F62">.</span><span style="color:#24292E">cache</span><span style="color:#032F62">[</span><span style="color:#24292E">n</span><span style="color:#032F62">]</span><span style="color:#032F62">}`</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#D73A49">      return</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.cache[n];</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">    </span></span>
+<span class="line"><span style="color:#D73A49">    const</span><span style="color:#005CC5"> result</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.calculate.</span><span style="color:#6F42C1">factorial</span><span style="color:#24292E">(n);</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.cache[n] </span><span style="color:#D73A49">=</span><span style="color:#24292E"> result;</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#24292E"> result;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 使用</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> proxy</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> CacheProxy</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">proxy.</span><span style="color:#6F42C1">factorial</span><span style="color:#24292E">(</span><span style="color:#005CC5">5</span><span style="color:#24292E">);  </span><span style="color:#6A737D">// 真实计算</span></span>
+<span class="line"><span style="color:#24292E">proxy.</span><span style="color:#6F42C1">factorial</span><span style="color:#24292E">(</span><span style="color:#005CC5">5</span><span style="color:#24292E">);  </span><span style="color:#6A737D">// 使用缓存</span></span></code></pre>
+<h3 id="4-日志代理">4. 日志代理</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">class</span><span style="color:#6F42C1"> LogProxy</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#D73A49">  constructor</span><span style="color:#24292E">(</span><span style="color:#E36209">target</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.target </span><span style="color:#D73A49">=</span><span style="color:#24292E"> target;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  get</span><span style="color:#24292E">(</span><span style="color:#E36209">property</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#24292E">    console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(</span><span style="color:#032F62">`读取 ${</span><span style="color:#24292E">property</span><span style="color:#032F62">}: ${</span><span style="color:#005CC5">this</span><span style="color:#032F62">.</span><span style="color:#24292E">target</span><span style="color:#032F62">[</span><span style="color:#24292E">property</span><span style="color:#032F62">]</span><span style="color:#032F62">}`</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.target[property];</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  set</span><span style="color:#24292E">(</span><span style="color:#E36209">property</span><span style="color:#24292E">, </span><span style="color:#E36209">value</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#24292E">    console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(</span><span style="color:#032F62">`设置 ${</span><span style="color:#24292E">property</span><span style="color:#032F62">}: ${</span><span style="color:#24292E">value</span><span style="color:#032F62">} → ${</span><span style="color:#005CC5">this</span><span style="color:#032F62">.</span><span style="color:#24292E">target</span><span style="color:#032F62">[</span><span style="color:#24292E">property</span><span style="color:#032F62">]</span><span style="color:#032F62">}`</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.target[property] </span><span style="color:#D73A49">=</span><span style="color:#24292E"> value;</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#005CC5"> true</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  callMethod</span><span style="color:#24292E">(</span><span style="color:#E36209">method</span><span style="color:#24292E">, </span><span style="color:#D73A49">...</span><span style="color:#E36209">args</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#24292E">    console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(</span><span style="color:#032F62">`调用方法 ${</span><span style="color:#24292E">method</span><span style="color:#032F62">}(${</span><span style="color:#24292E">args</span><span style="color:#032F62">})`</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#D73A49">    const</span><span style="color:#005CC5"> result</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.target[method](</span><span style="color:#D73A49">...</span><span style="color:#24292E">args);</span></span>
+<span class="line"><span style="color:#24292E">    console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(</span><span style="color:#032F62">`方法返回: ${</span><span style="color:#24292E">result</span><span style="color:#032F62">}`</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#24292E"> result;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h3 id="5-数据验证">5. 数据验证</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">class</span><span style="color:#6F42C1"> Validator</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#6F42C1">  validate</span><span style="color:#24292E">(</span><span style="color:#E36209">target</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">    const</span><span style="color:#005CC5"> errors</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> [];</span></span>
+<span class="line"><span style="color:#24292E">    </span></span>
+<span class="line"><span style="color:#D73A49">    for</span><span style="color:#24292E"> (</span><span style="color:#D73A49">const</span><span style="color:#24292E"> [</span><span style="color:#005CC5">prop</span><span style="color:#24292E">, </span><span style="color:#005CC5">rules</span><span style="color:#24292E">] </span><span style="color:#D73A49">of</span><span style="color:#24292E"> Object.</span><span style="color:#6F42C1">entries</span><span style="color:#24292E">(rules)) {</span></span>
+<span class="line"><span style="color:#D73A49">      const</span><span style="color:#005CC5"> value</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> target[prop];</span></span>
+<span class="line"><span style="color:#24292E">      </span></span>
+<span class="line"><span style="color:#D73A49">      if</span><span style="color:#24292E"> (rules.required </span><span style="color:#D73A49">&#x26;&#x26;</span><span style="color:#D73A49"> !</span><span style="color:#24292E">value) {</span></span>
+<span class="line"><span style="color:#24292E">        errors.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">(</span><span style="color:#032F62">`${</span><span style="color:#24292E">prop</span><span style="color:#032F62">} is required`</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#24292E">      }</span></span>
+<span class="line"><span style="color:#24292E">      </span></span>
+<span class="line"><span style="color:#D73A49">      if</span><span style="color:#24292E"> (rules.type </span><span style="color:#D73A49">&#x26;&#x26;</span><span style="color:#D73A49"> typeof</span><span style="color:#24292E"> value </span><span style="color:#D73A49">!==</span><span style="color:#24292E"> rules.type) {</span></span>
+<span class="line"><span style="color:#24292E">        errors.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">(</span><span style="color:#032F62">`${</span><span style="color:#24292E">prop</span><span style="color:#032F62">} must be ${</span><span style="color:#24292E">rules</span><span style="color:#032F62">.</span><span style="color:#24292E">type</span><span style="color:#032F62">}`</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#24292E">      }</span></span>
+<span class="line"><span style="color:#24292E">      </span></span>
+<span class="line"><span style="color:#D73A49">      if</span><span style="color:#24292E"> (rules.min </span><span style="color:#D73A49">&#x26;&#x26;</span><span style="color:#24292E"> value </span><span style="color:#D73A49">&#x3C;</span><span style="color:#24292E"> rules.min) {</span></span>
+<span class="line"><span style="color:#24292E">        errors.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">(</span><span style="color:#032F62">`${</span><span style="color:#24292E">prop</span><span style="color:#032F62">} must be at least ${</span><span style="color:#24292E">rules</span><span style="color:#032F62">.</span><span style="color:#24292E">min</span><span style="color:#032F62">}`</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#24292E">      }</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">    </span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#24292E"> errors;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> user</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> { name: </span><span style="color:#032F62">'Jordan'</span><span style="color:#24292E">, age: </span><span style="color:#005CC5">17</span><span style="color:#24292E"> };</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> rules</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#24292E">  name: { required: </span><span style="color:#005CC5">true</span><span style="color:#24292E">, type: </span><span style="color:#032F62">'string'</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">  age: { required: </span><span style="color:#005CC5">true</span><span style="color:#24292E">, type: </span><span style="color:#032F62">'number'</span><span style="color:#24292E">, min: </span><span style="color:#005CC5">18</span><span style="color:#24292E"> }</span></span>
+<span class="line"><span style="color:#24292E">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(</span><span style="color:#D73A49">new</span><span style="color:#6F42C1"> Validator</span><span style="color:#24292E">().</span><span style="color:#6F42C1">validate</span><span style="color:#24292E">(user)); </span><span style="color:#6A737D">// ['age must be at least 18']</span></span></code></pre>
+<h2 id="vue3-中的代理">Vue3 中的代理</h2>
+<h3 id="1-reactive">1. Reactive</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { reactive } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> 'vue'</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> state</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> reactive</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#24292E">  count: </span><span style="color:#005CC5">0</span></span>
+<span class="line"><span style="color:#24292E">});</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 内部使用 Proxy 实现响应式</span></span></code></pre>
+<h3 id="2-自定义-ref">2. 自定义 Ref</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { ref, customRef } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> 'vue'</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> useStorage</span><span style="color:#24292E">(</span><span style="color:#E36209">key</span><span style="color:#24292E">, </span><span style="color:#E36209">initialValue</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#6F42C1"> customRef</span><span style="color:#24292E">((</span><span style="color:#E36209">track</span><span style="color:#24292E">, </span><span style="color:#E36209">trigger</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> ({</span></span>
+<span class="line"><span style="color:#6F42C1">    get</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#6F42C1">      track</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#D73A49">      return</span><span style="color:#24292E"> localStorage.</span><span style="color:#6F42C1">getItem</span><span style="color:#24292E">(key) </span><span style="color:#D73A49">||</span><span style="color:#24292E"> initialValue;</span></span>
+<span class="line"><span style="color:#24292E">    },</span></span>
+<span class="line"><span style="color:#6F42C1">    set</span><span style="color:#24292E">(</span><span style="color:#E36209">value</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#24292E">      localStorage.</span><span style="color:#6F42C1">setItem</span><span style="color:#24292E">(key, value);</span></span>
+<span class="line"><span style="color:#6F42C1">      trigger</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">  }));</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> name</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> useStorage</span><span style="color:#24292E">(</span><span style="color:#032F62">'name'</span><span style="color:#24292E">, </span><span style="color:#032F62">'Jordan'</span><span style="color:#24292E">);</span></span></code></pre>
+<h2 id="总结">总结</h2>
+<ul>
+<li><strong>保护代理</strong>：权限控制</li>
+<li><strong>虚拟代理</strong>：懒加载</li>
+<li><strong>缓存代理</strong>：结果缓存</li>
+<li><strong>日志代理</strong>：操作日志</li>
+<li><strong>ES6 Proxy</strong>：更简洁的实现方式</li>
+</ul>
+<p>适用场景：</p>
+<ul>
+<li>访问控制</li>
+<li>懒加载</li>
+<li>缓存</li>
+<li>日志记录</li>
+<li>数据验证</li>
+</ul> </div> <footer class="post__tags container container--narrow" data-astro-cid-egg7nqdx> <span class="tag" data-astro-cid-egg7nqdx>#设计模式</span> </footer> </article> <nav class="post-nav container container--narrow" data-astro-cid-egg7nqdx> <a href="/posts/technology-ai-fuzhu-biancheng" class="post-nav__link post-nav__link--prev" data-astro-cid-egg7nqdx> <span class="post-nav__kicker" data-astro-cid-egg7nqdx>← 上一篇</span> <span class="post-nav__title" data-astro-cid-egg7nqdx>AI 辅助编程实践指南</span> </a> <a href="/posts/technology-performance-optimization" class="post-nav__link post-nav__link--next" data-astro-cid-egg7nqdx> <span class="post-nav__kicker" data-astro-cid-egg7nqdx>下一篇 →</span> <span class="post-nav__title" data-astro-cid-egg7nqdx>前端性能优化实战指南</span> </a> </nav>  </main> <footer class="site-footer" data-astro-cid-37fxchfa> <div class="container site-footer__inner" data-astro-cid-37fxchfa> <p class="site-footer__sig deco" data-astro-cid-37fxchfa>每一个不曾起舞的日子，都是对生命的辜负</p> <p class="site-footer__meta fade" data-astro-cid-37fxchfa>
+© 2020 – 2026 Jordan · Built with Astro
+</p> </div> </footer> <!-- 浮动联系按钮 --> <a href="/contact" class="contact-fab" aria-label="联系 Jordan" data-astro-cid-37fxchfa> <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-37fxchfa> <path d="M4 6h16v12H4z" data-astro-cid-37fxchfa></path> <path d="M4 6l8 7 8-7" data-astro-cid-37fxchfa></path> </svg> </a> <script>
+      // 主题切换
+      const btn = document.querySelector('[data-theme-toggle]');
+      const icon = document.querySelector('[data-theme-icon]');
+      function updateIcon() {
+        const t = document.documentElement.getAttribute('data-theme');
+        if (icon) icon.textContent = t === 'dark' ? '☀' : '☾';
+      }
+      updateIcon();
+      btn?.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme') || 'light';
+        const next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateIcon();
+      });
+    </script>  </body> </html> 

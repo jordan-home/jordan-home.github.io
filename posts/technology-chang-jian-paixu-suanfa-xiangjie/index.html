@@ -1,0 +1,282 @@
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="十大经典排序算法全解析：冒泡排序、快速排序、归并排序、堆排序、插入排序等，包含时间复杂度分析、动画图解与 JavaScript 实现。"><meta name="theme-color" content="#F5EFE0"><link rel="icon" type="image/png" href="/favicon.png"><link rel="manifest" href="/manifest.json"><meta property="og:title" content="常见排序算法详解 · Jordan の Words"><meta property="og:description" content="十大经典排序算法全解析：冒泡排序、快速排序、归并排序、堆排序、插入排序等，包含时间复杂度分析、动画图解与 JavaScript 实现。"><meta property="og:image" content="/illustrations/hero-shanhui.png"><meta property="og:type" content="website"><title>常见排序算法详解 · Jordan の Words</title><!-- 字体：衬线中文 + 衬线英文 + 题花 --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Ma+Shan+Zheng&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"><script>
+      // 主题持久化
+      (function () {
+        const t = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script><link rel="stylesheet" href="/assets/about.D9jOoOgW.css">
+<style>.post[data-astro-cid-egg7nqdx]{padding:var(--sp-8) 0}.post__head[data-astro-cid-egg7nqdx]{text-align:center;margin-bottom:var(--sp-7)}.post__meta[data-astro-cid-egg7nqdx]{display:flex;gap:var(--sp-4);justify-content:center;font-size:var(--fs-xs);color:var(--ink-fade);margin:0 0 var(--sp-5)}.post__cat[data-astro-cid-egg7nqdx]{padding:2px 10px;background:var(--cinnabar);color:var(--paper);border-radius:var(--r-sm)}.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-3xl);line-height:var(--lh-tight);margin:0 0 var(--sp-5);letter-spacing:.02em}.post__desc[data-astro-cid-egg7nqdx]{font-size:var(--fs-md);color:var(--ink-soft);line-height:var(--lh-loose);margin:0}.post__rule[data-astro-cid-egg7nqdx]{width:80px;height:24px;margin:var(--sp-6) auto 0;background:url(/illustrations/divider-cloud.svg) no-repeat center / contain;border:none}.post__body[data-astro-cid-egg7nqdx] p{line-height:var(--lh-loose)}.post__body[data-astro-cid-egg7nqdx] h2{margin-top:var(--sp-7);padding-top:var(--sp-4);border-top:1px solid var(--line);font-size:var(--fs-xl)}.post__body[data-astro-cid-egg7nqdx] h2:before{content:"· ";color:var(--cinnabar)}.post__body[data-astro-cid-egg7nqdx] h3{margin-top:var(--sp-6);color:var(--ink);font-size:var(--fs-lg)}.post__body[data-astro-cid-egg7nqdx] img{margin:var(--sp-6) auto;border-radius:var(--r-md);box-shadow:var(--sh-1)}.post__body[data-astro-cid-egg7nqdx] ul,.post__body[data-astro-cid-egg7nqdx] ol{line-height:var(--lh-loose);padding-left:var(--sp-5)}.post__tags[data-astro-cid-egg7nqdx]{margin-top:var(--sp-7);padding-top:var(--sp-5);border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:var(--sp-3)}.tag[data-astro-cid-egg7nqdx]{font-size:var(--fs-xs);color:var(--ink-soft);padding:4px 10px;border:1px solid var(--line);border-radius:var(--r-sm)}.post-nav[data-astro-cid-egg7nqdx]{margin:var(--sp-8) auto var(--sp-7);display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-5)}.post-nav__link[data-astro-cid-egg7nqdx]{display:block;padding:var(--sp-5);background:var(--paper-warm);border-radius:var(--r-md);color:var(--ink);border:1px solid var(--line)}.post-nav__link[data-astro-cid-egg7nqdx]:hover{border-color:var(--cinnabar)}.post-nav__link--next[data-astro-cid-egg7nqdx]{text-align:right}.post-nav__kicker[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-xs);color:var(--ink-fade);margin-bottom:var(--sp-2)}.post-nav__title[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-sm);font-weight:500}@media(max-width:640px){.post-nav[data-astro-cid-egg7nqdx]{grid-template-columns:1fr}}
+</style></head> <body data-astro-cid-37fxchfa> <a class="skip-link" href="#main" data-astro-cid-37fxchfa>跳到正文</a> <header class="site-header" data-astro-cid-37fxchfa> <div class="container site-header__inner" data-astro-cid-37fxchfa> <a href="/" class="brand" aria-label="Jordan の Words" data-astro-cid-37fxchfa> <img src="/illustrations/seal-red.png" alt="" class="brand__seal" width="36" height="36" data-astro-cid-37fxchfa> <span class="brand__name" data-astro-cid-37fxchfa>Jordan <span class="brand__name-aux" data-astro-cid-37fxchfa>の</span> Words</span> </a> <nav class="nav" aria-label="主导航" data-astro-cid-37fxchfa> <ul data-astro-cid-37fxchfa> <li data-astro-cid-37fxchfa> <a href="/" class="nav__link" data-astro-cid-37fxchfa> 首页 </a> </li><li data-astro-cid-37fxchfa> <a href="/posts" class="nav__link is-active" data-astro-cid-37fxchfa> 文字 </a> </li><li data-astro-cid-37fxchfa> <a href="/projects" class="nav__link" data-astro-cid-37fxchfa> 作品 </a> </li><li data-astro-cid-37fxchfa> <a href="/about" class="nav__link" data-astro-cid-37fxchfa> 关于 </a> </li><li data-astro-cid-37fxchfa> <a href="/contact" class="nav__link" data-astro-cid-37fxchfa> 联系 </a> </li> </ul> </nav> <button class="theme-toggle" type="button" aria-label="切换主题" data-theme-toggle data-astro-cid-37fxchfa> <span class="theme-toggle__icon" data-theme-icon data-astro-cid-37fxchfa>☾</span> </button> </div> </header> <main id="main" data-astro-cid-37fxchfa>  <article class="post" data-astro-cid-egg7nqdx> <header class="post__head container container--narrow" data-astro-cid-egg7nqdx> <p class="post__meta" data-astro-cid-egg7nqdx> <span class="post__cat" data-astro-cid-egg7nqdx>技术</span> <time datetime="2026-01-12T00:00:00.000Z" data-astro-cid-egg7nqdx>2026年1月12日</time> </p> <h1 class="post__title" data-astro-cid-egg7nqdx>常见排序算法详解</h1> <p class="post__desc deco" data-astro-cid-egg7nqdx>十大经典排序算法全解析：冒泡排序、快速排序、归并排序、堆排序、插入排序等，包含时间复杂度分析、动画图解与 JavaScript 实现。</p> <hr class="post__rule" data-astro-cid-egg7nqdx> </header> <div class="post__body container container--narrow prose" data-astro-cid-egg7nqdx> <h2 id="前言">前言</h2>
+<p>排序算法是计算机科学中最基础的算法之一。本文详细介绍常见的排序算法，包括冒泡排序、选择排序、插入排序、快速排序、归并排序等。</p>
+<h2 id="冒泡排序bubble-sort">冒泡排序（Bubble Sort）</h2>
+<h3 id="原理">原理</h3>
+<p>重复遍历数组，比较相邻元素并交换位置，最大元素逐渐”冒泡”到末尾。</p>
+<h3 id="实现">实现</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> bubbleSort</span><span style="color:#24292E">(</span><span style="color:#E36209">arr</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> n</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> arr.</span><span style="color:#005CC5">length</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">  for</span><span style="color:#24292E"> (</span><span style="color:#D73A49">let</span><span style="color:#24292E"> i </span><span style="color:#D73A49">=</span><span style="color:#005CC5"> 0</span><span style="color:#24292E">; i </span><span style="color:#D73A49">&#x3C;</span><span style="color:#24292E"> n </span><span style="color:#D73A49">-</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">; i</span><span style="color:#D73A49">++</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">    for</span><span style="color:#24292E"> (</span><span style="color:#D73A49">let</span><span style="color:#24292E"> j </span><span style="color:#D73A49">=</span><span style="color:#005CC5"> 0</span><span style="color:#24292E">; j </span><span style="color:#D73A49">&#x3C;</span><span style="color:#24292E"> n </span><span style="color:#D73A49">-</span><span style="color:#24292E"> i </span><span style="color:#D73A49">-</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">; j</span><span style="color:#D73A49">++</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">      if</span><span style="color:#24292E"> (arr[j] </span><span style="color:#D73A49">></span><span style="color:#24292E"> arr[j </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">]) {</span></span>
+<span class="line"><span style="color:#24292E">        [arr[j], arr[j </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">]] </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [arr[j </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">], arr[j]];</span></span>
+<span class="line"><span style="color:#24292E">      }</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> arr;</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h3 id="优化版本">优化版本</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> bubbleSortOptimized</span><span style="color:#24292E">(</span><span style="color:#E36209">arr</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> n</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> arr.</span><span style="color:#005CC5">length</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">  for</span><span style="color:#24292E"> (</span><span style="color:#D73A49">let</span><span style="color:#24292E"> i </span><span style="color:#D73A49">=</span><span style="color:#005CC5"> 0</span><span style="color:#24292E">; i </span><span style="color:#D73A49">&#x3C;</span><span style="color:#24292E"> n; i</span><span style="color:#D73A49">++</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">    let</span><span style="color:#24292E"> swapped </span><span style="color:#D73A49">=</span><span style="color:#005CC5"> false</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">    for</span><span style="color:#24292E"> (</span><span style="color:#D73A49">let</span><span style="color:#24292E"> j </span><span style="color:#D73A49">=</span><span style="color:#005CC5"> 0</span><span style="color:#24292E">; j </span><span style="color:#D73A49">&#x3C;</span><span style="color:#24292E"> n </span><span style="color:#D73A49">-</span><span style="color:#24292E"> i </span><span style="color:#D73A49">-</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">; j</span><span style="color:#D73A49">++</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">      if</span><span style="color:#24292E"> (arr[j] </span><span style="color:#D73A49">></span><span style="color:#24292E"> arr[j </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">]) {</span></span>
+<span class="line"><span style="color:#24292E">        [arr[j], arr[j </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">]] </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [arr[j </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">], arr[j]];</span></span>
+<span class="line"><span style="color:#24292E">        swapped </span><span style="color:#D73A49">=</span><span style="color:#005CC5"> true</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">      }</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#6A737D">    // 如果没有交换，说明已排序完成</span></span>
+<span class="line"><span style="color:#D73A49">    if</span><span style="color:#24292E"> (</span><span style="color:#D73A49">!</span><span style="color:#24292E">swapped) </span><span style="color:#D73A49">break</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> arr;</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h3 id="复杂度">复杂度</h3>
+<ul>
+<li>时间复杂度：O(n²)（最坏/平均），O(n)（最好）</li>
+<li>空间复杂度：O(1)</li>
+</ul>
+<h2 id="选择排序selection-sort">选择排序（Selection Sort）</h2>
+<h3 id="原理-1">原理</h3>
+<p>在未排序部分找到最小元素，放到已排序部分末尾。</p>
+<h3 id="实现-1">实现</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> selectionSort</span><span style="color:#24292E">(</span><span style="color:#E36209">arr</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> n</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> arr.</span><span style="color:#005CC5">length</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">  for</span><span style="color:#24292E"> (</span><span style="color:#D73A49">let</span><span style="color:#24292E"> i </span><span style="color:#D73A49">=</span><span style="color:#005CC5"> 0</span><span style="color:#24292E">; i </span><span style="color:#D73A49">&#x3C;</span><span style="color:#24292E"> n </span><span style="color:#D73A49">-</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">; i</span><span style="color:#D73A49">++</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">    let</span><span style="color:#24292E"> minIdx </span><span style="color:#D73A49">=</span><span style="color:#24292E"> i;</span></span>
+<span class="line"><span style="color:#D73A49">    for</span><span style="color:#24292E"> (</span><span style="color:#D73A49">let</span><span style="color:#24292E"> j </span><span style="color:#D73A49">=</span><span style="color:#24292E"> i </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">; j </span><span style="color:#D73A49">&#x3C;</span><span style="color:#24292E"> n; j</span><span style="color:#D73A49">++</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">      if</span><span style="color:#24292E"> (arr[j] </span><span style="color:#D73A49">&#x3C;</span><span style="color:#24292E"> arr[minIdx]) {</span></span>
+<span class="line"><span style="color:#24292E">        minIdx </span><span style="color:#D73A49">=</span><span style="color:#24292E"> j;</span></span>
+<span class="line"><span style="color:#24292E">      }</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">    [arr[i], arr[minIdx]] </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [arr[minIdx], arr[i]];</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> arr;</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h3 id="复杂度-1">复杂度</h3>
+<ul>
+<li>时间复杂度：O(n²)</li>
+<li>空间复杂度：O(1)</li>
+</ul>
+<h2 id="插入排序insertion-sort">插入排序（Insertion Sort）</h2>
+<h3 id="原理-2">原理</h3>
+<p>将数组分为已排序和未排序两部分，逐个处理未排序元素插入到正确位置。</p>
+<h3 id="实现-2">实现</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> insertionSort</span><span style="color:#24292E">(</span><span style="color:#E36209">arr</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">  for</span><span style="color:#24292E"> (</span><span style="color:#D73A49">let</span><span style="color:#24292E"> i </span><span style="color:#D73A49">=</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">; i </span><span style="color:#D73A49">&#x3C;</span><span style="color:#24292E"> arr.</span><span style="color:#005CC5">length</span><span style="color:#24292E">; i</span><span style="color:#D73A49">++</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">    const</span><span style="color:#005CC5"> key</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> arr[i];</span></span>
+<span class="line"><span style="color:#D73A49">    let</span><span style="color:#24292E"> j </span><span style="color:#D73A49">=</span><span style="color:#24292E"> i </span><span style="color:#D73A49">-</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">    while</span><span style="color:#24292E"> (j </span><span style="color:#D73A49">>=</span><span style="color:#005CC5"> 0</span><span style="color:#D73A49"> &#x26;&#x26;</span><span style="color:#24292E"> arr[j] </span><span style="color:#D73A49">></span><span style="color:#24292E"> key) {</span></span>
+<span class="line"><span style="color:#24292E">      arr[j </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">] </span><span style="color:#D73A49">=</span><span style="color:#24292E"> arr[j];</span></span>
+<span class="line"><span style="color:#24292E">      j</span><span style="color:#D73A49">--</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">    arr[j </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">] </span><span style="color:#D73A49">=</span><span style="color:#24292E"> key;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> arr;</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h3 id="复杂度-2">复杂度</h3>
+<ul>
+<li>时间复杂度：O(n²)（最坏/平均），O(n)（最好）</li>
+<li>空间复杂度：O(1)</li>
+<li>特点：对于小规模数据或基本有序的数据效率高</li>
+</ul>
+<h2 id="快速排序quick-sort">快速排序（Quick Sort）</h2>
+<h3 id="原理-3">原理</h3>
+<p>选择一个基准元素，将数组分为小于基准和大于基准的两部分，递归排序。</p>
+<h3 id="实现-3">实现</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> quickSort</span><span style="color:#24292E">(</span><span style="color:#E36209">arr</span><span style="color:#24292E">, </span><span style="color:#E36209">low</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> 0</span><span style="color:#24292E">, </span><span style="color:#E36209">high</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> arr.</span><span style="color:#005CC5">length</span><span style="color:#D73A49"> -</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">  if</span><span style="color:#24292E"> (low </span><span style="color:#D73A49">&#x3C;</span><span style="color:#24292E"> high) {</span></span>
+<span class="line"><span style="color:#D73A49">    const</span><span style="color:#005CC5"> pi</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> partition</span><span style="color:#24292E">(arr, low, high);</span></span>
+<span class="line"><span style="color:#6F42C1">    quickSort</span><span style="color:#24292E">(arr, low, pi </span><span style="color:#D73A49">-</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#6F42C1">    quickSort</span><span style="color:#24292E">(arr, pi </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">, high);</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> arr;</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> partition</span><span style="color:#24292E">(</span><span style="color:#E36209">arr</span><span style="color:#24292E">, </span><span style="color:#E36209">low</span><span style="color:#24292E">, </span><span style="color:#E36209">high</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> pivot</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> arr[high];</span></span>
+<span class="line"><span style="color:#D73A49">  let</span><span style="color:#24292E"> i </span><span style="color:#D73A49">=</span><span style="color:#24292E"> low </span><span style="color:#D73A49">-</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#D73A49">  for</span><span style="color:#24292E"> (</span><span style="color:#D73A49">let</span><span style="color:#24292E"> j </span><span style="color:#D73A49">=</span><span style="color:#24292E"> low; j </span><span style="color:#D73A49">&#x3C;</span><span style="color:#24292E"> high; j</span><span style="color:#D73A49">++</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">    if</span><span style="color:#24292E"> (arr[j] </span><span style="color:#D73A49">&#x3C;</span><span style="color:#24292E"> pivot) {</span></span>
+<span class="line"><span style="color:#24292E">      i</span><span style="color:#D73A49">++</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">      [arr[i], arr[j]] </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [arr[j], arr[i]];</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  [arr[i </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">], arr[high]] </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [arr[high], arr[i </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">]];</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> i </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h3 id="复杂度-3">复杂度</h3>
+<ul>
+<li>时间复杂度：O(n log n)（平均），O(n²)（最坏）</li>
+<li>空间复杂度：O(log n)</li>
+<li>特点：原地排序，平均性能优秀</li>
+</ul>
+<h2 id="归并排序merge-sort">归并排序（Merge Sort）</h2>
+<h3 id="原理-4">原理</h3>
+<p>采用分治思想，将数组递归拆分后合并。</p>
+<h3 id="实现-4">实现</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> mergeSort</span><span style="color:#24292E">(</span><span style="color:#E36209">arr</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">  if</span><span style="color:#24292E"> (arr.</span><span style="color:#005CC5">length</span><span style="color:#D73A49"> &#x3C;=</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">) </span><span style="color:#D73A49">return</span><span style="color:#24292E"> arr;</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> mid</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> Math.</span><span style="color:#6F42C1">floor</span><span style="color:#24292E">(arr.</span><span style="color:#005CC5">length</span><span style="color:#D73A49"> /</span><span style="color:#005CC5"> 2</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> left</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> mergeSort</span><span style="color:#24292E">(arr.</span><span style="color:#6F42C1">slice</span><span style="color:#24292E">(</span><span style="color:#005CC5">0</span><span style="color:#24292E">, mid));</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> right</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> mergeSort</span><span style="color:#24292E">(arr.</span><span style="color:#6F42C1">slice</span><span style="color:#24292E">(mid));</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#6F42C1"> merge</span><span style="color:#24292E">(left, right);</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> merge</span><span style="color:#24292E">(</span><span style="color:#E36209">left</span><span style="color:#24292E">, </span><span style="color:#E36209">right</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> result</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> [];</span></span>
+<span class="line"><span style="color:#D73A49">  let</span><span style="color:#24292E"> i </span><span style="color:#D73A49">=</span><span style="color:#005CC5"> 0</span><span style="color:#24292E">, j </span><span style="color:#D73A49">=</span><span style="color:#005CC5"> 0</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#D73A49">  while</span><span style="color:#24292E"> (i </span><span style="color:#D73A49">&#x3C;</span><span style="color:#24292E"> left.</span><span style="color:#005CC5">length</span><span style="color:#D73A49"> &#x26;&#x26;</span><span style="color:#24292E"> j </span><span style="color:#D73A49">&#x3C;</span><span style="color:#24292E"> right.</span><span style="color:#005CC5">length</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">    if</span><span style="color:#24292E"> (left[i] </span><span style="color:#D73A49">&#x3C;=</span><span style="color:#24292E"> right[j]) {</span></span>
+<span class="line"><span style="color:#24292E">      result.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">(left[i</span><span style="color:#D73A49">++</span><span style="color:#24292E">]);</span></span>
+<span class="line"><span style="color:#24292E">    } </span><span style="color:#D73A49">else</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#24292E">      result.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">(right[j</span><span style="color:#D73A49">++</span><span style="color:#24292E">]);</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> result.</span><span style="color:#6F42C1">concat</span><span style="color:#24292E">(left.</span><span style="color:#6F42C1">slice</span><span style="color:#24292E">(i)).</span><span style="color:#6F42C1">concat</span><span style="color:#24292E">(right.</span><span style="color:#6F42C1">slice</span><span style="color:#24292E">(j));</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h3 id="复杂度-4">复杂度</h3>
+<ul>
+<li>时间复杂度：O(n log n)</li>
+<li>空间复杂度：O(n)</li>
+<li>特点：稳定排序，适合大规模数据</li>
+</ul>
+<h2 id="堆排序heap-sort">堆排序（Heap Sort）</h2>
+<h3 id="原理-5">原理</h3>
+<p>利用堆数据结构进行排序。</p>
+<h3 id="实现-5">实现</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> heapSort</span><span style="color:#24292E">(</span><span style="color:#E36209">arr</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> n</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> arr.</span><span style="color:#005CC5">length</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6A737D">  // 构建最大堆</span></span>
+<span class="line"><span style="color:#D73A49">  for</span><span style="color:#24292E"> (</span><span style="color:#D73A49">let</span><span style="color:#24292E"> i </span><span style="color:#D73A49">=</span><span style="color:#24292E"> Math.</span><span style="color:#6F42C1">floor</span><span style="color:#24292E">(n </span><span style="color:#D73A49">/</span><span style="color:#005CC5"> 2</span><span style="color:#24292E">) </span><span style="color:#D73A49">-</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">; i </span><span style="color:#D73A49">>=</span><span style="color:#005CC5"> 0</span><span style="color:#24292E">; i</span><span style="color:#D73A49">--</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#6F42C1">    heapify</span><span style="color:#24292E">(arr, n, i);</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6A737D">  // 提取元素</span></span>
+<span class="line"><span style="color:#D73A49">  for</span><span style="color:#24292E"> (</span><span style="color:#D73A49">let</span><span style="color:#24292E"> i </span><span style="color:#D73A49">=</span><span style="color:#24292E"> n </span><span style="color:#D73A49">-</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">; i </span><span style="color:#D73A49">></span><span style="color:#005CC5"> 0</span><span style="color:#24292E">; i</span><span style="color:#D73A49">--</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#24292E">    [arr[</span><span style="color:#005CC5">0</span><span style="color:#24292E">], arr[i]] </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [arr[i], arr[</span><span style="color:#005CC5">0</span><span style="color:#24292E">]];</span></span>
+<span class="line"><span style="color:#6F42C1">    heapify</span><span style="color:#24292E">(arr, i, </span><span style="color:#005CC5">0</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> arr;</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> heapify</span><span style="color:#24292E">(</span><span style="color:#E36209">arr</span><span style="color:#24292E">, </span><span style="color:#E36209">n</span><span style="color:#24292E">, </span><span style="color:#E36209">i</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">  let</span><span style="color:#24292E"> largest </span><span style="color:#D73A49">=</span><span style="color:#24292E"> i;</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> left</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> 2</span><span style="color:#D73A49"> *</span><span style="color:#24292E"> i </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> right</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> 2</span><span style="color:#D73A49"> *</span><span style="color:#24292E"> i </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 2</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#D73A49">  if</span><span style="color:#24292E"> (left </span><span style="color:#D73A49">&#x3C;</span><span style="color:#24292E"> n </span><span style="color:#D73A49">&#x26;&#x26;</span><span style="color:#24292E"> arr[left] </span><span style="color:#D73A49">></span><span style="color:#24292E"> arr[largest]) {</span></span>
+<span class="line"><span style="color:#24292E">    largest </span><span style="color:#D73A49">=</span><span style="color:#24292E"> left;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#D73A49">  if</span><span style="color:#24292E"> (right </span><span style="color:#D73A49">&#x3C;</span><span style="color:#24292E"> n </span><span style="color:#D73A49">&#x26;&#x26;</span><span style="color:#24292E"> arr[right] </span><span style="color:#D73A49">></span><span style="color:#24292E"> arr[largest]) {</span></span>
+<span class="line"><span style="color:#24292E">    largest </span><span style="color:#D73A49">=</span><span style="color:#24292E"> right;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#D73A49">  if</span><span style="color:#24292E"> (largest </span><span style="color:#D73A49">!==</span><span style="color:#24292E"> i) {</span></span>
+<span class="line"><span style="color:#24292E">    [arr[i], arr[largest]] </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [arr[largest], arr[i]];</span></span>
+<span class="line"><span style="color:#6F42C1">    heapify</span><span style="color:#24292E">(arr, n, largest);</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h3 id="复杂度-5">复杂度</h3>
+<ul>
+<li>时间复杂度：O(n log n)</li>
+<li>空间复杂度：O(1)</li>
+</ul>
+<h2 id="算法对比">算法对比</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>算法</th><th>时间复杂度(平均)</th><th>时间复杂度(最坏)</th><th>空间复杂度</th><th>稳定性</th></tr></thead><tbody><tr><td>冒泡排序</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td><td>稳定</td></tr><tr><td>选择排序</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td><td>不稳定</td></tr><tr><td>插入排序</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td><td>稳定</td></tr><tr><td>快速排序</td><td>O(n log n)</td><td>O(n²)</td><td>O(log n)</td><td>不稳定</td></tr><tr><td>归并排序</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n)</td><td>稳定</td></tr><tr><td>堆排序</td><td>O(n log n)</td><td>O(n log n)</td><td>O(1)</td><td>不稳定</td></tr></tbody></table>
+<h2 id="实际使用建议">实际使用建议</h2>
+<ol>
+<li><strong>小规模数据</strong>：插入排序效率高</li>
+<li><strong>大规模数据</strong>：快速排序、归并排序、堆排序</li>
+<li><strong>基本有序</strong>：插入排序</li>
+<li><strong>需要稳定排序</strong>：归并排序</li>
+<li><strong>JavaScript 内置</strong>：<code>Array.sort()</code> 使用快速排序的改进版本</li>
+</ol> </div> <footer class="post__tags container container--narrow" data-astro-cid-egg7nqdx> <span class="tag" data-astro-cid-egg7nqdx>#算法</span><span class="tag" data-astro-cid-egg7nqdx>#排序</span><span class="tag" data-astro-cid-egg7nqdx>#数据结构</span> </footer> </article> <nav class="post-nav container container--narrow" data-astro-cid-egg7nqdx> <a href="/posts/technology-typescript-gaoji-leixing" class="post-nav__link post-nav__link--prev" data-astro-cid-egg7nqdx> <span class="post-nav__kicker" data-astro-cid-egg7nqdx>← 上一篇</span> <span class="post-nav__title" data-astro-cid-egg7nqdx>TypeScript高级类型</span> </a> <a href="/posts/technology-danli-moshi" class="post-nav__link post-nav__link--next" data-astro-cid-egg7nqdx> <span class="post-nav__kicker" data-astro-cid-egg7nqdx>下一篇 →</span> <span class="post-nav__title" data-astro-cid-egg7nqdx>设计模式之单例模式</span> </a> </nav>  </main> <footer class="site-footer" data-astro-cid-37fxchfa> <div class="container site-footer__inner" data-astro-cid-37fxchfa> <p class="site-footer__sig deco" data-astro-cid-37fxchfa>每一个不曾起舞的日子，都是对生命的辜负</p> <p class="site-footer__meta fade" data-astro-cid-37fxchfa>
+© 2020 – 2026 Jordan · Built with Astro
+</p> </div> </footer> <!-- 浮动联系按钮 --> <a href="/contact" class="contact-fab" aria-label="联系 Jordan" data-astro-cid-37fxchfa> <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-37fxchfa> <path d="M4 6h16v12H4z" data-astro-cid-37fxchfa></path> <path d="M4 6l8 7 8-7" data-astro-cid-37fxchfa></path> </svg> </a> <script>
+      // 主题切换
+      const btn = document.querySelector('[data-theme-toggle]');
+      const icon = document.querySelector('[data-theme-icon]');
+      function updateIcon() {
+        const t = document.documentElement.getAttribute('data-theme');
+        if (icon) icon.textContent = t === 'dark' ? '☀' : '☾';
+      }
+      updateIcon();
+      btn?.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme') || 'light';
+        const next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateIcon();
+      });
+    </script>  </body> </html> 

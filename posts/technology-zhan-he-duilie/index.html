@@ -1,0 +1,378 @@
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="栈（Stack）和队列（Queue）两种基础线性数据结构的完整指南：LIFO 与 FIFO 原理、JavaScript 实现、应用场景与算法题解。"><meta name="theme-color" content="#F5EFE0"><link rel="icon" type="image/png" href="/favicon.png"><link rel="manifest" href="/manifest.json"><meta property="og:title" content="栈与队列：数据结构基础 · Jordan の Words"><meta property="og:description" content="栈（Stack）和队列（Queue）两种基础线性数据结构的完整指南：LIFO 与 FIFO 原理、JavaScript 实现、应用场景与算法题解。"><meta property="og:image" content="/illustrations/hero-shanhui.png"><meta property="og:type" content="website"><title>栈与队列：数据结构基础 · Jordan の Words</title><!-- 字体：衬线中文 + 衬线英文 + 题花 --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Ma+Shan+Zheng&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"><script>
+      // 主题持久化
+      (function () {
+        const t = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script><link rel="stylesheet" href="/assets/about.D9jOoOgW.css">
+<style>.post[data-astro-cid-egg7nqdx]{padding:var(--sp-8) 0}.post__head[data-astro-cid-egg7nqdx]{text-align:center;margin-bottom:var(--sp-7)}.post__meta[data-astro-cid-egg7nqdx]{display:flex;gap:var(--sp-4);justify-content:center;font-size:var(--fs-xs);color:var(--ink-fade);margin:0 0 var(--sp-5)}.post__cat[data-astro-cid-egg7nqdx]{padding:2px 10px;background:var(--cinnabar);color:var(--paper);border-radius:var(--r-sm)}.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-3xl);line-height:var(--lh-tight);margin:0 0 var(--sp-5);letter-spacing:.02em}.post__desc[data-astro-cid-egg7nqdx]{font-size:var(--fs-md);color:var(--ink-soft);line-height:var(--lh-loose);margin:0}.post__rule[data-astro-cid-egg7nqdx]{width:80px;height:24px;margin:var(--sp-6) auto 0;background:url(/illustrations/divider-cloud.svg) no-repeat center / contain;border:none}.post__body[data-astro-cid-egg7nqdx] p{line-height:var(--lh-loose)}.post__body[data-astro-cid-egg7nqdx] h2{margin-top:var(--sp-7);padding-top:var(--sp-4);border-top:1px solid var(--line);font-size:var(--fs-xl)}.post__body[data-astro-cid-egg7nqdx] h2:before{content:"· ";color:var(--cinnabar)}.post__body[data-astro-cid-egg7nqdx] h3{margin-top:var(--sp-6);color:var(--ink);font-size:var(--fs-lg)}.post__body[data-astro-cid-egg7nqdx] img{margin:var(--sp-6) auto;border-radius:var(--r-md);box-shadow:var(--sh-1)}.post__body[data-astro-cid-egg7nqdx] ul,.post__body[data-astro-cid-egg7nqdx] ol{line-height:var(--lh-loose);padding-left:var(--sp-5)}.post__tags[data-astro-cid-egg7nqdx]{margin-top:var(--sp-7);padding-top:var(--sp-5);border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:var(--sp-3)}.tag[data-astro-cid-egg7nqdx]{font-size:var(--fs-xs);color:var(--ink-soft);padding:4px 10px;border:1px solid var(--line);border-radius:var(--r-sm)}.post-nav[data-astro-cid-egg7nqdx]{margin:var(--sp-8) auto var(--sp-7);display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-5)}.post-nav__link[data-astro-cid-egg7nqdx]{display:block;padding:var(--sp-5);background:var(--paper-warm);border-radius:var(--r-md);color:var(--ink);border:1px solid var(--line)}.post-nav__link[data-astro-cid-egg7nqdx]:hover{border-color:var(--cinnabar)}.post-nav__link--next[data-astro-cid-egg7nqdx]{text-align:right}.post-nav__kicker[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-xs);color:var(--ink-fade);margin-bottom:var(--sp-2)}.post-nav__title[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-sm);font-weight:500}@media(max-width:640px){.post-nav[data-astro-cid-egg7nqdx]{grid-template-columns:1fr}}
+</style></head> <body data-astro-cid-37fxchfa> <a class="skip-link" href="#main" data-astro-cid-37fxchfa>跳到正文</a> <header class="site-header" data-astro-cid-37fxchfa> <div class="container site-header__inner" data-astro-cid-37fxchfa> <a href="/" class="brand" aria-label="Jordan の Words" data-astro-cid-37fxchfa> <img src="/illustrations/seal-red.png" alt="" class="brand__seal" width="36" height="36" data-astro-cid-37fxchfa> <span class="brand__name" data-astro-cid-37fxchfa>Jordan <span class="brand__name-aux" data-astro-cid-37fxchfa>の</span> Words</span> </a> <nav class="nav" aria-label="主导航" data-astro-cid-37fxchfa> <ul data-astro-cid-37fxchfa> <li data-astro-cid-37fxchfa> <a href="/" class="nav__link" data-astro-cid-37fxchfa> 首页 </a> </li><li data-astro-cid-37fxchfa> <a href="/posts" class="nav__link is-active" data-astro-cid-37fxchfa> 文字 </a> </li><li data-astro-cid-37fxchfa> <a href="/projects" class="nav__link" data-astro-cid-37fxchfa> 作品 </a> </li><li data-astro-cid-37fxchfa> <a href="/about" class="nav__link" data-astro-cid-37fxchfa> 关于 </a> </li><li data-astro-cid-37fxchfa> <a href="/contact" class="nav__link" data-astro-cid-37fxchfa> 联系 </a> </li> </ul> </nav> <button class="theme-toggle" type="button" aria-label="切换主题" data-theme-toggle data-astro-cid-37fxchfa> <span class="theme-toggle__icon" data-theme-icon data-astro-cid-37fxchfa>☾</span> </button> </div> </header> <main id="main" data-astro-cid-37fxchfa>  <article class="post" data-astro-cid-egg7nqdx> <header class="post__head container container--narrow" data-astro-cid-egg7nqdx> <p class="post__meta" data-astro-cid-egg7nqdx> <span class="post__cat" data-astro-cid-egg7nqdx>技术</span> <time datetime="2026-01-26T00:00:00.000Z" data-astro-cid-egg7nqdx>2026年1月26日</time> </p> <h1 class="post__title" data-astro-cid-egg7nqdx>栈与队列：数据结构基础</h1> <p class="post__desc deco" data-astro-cid-egg7nqdx>栈（Stack）和队列（Queue）两种基础线性数据结构的完整指南：LIFO 与 FIFO 原理、JavaScript 实现、应用场景与算法题解。</p> <hr class="post__rule" data-astro-cid-egg7nqdx> </header> <div class="post__body container container--narrow prose" data-astro-cid-egg7nqdx> <h2 id="前言">前言</h2>
+<p>栈（Stack）和队列（Queue）是两种最基本的线性数据结构，广泛应用于算法和系统设计中。</p>
+<h2 id="栈stack">栈（Stack）</h2>
+<h3 id="概念">概念</h3>
+<p>栈是一种**后进先出（LIFO, Last In First Out）**的数据结构。</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>栈示意图：</span></span>
+<span class="line"><span>    ┌───┐</span></span>
+<span class="line"><span>    │ 5 │  ← 栈顶（最后入栈）</span></span>
+<span class="line"><span>    ├───┤</span></span>
+<span class="line"><span>    │ 3 │</span></span>
+<span class="line"><span>    ├───┤</span></span>
+<span class="line"><span>    │ 1 │  ← 栈底（最先入栈）</span></span>
+<span class="line"><span>    └───┘</span></span></code></pre>
+<h3 id="操作">操作</h3>
+<ul>
+<li><strong>push</strong>：入栈（添加到栈顶）</li>
+<li><strong>pop</strong>：出栈（移除栈顶元素）</li>
+<li><strong>peek</strong>：查看栈顶元素</li>
+<li><strong>isEmpty</strong>：判断是否为空</li>
+</ul>
+<h3 id="javascript-实现">JavaScript 实现</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">class</span><span style="color:#6F42C1"> Stack</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#D73A49">  constructor</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.items </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [];</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6A737D">  // 入栈</span></span>
+<span class="line"><span style="color:#6F42C1">  push</span><span style="color:#24292E">(</span><span style="color:#E36209">element</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.items.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">(element);</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6A737D">  // 出栈</span></span>
+<span class="line"><span style="color:#6F42C1">  pop</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">    if</span><span style="color:#24292E"> (</span><span style="color:#005CC5">this</span><span style="color:#24292E">.items.</span><span style="color:#005CC5">length</span><span style="color:#D73A49"> ===</span><span style="color:#005CC5"> 0</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">      return</span><span style="color:#005CC5"> undefined</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.items.</span><span style="color:#6F42C1">pop</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6A737D">  // 查看栈顶</span></span>
+<span class="line"><span style="color:#6F42C1">  peek</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.items[</span><span style="color:#005CC5">this</span><span style="color:#24292E">.items.</span><span style="color:#005CC5">length</span><span style="color:#D73A49"> -</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">];</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6A737D">  // 是否为空</span></span>
+<span class="line"><span style="color:#6F42C1">  isEmpty</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.items.</span><span style="color:#005CC5">length</span><span style="color:#D73A49"> ===</span><span style="color:#005CC5"> 0</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6A737D">  // 大小</span></span>
+<span class="line"><span style="color:#6F42C1">  size</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.items.</span><span style="color:#005CC5">length</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6A737D">  // 清空</span></span>
+<span class="line"><span style="color:#6F42C1">  clear</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.items </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [];</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 使用</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> stack</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> Stack</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">stack.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">(</span><span style="color:#005CC5">1</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#24292E">stack.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">(</span><span style="color:#005CC5">3</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#24292E">stack.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">(</span><span style="color:#005CC5">5</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#24292E">console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(stack.</span><span style="color:#6F42C1">pop</span><span style="color:#24292E">()); </span><span style="color:#6A737D">// 5</span></span>
+<span class="line"><span style="color:#24292E">console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(stack.</span><span style="color:#6F42C1">peek</span><span style="color:#24292E">()); </span><span style="color:#6A737D">// 3</span></span></code></pre>
+<h3 id="应用场景">应用场景</h3>
+<h4 id="1-函数调用栈">1. 函数调用栈</h4>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#6A737D">// 递归调用本质就是栈</span></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> factorial</span><span style="color:#24292E">(</span><span style="color:#E36209">n</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">  if</span><span style="color:#24292E"> (n </span><span style="color:#D73A49">&#x3C;=</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">) </span><span style="color:#D73A49">return</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> n </span><span style="color:#D73A49">*</span><span style="color:#6F42C1"> factorial</span><span style="color:#24292E">(n </span><span style="color:#D73A49">-</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 调用过程：</span></span>
+<span class="line"><span style="color:#6A737D">// factorial(3)</span></span>
+<span class="line"><span style="color:#6A737D">// 3 * factorial(2)</span></span>
+<span class="line"><span style="color:#6A737D">// 3 * 2 * factorial(1)</span></span>
+<span class="line"><span style="color:#6A737D">// 3 * 2 * 1</span></span>
+<span class="line"><span style="color:#6A737D">// 6</span></span></code></pre>
+<h4 id="2-括号匹配">2. 括号匹配</h4>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> isValidBracket</span><span style="color:#24292E">(</span><span style="color:#E36209">s</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> stack</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> Stack</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> pairs</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#032F62">    ')'</span><span style="color:#24292E">: </span><span style="color:#032F62">'('</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">    ']'</span><span style="color:#24292E">: </span><span style="color:#032F62">'['</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">    '}'</span><span style="color:#24292E">: </span><span style="color:#032F62">'{'</span></span>
+<span class="line"><span style="color:#24292E">  };</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#D73A49">  for</span><span style="color:#24292E"> (</span><span style="color:#D73A49">const</span><span style="color:#005CC5"> char</span><span style="color:#D73A49"> of</span><span style="color:#24292E"> s) {</span></span>
+<span class="line"><span style="color:#D73A49">    if</span><span style="color:#24292E"> ([</span><span style="color:#032F62">'('</span><span style="color:#24292E">, </span><span style="color:#032F62">'['</span><span style="color:#24292E">, </span><span style="color:#032F62">'{'</span><span style="color:#24292E">].</span><span style="color:#6F42C1">includes</span><span style="color:#24292E">(char)) {</span></span>
+<span class="line"><span style="color:#24292E">      stack.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">(char);</span></span>
+<span class="line"><span style="color:#24292E">    } </span><span style="color:#D73A49">else</span><span style="color:#D73A49"> if</span><span style="color:#24292E"> ([</span><span style="color:#032F62">')'</span><span style="color:#24292E">, </span><span style="color:#032F62">']'</span><span style="color:#24292E">, </span><span style="color:#032F62">'}'</span><span style="color:#24292E">].</span><span style="color:#6F42C1">includes</span><span style="color:#24292E">(char)) {</span></span>
+<span class="line"><span style="color:#D73A49">      if</span><span style="color:#24292E"> (stack.</span><span style="color:#6F42C1">isEmpty</span><span style="color:#24292E">() </span><span style="color:#D73A49">||</span><span style="color:#24292E"> stack.</span><span style="color:#6F42C1">pop</span><span style="color:#24292E">() </span><span style="color:#D73A49">!==</span><span style="color:#24292E"> pairs[char]) {</span></span>
+<span class="line"><span style="color:#D73A49">        return</span><span style="color:#005CC5"> false</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">      }</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> stack.</span><span style="color:#6F42C1">isEmpty</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(</span><span style="color:#6F42C1">isValidBracket</span><span style="color:#24292E">(</span><span style="color:#032F62">'()[]{}'</span><span style="color:#24292E">)); </span><span style="color:#6A737D">// true</span></span>
+<span class="line"><span style="color:#24292E">console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(</span><span style="color:#6F42C1">isValidBracket</span><span style="color:#24292E">(</span><span style="color:#032F62">'([)]'</span><span style="color:#24292E">));  </span><span style="color:#6A737D">// false</span></span></code></pre>
+<h4 id="3-浏览器历史记录">3. 浏览器历史记录</h4>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#6A737D">// 前进/后退按钮就是栈的应用</span></span>
+<span class="line"><span style="color:#D73A49">class</span><span style="color:#6F42C1"> BrowserHistory</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#D73A49">  constructor</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.backStack </span><span style="color:#D73A49">=</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> Stack</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.forwardStack </span><span style="color:#D73A49">=</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> Stack</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  visit</span><span style="color:#24292E">(</span><span style="color:#E36209">url</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.backStack.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">(url);</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.forwardStack.</span><span style="color:#6F42C1">clear</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  back</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">    if</span><span style="color:#24292E"> (</span><span style="color:#005CC5">this</span><span style="color:#24292E">.backStack.</span><span style="color:#6F42C1">size</span><span style="color:#24292E">() </span><span style="color:#D73A49">&#x3C;=</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">) </span><span style="color:#D73A49">return</span><span style="color:#005CC5"> null</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.forwardStack.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">(</span><span style="color:#005CC5">this</span><span style="color:#24292E">.backStack.</span><span style="color:#6F42C1">pop</span><span style="color:#24292E">());</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.backStack.</span><span style="color:#6F42C1">peek</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  forward</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">    if</span><span style="color:#24292E"> (</span><span style="color:#005CC5">this</span><span style="color:#24292E">.forwardStack.</span><span style="color:#6F42C1">isEmpty</span><span style="color:#24292E">()) </span><span style="color:#D73A49">return</span><span style="color:#005CC5"> null</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">    const</span><span style="color:#005CC5"> url</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.forwardStack.</span><span style="color:#6F42C1">pop</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.backStack.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">(url);</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#24292E"> url;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h2 id="队列queue">队列（Queue）</h2>
+<h3 id="概念-1">概念</h3>
+<p>队列是一种**先进先出（FIFO, First In First Out）**的数据结构。</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>队列示意图：</span></span>
+<span class="line"><span>    入队 → [1] [3] [5] [7] → 出队</span></span>
+<span class="line"><span>           ↑           ↑</span></span>
+<span class="line"><span>         队首         队尾</span></span></code></pre>
+<h3 id="操作-1">操作</h3>
+<ul>
+<li><strong>enqueue</strong>：入队（添加到队尾）</li>
+<li><strong>dequeue</strong>：出队（移除队首元素）</li>
+<li><strong>front</strong>：查看队首元素</li>
+<li><strong>isEmpty</strong>：判断是否为空</li>
+</ul>
+<h3 id="javascript-实现-1">JavaScript 实现</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">class</span><span style="color:#6F42C1"> Queue</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#D73A49">  constructor</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.items </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [];</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6A737D">  // 入队</span></span>
+<span class="line"><span style="color:#6F42C1">  enqueue</span><span style="color:#24292E">(</span><span style="color:#E36209">element</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.items.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">(element);</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6A737D">  // 出队</span></span>
+<span class="line"><span style="color:#6F42C1">  dequeue</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">    if</span><span style="color:#24292E"> (</span><span style="color:#005CC5">this</span><span style="color:#24292E">.items.</span><span style="color:#005CC5">length</span><span style="color:#D73A49"> ===</span><span style="color:#005CC5"> 0</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">      return</span><span style="color:#005CC5"> undefined</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.items.</span><span style="color:#6F42C1">shift</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6A737D">  // 查看队首</span></span>
+<span class="line"><span style="color:#6F42C1">  front</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.items[</span><span style="color:#005CC5">0</span><span style="color:#24292E">];</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6A737D">  // 是否为空</span></span>
+<span class="line"><span style="color:#6F42C1">  isEmpty</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.items.</span><span style="color:#005CC5">length</span><span style="color:#D73A49"> ===</span><span style="color:#005CC5"> 0</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6A737D">  // 大小</span></span>
+<span class="line"><span style="color:#6F42C1">  size</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.items.</span><span style="color:#005CC5">length</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h3 id="优先队列">优先队列</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">class</span><span style="color:#6F42C1"> PriorityQueue</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#D73A49">  constructor</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.items </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [];</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  enqueue</span><span style="color:#24292E">(</span><span style="color:#E36209">element</span><span style="color:#24292E">, </span><span style="color:#E36209">priority</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">    const</span><span style="color:#005CC5"> queueElement</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> { element, priority };</span></span>
+<span class="line"><span style="color:#D73A49">    let</span><span style="color:#24292E"> added </span><span style="color:#D73A49">=</span><span style="color:#005CC5"> false</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">    </span></span>
+<span class="line"><span style="color:#D73A49">    for</span><span style="color:#24292E"> (</span><span style="color:#D73A49">let</span><span style="color:#24292E"> i </span><span style="color:#D73A49">=</span><span style="color:#005CC5"> 0</span><span style="color:#24292E">; i </span><span style="color:#D73A49">&#x3C;</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.items.</span><span style="color:#005CC5">length</span><span style="color:#24292E">; i</span><span style="color:#D73A49">++</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">      if</span><span style="color:#24292E"> (queueElement.priority </span><span style="color:#D73A49">&#x3C;</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.items[i].priority) {</span></span>
+<span class="line"><span style="color:#005CC5">        this</span><span style="color:#24292E">.items.</span><span style="color:#6F42C1">splice</span><span style="color:#24292E">(i, </span><span style="color:#005CC5">0</span><span style="color:#24292E">, queueElement);</span></span>
+<span class="line"><span style="color:#24292E">        added </span><span style="color:#D73A49">=</span><span style="color:#005CC5"> true</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">        break</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">      }</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">    </span></span>
+<span class="line"><span style="color:#D73A49">    if</span><span style="color:#24292E"> (</span><span style="color:#D73A49">!</span><span style="color:#24292E">added) {</span></span>
+<span class="line"><span style="color:#005CC5">      this</span><span style="color:#24292E">.items.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">(queueElement);</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  dequeue</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.items.</span><span style="color:#6F42C1">shift</span><span style="color:#24292E">()?.element;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 使用</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> pq</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> PriorityQueue</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">pq.</span><span style="color:#6F42C1">enqueue</span><span style="color:#24292E">(</span><span style="color:#032F62">'任务A'</span><span style="color:#24292E">, </span><span style="color:#005CC5">2</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#24292E">pq.</span><span style="color:#6F42C1">enqueue</span><span style="color:#24292E">(</span><span style="color:#032F62">'任务B'</span><span style="color:#24292E">, </span><span style="color:#005CC5">1</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#24292E">pq.</span><span style="color:#6F42C1">enqueue</span><span style="color:#24292E">(</span><span style="color:#032F62">'任务C'</span><span style="color:#24292E">, </span><span style="color:#005CC5">3</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#24292E">console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(pq.</span><span style="color:#6F42C1">dequeue</span><span style="color:#24292E">()); </span><span style="color:#6A737D">// 任务B</span></span></code></pre>
+<h3 id="应用场景-1">应用场景</h3>
+<h4 id="1-任务调度">1. 任务调度</h4>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">class</span><span style="color:#6F42C1"> TaskScheduler</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#D73A49">  constructor</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.queue </span><span style="color:#D73A49">=</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> Queue</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  addTask</span><span style="color:#24292E">(</span><span style="color:#E36209">task</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.queue.</span><span style="color:#6F42C1">enqueue</span><span style="color:#24292E">(task);</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  executeNext</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">    const</span><span style="color:#005CC5"> task</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.queue.</span><span style="color:#6F42C1">dequeue</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#D73A49">    if</span><span style="color:#24292E"> (task) {</span></span>
+<span class="line"><span style="color:#6F42C1">      task</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  executeAll</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">    while</span><span style="color:#24292E"> (</span><span style="color:#D73A49">!</span><span style="color:#005CC5">this</span><span style="color:#24292E">.queue.</span><span style="color:#6F42C1">isEmpty</span><span style="color:#24292E">()) {</span></span>
+<span class="line"><span style="color:#005CC5">      this</span><span style="color:#24292E">.</span><span style="color:#6F42C1">executeNext</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h4 id="2-广度优先搜索bfs">2. 广度优先搜索（BFS）</h4>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> bfs</span><span style="color:#24292E">(</span><span style="color:#E36209">graph</span><span style="color:#24292E">, </span><span style="color:#E36209">start</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> queue</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> Queue</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> visited</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> Set</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#24292E">  queue.</span><span style="color:#6F42C1">enqueue</span><span style="color:#24292E">(start);</span></span>
+<span class="line"><span style="color:#24292E">  visited.</span><span style="color:#6F42C1">add</span><span style="color:#24292E">(start);</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> result</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> [];</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#D73A49">  while</span><span style="color:#24292E"> (</span><span style="color:#D73A49">!</span><span style="color:#24292E">queue.</span><span style="color:#6F42C1">isEmpty</span><span style="color:#24292E">()) {</span></span>
+<span class="line"><span style="color:#D73A49">    const</span><span style="color:#005CC5"> vertex</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> queue.</span><span style="color:#6F42C1">dequeue</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">    result.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">(vertex);</span></span>
+<span class="line"><span style="color:#24292E">    </span></span>
+<span class="line"><span style="color:#D73A49">    for</span><span style="color:#24292E"> (</span><span style="color:#D73A49">const</span><span style="color:#005CC5"> neighbor</span><span style="color:#D73A49"> of</span><span style="color:#24292E"> graph[vertex]) {</span></span>
+<span class="line"><span style="color:#D73A49">      if</span><span style="color:#24292E"> (</span><span style="color:#D73A49">!</span><span style="color:#24292E">visited.</span><span style="color:#6F42C1">has</span><span style="color:#24292E">(neighbor)) {</span></span>
+<span class="line"><span style="color:#24292E">        visited.</span><span style="color:#6F42C1">add</span><span style="color:#24292E">(neighbor);</span></span>
+<span class="line"><span style="color:#24292E">        queue.</span><span style="color:#6F42C1">enqueue</span><span style="color:#24292E">(neighbor);</span></span>
+<span class="line"><span style="color:#24292E">      }</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> result;</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 使用</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> graph</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#24292E">  A: [</span><span style="color:#032F62">'B'</span><span style="color:#24292E">, </span><span style="color:#032F62">'C'</span><span style="color:#24292E">],</span></span>
+<span class="line"><span style="color:#24292E">  B: [</span><span style="color:#032F62">'A'</span><span style="color:#24292E">, </span><span style="color:#032F62">'D'</span><span style="color:#24292E">, </span><span style="color:#032F62">'E'</span><span style="color:#24292E">],</span></span>
+<span class="line"><span style="color:#24292E">  C: [</span><span style="color:#032F62">'A'</span><span style="color:#24292E">, </span><span style="color:#032F62">'F'</span><span style="color:#24292E">],</span></span>
+<span class="line"><span style="color:#24292E">  D: [</span><span style="color:#032F62">'B'</span><span style="color:#24292E">],</span></span>
+<span class="line"><span style="color:#24292E">  E: [</span><span style="color:#032F62">'B'</span><span style="color:#24292E">, </span><span style="color:#032F62">'F'</span><span style="color:#24292E">],</span></span>
+<span class="line"><span style="color:#24292E">  F: [</span><span style="color:#032F62">'C'</span><span style="color:#24292E">, </span><span style="color:#032F62">'E'</span><span style="color:#24292E">]</span></span>
+<span class="line"><span style="color:#24292E">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(</span><span style="color:#6F42C1">bfs</span><span style="color:#24292E">(graph, </span><span style="color:#032F62">'A'</span><span style="color:#24292E">)); </span><span style="color:#6A737D">// ['A', 'B', 'C', 'D', 'E', 'F']</span></span></code></pre>
+<h4 id="3-消息队列">3. 消息队列</h4>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">class</span><span style="color:#6F42C1"> MessageQueue</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#D73A49">  constructor</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.queue </span><span style="color:#D73A49">=</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> Queue</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.handlers </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [];</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  subscribe</span><span style="color:#24292E">(</span><span style="color:#E36209">handler</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.handlers.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">(handler);</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  publish</span><span style="color:#24292E">(</span><span style="color:#E36209">message</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.queue.</span><span style="color:#6F42C1">enqueue</span><span style="color:#24292E">(message);</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.</span><span style="color:#6F42C1">process</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#6F42C1">  process</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">    while</span><span style="color:#24292E"> (</span><span style="color:#D73A49">!</span><span style="color:#005CC5">this</span><span style="color:#24292E">.queue.</span><span style="color:#6F42C1">isEmpty</span><span style="color:#24292E">()) {</span></span>
+<span class="line"><span style="color:#D73A49">      const</span><span style="color:#005CC5"> message</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.queue.</span><span style="color:#6F42C1">dequeue</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#005CC5">      this</span><span style="color:#24292E">.handlers.</span><span style="color:#6F42C1">forEach</span><span style="color:#24292E">(</span><span style="color:#E36209">handler</span><span style="color:#D73A49"> =></span><span style="color:#6F42C1"> handler</span><span style="color:#24292E">(message));</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h2 id="栈与队列对比">栈与队列对比</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>特性</th><th>栈</th><th>队列</th></tr></thead><tbody><tr><td>原则</td><td>LIFO（后进先出）</td><td>FIFO（先进先出）</td></tr><tr><td>操作</td><td>push/pop</td><td>enqueue/dequeue</td></tr><tr><td>队首</td><td>一端</td><td>两端</td></tr><tr><td>应用</td><td>递归、撤销、历史记录</td><td>任务调度、BFS、消息队列</td></tr></tbody></table>
+<h2 id="实际使用建议">实际使用建议</h2>
+<h3 id="1-使用数组作为底层实现">1. 使用数组作为底层实现</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#6A737D">// 栈：push + pop（高效）</span></span>
+<span class="line"><span style="color:#6A737D">// 队列：unshift + pop（低效）</span></span>
+<span class="line"><span style="color:#6A737D">//      使用指针优化更好</span></span></code></pre>
+<h3 id="2-注意边界条件">2. 注意边界条件</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#6A737D">// 空栈/空队列操作</span></span>
+<span class="line"><span style="color:#6F42C1">pop</span><span style="color:#24292E">();    </span><span style="color:#6A737D">// 返回 undefined</span></span>
+<span class="line"><span style="color:#6F42C1">dequeue</span><span style="color:#24292E">(); </span><span style="color:#6A737D">// 返回 undefined</span></span></code></pre>
+<h3 id="3-选择合适的数据结构">3. 选择合适的数据结构</h3>
+<ul>
+<li>需要<strong>撤销</strong>功能 → 栈</li>
+<li>需要<strong>公平处理</strong> → 队列</li>
+<li>需要<strong>优先级</strong> → 优先队列</li>
+</ul>
+<h2 id="总结">总结</h2>
+<ul>
+<li><strong>栈</strong>：后进先出，push/pop</li>
+<li><strong>队列</strong>：先进先出，enqueue/dequeue</li>
+<li><strong>栈应用</strong>：函数调用、括号匹配、历史记录</li>
+<li><strong>队列应用</strong>：任务调度、BFS、消息队列</li>
+<li>理解这两种数据结构是学习更复杂算法的基础</li>
+</ul> </div> <footer class="post__tags container container--narrow" data-astro-cid-egg7nqdx> <span class="tag" data-astro-cid-egg7nqdx>#数据结构</span><span class="tag" data-astro-cid-egg7nqdx>#算法</span> </footer> </article> <nav class="post-nav container container--narrow" data-astro-cid-egg7nqdx> <a href="/posts/technology-chatgpt-api-rumen" class="post-nav__link post-nav__link--prev" data-astro-cid-egg7nqdx> <span class="post-nav__kicker" data-astro-cid-egg7nqdx>← 上一篇</span> <span class="post-nav__title" data-astro-cid-egg7nqdx>ChatGPT API 调用入门</span> </a> <a href="/posts/technology-gongchang-moshi" class="post-nav__link post-nav__link--next" data-astro-cid-egg7nqdx> <span class="post-nav__kicker" data-astro-cid-egg7nqdx>下一篇 →</span> <span class="post-nav__title" data-astro-cid-egg7nqdx>设计模式之工厂模式</span> </a> </nav>  </main> <footer class="site-footer" data-astro-cid-37fxchfa> <div class="container site-footer__inner" data-astro-cid-37fxchfa> <p class="site-footer__sig deco" data-astro-cid-37fxchfa>每一个不曾起舞的日子，都是对生命的辜负</p> <p class="site-footer__meta fade" data-astro-cid-37fxchfa>
+© 2020 – 2026 Jordan · Built with Astro
+</p> </div> </footer> <!-- 浮动联系按钮 --> <a href="/contact" class="contact-fab" aria-label="联系 Jordan" data-astro-cid-37fxchfa> <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-37fxchfa> <path d="M4 6h16v12H4z" data-astro-cid-37fxchfa></path> <path d="M4 6l8 7 8-7" data-astro-cid-37fxchfa></path> </svg> </a> <script>
+      // 主题切换
+      const btn = document.querySelector('[data-theme-toggle]');
+      const icon = document.querySelector('[data-theme-icon]');
+      function updateIcon() {
+        const t = document.documentElement.getAttribute('data-theme');
+        if (icon) icon.textContent = t === 'dark' ? '☀' : '☾';
+      }
+      updateIcon();
+      btn?.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme') || 'light';
+        const next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateIcon();
+      });
+    </script>  </body> </html> 

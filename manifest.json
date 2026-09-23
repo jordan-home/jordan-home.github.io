@@ -1,0 +1,18 @@
+{
+  "name": "Jordan の Words",
+  "short_name": "Jordan",
+  "description": "Jordan 的个人站点 — 技术、文学、哲学、生活的痕迹",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5EFE0",
+  "theme_color": "#F5EFE0",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "/illustrations/seal-red.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
