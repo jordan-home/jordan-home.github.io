@@ -30,3 +30,6 @@ yarn-error.log*
 
 # Type checking
 tsconfig.tsbuildinfo
+
+# Backup of old VuePress content (kept locally, never deploy)
+.backup-vuepress/
