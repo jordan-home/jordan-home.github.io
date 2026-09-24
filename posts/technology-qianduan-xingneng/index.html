@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="从 Core Web Vitals 到具体优化手段：LCP / INP / CLS、懒加载、代码分割、缓存策略。"><meta name="theme-color" content="#F5EFE0"><link rel="icon" type="image/png" href="/favicon.png"><link rel="manifest" href="/manifest.json"><link rel="canonical" href="https://jordan-home.github.io/posts/technology-qianduan-xingneng/"><title>前端性能优化实战指南 · Jordan の Words</title><!-- JSON-LD: Person schema（站点作者信息） --><script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Jordan","url":"https://jordan-home.github.io/","description":"Jordan 的个人站点 — 记录技术、文学、哲学、AI 与生活的痕迹。","knowsAbout":["Web Development","AI","Writing","Psychology","Design"],"sameAs":["https://github.com/jordan-home","https://www.sweet-novel.net","https://petmona.app"]}</script><!-- 字体：衬线中文 + 衬线英文 + 题花 --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Ma+Shan+Zheng&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"><!-- 主题持久化（避免闪烁） --><script>
+      (function () {
+        const t = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script><!-- Open Graph --><meta property="og:title" content="前端性能优化实战指南 · Jordan の Words"><meta property="og:description" content="从 Core Web Vitals 到具体优化手段：LCP / INP / CLS、懒加载、代码分割、缓存策略。"><meta property="og:image" content="https://jordan-home.github.io/illustrations/hero-shanhui.webp"><meta property="og:type" content="website"><meta property="og:url" content="https://jordan-home.github.io/posts/technology-qianduan-xingneng/"><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="前端性能优化实战指南 · Jordan の Words"><meta name="twitter:description" content="从 Core Web Vitals 到具体优化手段：LCP / INP / CLS、懒加载、代码分割、缓存策略。"><meta name="twitter:image" content="https://jordan-home.github.io/illustrations/hero-shanhui.webp"><link rel="stylesheet" href="/assets/about.n2tu8J8j.css">
+<style>.post[data-astro-cid-egg7nqdx]{padding:var(--sp-8) 0}.post__head[data-astro-cid-egg7nqdx]{text-align:center;margin-bottom:var(--sp-7)}.post__meta[data-astro-cid-egg7nqdx]{display:flex;gap:var(--sp-4);justify-content:center;font-size:var(--fs-xs);color:var(--ink-fade);margin:0 0 var(--sp-5)}.post__cat[data-astro-cid-egg7nqdx]{padding:2px 10px;background:var(--cinnabar);color:var(--paper);border-radius:var(--r-sm)}.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-3xl);margin:0 0 var(--sp-4);line-height:var(--lh-snug)}.post__desc[data-astro-cid-egg7nqdx]{font-size:var(--fs-md);color:var(--ink-soft);line-height:var(--lh-loose);margin:0 0 var(--sp-5);font-style:italic}.post__rule[data-astro-cid-egg7nqdx]{width:80px;height:28px;border:0;background:url(/illustrations/divider-bamboo.svg) no-repeat center / contain;margin:var(--sp-6) auto 0}.post__tags[data-astro-cid-egg7nqdx]{margin-top:var(--sp-7);display:flex;flex-wrap:wrap;gap:var(--sp-2)}.post__tags[data-astro-cid-egg7nqdx] .tag[data-astro-cid-egg7nqdx]{font-size:var(--fs-xs);padding:4px 12px;background:var(--paper-warm);border:1px solid var(--line);border-radius:var(--r-sm);color:var(--ink-soft)}.post-nav[data-astro-cid-egg7nqdx]{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);margin-top:var(--sp-7);padding-top:var(--sp-7);border-top:1px solid var(--line)}.post-nav__link[data-astro-cid-egg7nqdx]{display:block;padding:var(--sp-4);background:var(--paper-warm);border:1px solid var(--line);border-radius:var(--r-md);color:var(--ink);transition:all var(--dur-fast) var(--ease-soft)}.post-nav__link[data-astro-cid-egg7nqdx]:hover{border-color:var(--cinnabar);background:var(--paper)}.post-nav__link--next[data-astro-cid-egg7nqdx]{text-align:right}.post-nav__kicker[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-xs);color:var(--ink-fade);margin-bottom:var(--sp-2)}.post-nav__title[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-base);font-weight:500}@media(max-width:860px){.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-2xl)}.post__body[data-astro-cid-egg7nqdx] h2{font-size:var(--fs-lg)}.post__body[data-astro-cid-egg7nqdx] h3{font-size:var(--fs-md)}.post__desc[data-astro-cid-egg7nqdx]{font-size:var(--fs-base)}}@media(max-width:640px){.post[data-astro-cid-egg7nqdx]{padding:var(--sp-6) 0}.post__head[data-astro-cid-egg7nqdx]{margin-bottom:var(--sp-5)}.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-xl)}.post__meta[data-astro-cid-egg7nqdx]{flex-wrap:wrap;gap:var(--sp-2)}.post-nav[data-astro-cid-egg7nqdx]{grid-template-columns:1fr}.post__body[data-astro-cid-egg7nqdx] pre{font-size:var(--fs-xs);padding:var(--sp-4)}}@media(max-width:480px){.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-lg)}.post__rule[data-astro-cid-egg7nqdx]{width:60px;height:20px;margin-top:var(--sp-5)}.post__body[data-astro-cid-egg7nqdx] blockquote{padding:var(--sp-3) var(--sp-4)}}
+</style></head> <body data-astro-cid-37fxchfa> <a class="skip-link" href="#main" data-astro-cid-37fxchfa>跳到正文</a> <header class="site-header" data-astro-cid-37fxchfa> <div class="container site-header__inner" data-astro-cid-37fxchfa> <a href="/" class="brand" aria-label="Jordan の Words" data-astro-cid-37fxchfa> <img src="/illustrations/seal-red.webp" alt="" class="brand__seal" width="36" height="36" data-astro-cid-37fxchfa> <span class="brand__name" data-astro-cid-37fxchfa>Jordan <span class="brand__name-aux" data-astro-cid-37fxchfa>の</span> Words</span> </a> <nav class="nav" aria-label="主导航" data-astro-cid-37fxchfa> <ul data-astro-cid-37fxchfa> <li data-astro-cid-37fxchfa> <a href="/" class="nav__link" data-astro-cid-37fxchfa> 首页 </a> </li><li data-astro-cid-37fxchfa> <a href="/posts" class="nav__link is-active" data-astro-cid-37fxchfa> 文字 </a> </li><li data-astro-cid-37fxchfa> <a href="/projects" class="nav__link" data-astro-cid-37fxchfa> 作品 </a> </li><li data-astro-cid-37fxchfa> <a href="/about" class="nav__link" data-astro-cid-37fxchfa> 关于 </a> </li><li data-astro-cid-37fxchfa> <a href="/contact" class="nav__link" data-astro-cid-37fxchfa> 联系 </a> </li> </ul> </nav> <button class="theme-toggle" type="button" aria-label="切换主题" data-theme-toggle data-astro-cid-37fxchfa> <span class="theme-toggle__icon" data-theme-icon data-astro-cid-37fxchfa>☾</span> </button> </div> </header> <main id="main" data-astro-cid-37fxchfa>  <article class="post" data-astro-cid-egg7nqdx> <header class="post__head container" data-astro-cid-egg7nqdx> <p class="post__meta" data-astro-cid-egg7nqdx> <span class="post__cat" data-astro-cid-egg7nqdx>技术</span> <time datetime="2026-03-16T00:00:00.000Z" data-astro-cid-egg7nqdx>2026年3月16日</time> </p> <h1 class="post__title" data-astro-cid-egg7nqdx>前端性能优化实战指南</h1> <p class="post__desc deco" data-astro-cid-egg7nqdx>从 Core Web Vitals 到具体优化手段：LCP / INP / CLS、懒加载、代码分割、缓存策略。</p> <hr class="post__rule" data-astro-cid-egg7nqdx> </header> <div class="post__body prose-container prose" data-astro-cid-egg7nqdx> <p>前端性能优化的核心是 Core Web Vitals：LCP / INP / CLS。</p>
+<h2 id="三大指标">三大指标</h2>
+<h3 id="lcplargest-contentful-paint">LCP（Largest Contentful Paint）</h3>
+<p><strong>最大内容绘制</strong>时间。理想 &#x3C; 2.5s。</p>
+<p>优化：</p>
+<ul>
+<li>图片懒加载 + WebP</li>
+<li>关键 CSS 内联</li>
+<li>用 CDN</li>
+<li>字体 font-display: swap</li>
+</ul>
+<h3 id="inpinteraction-to-next-paint">INP（Interaction to Next Paint）</h3>
+<p><strong>交互到下次绘制</strong>时间。理想 &#x3C; 200ms。</p>
+<p>优化：</p>
+<ul>
+<li>减少 JS 主线程阻塞</li>
+<li>用 web worker 处理重计算</li>
+<li>避免强制同步布局</li>
+<li>用 transition 替代 setTimeout 动画</li>
+</ul>
+<h3 id="clscumulative-layout-shift">CLS（Cumulative Layout Shift）</h3>
+<p><strong>累计布局偏移</strong>。理想 &#x3C; 0.1。</p>
+<p>优化：</p>
+<ul>
+<li>图片 / 视频 / iframe 给宽高</li>
+<li>字体加载完前预留空间</li>
+<li>避免在已渲染内容上方插入 DOM</li>
+</ul>
+<h2 id="加载优化">加载优化</h2>
+<h3 id="1-资源压缩">1. 资源压缩</h3>
+<ul>
+<li>文本：gzip / brotli（CDN 自动）</li>
+<li>图片：WebP（比 PNG 小 70%）</li>
+<li>JS / CSS：terser / esbuild（Astro 默认）</li>
+</ul>
+<h3 id="2-代码分割">2. 代码分割</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> Heavy</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> lazy</span><span style="color:#24292E">(() </span><span style="color:#D73A49">=></span><span style="color:#D73A49"> import</span><span style="color:#24292E">(</span><span style="color:#032F62">'./Heavy'</span><span style="color:#24292E">));</span></span></code></pre>
+<p>按需加载，不在首屏的代码都不该阻塞首屏。</p>
+<h3 id="3-预加载--预连接">3. 预加载 / 预连接</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="html"><code><span class="line"><span style="color:#24292E">&#x3C;</span><span style="color:#22863A">link</span><span style="color:#6F42C1"> rel</span><span style="color:#24292E">=</span><span style="color:#032F62">"preconnect"</span><span style="color:#6F42C1"> href</span><span style="color:#24292E">=</span><span style="color:#032F62">"https://fonts.googleapis.com"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">&#x3C;</span><span style="color:#22863A">link</span><span style="color:#6F42C1"> rel</span><span style="color:#24292E">=</span><span style="color:#032F62">"preload"</span><span style="color:#6F42C1"> href</span><span style="color:#24292E">=</span><span style="color:#032F62">"/critical.css"</span><span style="color:#6F42C1"> as</span><span style="color:#24292E">=</span><span style="color:#032F62">"style"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">&#x3C;</span><span style="color:#22863A">link</span><span style="color:#6F42C1"> rel</span><span style="color:#24292E">=</span><span style="color:#032F62">"prefetch"</span><span style="color:#6F42C1"> href</span><span style="color:#24292E">=</span><span style="color:#032F62">"/next-page.html"</span><span style="color:#24292E"> /></span></span></code></pre>
+<h3 id="4-缓存">4. 缓存</h3>
+<ul>
+<li>静态资源：Cache-Control: public, max-age=31536000, immutable</li>
+<li>HTML：no-cache（每次跟服务器确认）</li>
+</ul>
+<h2 id="运行时优化">运行时优化</h2>
+<h3 id="1-避免-reflow--repaint">1. 避免 reflow / repaint</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#6A737D">// ❌ 触发多次 reflow</span></span>
+<span class="line"><span style="color:#24292E">el.style.width </span><span style="color:#D73A49">=</span><span style="color:#032F62"> '100px'</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">el.style.height </span><span style="color:#D73A49">=</span><span style="color:#032F62"> '100px'</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">el.style.margin </span><span style="color:#D73A49">=</span><span style="color:#032F62"> '10px'</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// ✅ 批量修改</span></span>
+<span class="line"><span style="color:#24292E">el.style.cssText </span><span style="color:#D73A49">=</span><span style="color:#032F62"> 'width:100px;height:100px;margin:10px'</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// ✅ 用 transform</span></span>
+<span class="line"><span style="color:#24292E">el.style.transform </span><span style="color:#D73A49">=</span><span style="color:#032F62"> 'translateX(100px)'</span><span style="color:#24292E">;</span></span></code></pre>
+<h3 id="2-防抖--节流">2. 防抖 / 节流</h3>
+<p>滚动 / resize / 输入事件用 debounce / throttle。</p>
+<h3 id="3-虚拟列表">3. 虚拟列表</h3>
+<p>长列表用虚拟滚动，只渲染可见区域。</p>
+<h2 id="工具">工具</h2>
+<ul>
+<li>Chrome DevTools → Performance</li>
+<li>Lighthouse</li>
+<li>WebPageTest</li>
+<li><code>performance.now()</code> 代码片段</li>
+</ul>
+<p>性能优化是<strong>先测量、再优化</strong>。</p> </div> <footer class="post__tags prose-container" data-astro-cid-egg7nqdx> <span class="tag" data-astro-cid-egg7nqdx>#性能优化</span><span class="tag" data-astro-cid-egg7nqdx>#前端</span> </footer> </article> <nav class="post-nav container" data-astro-cid-egg7nqdx> <a href="/posts/technology-daili-ms" class="post-nav__link post-nav__link--prev" data-astro-cid-egg7nqdx> <span class="post-nav__kicker" data-astro-cid-egg7nqdx>← 上一篇</span> <span class="post-nav__title" data-astro-cid-egg7nqdx>设计模式之代理模式</span> </a> <a href="/posts/technology-shu-erchashu" class="post-nav__link post-nav__link--next" data-astro-cid-egg7nqdx> <span class="post-nav__kicker" data-astro-cid-egg7nqdx>下一篇 →</span> <span class="post-nav__title" data-astro-cid-egg7nqdx>树与二叉树完全指南</span> </a> </nav>  </main> <footer class="site-footer" data-astro-cid-37fxchfa> <div class="container site-footer__inner" data-astro-cid-37fxchfa> <p class="site-footer__sig deco" data-astro-cid-37fxchfa>每一个不曾起舞的日子，都是对生命的辜负</p> <p class="site-footer__meta fade" data-astro-cid-37fxchfa>© 2020 – 2026 Jordan · Built with Astro</p> <p class="site-footer__meta fade" data-astro-cid-37fxchfa> <a href="/contact" class="site-footer__contact" data-astro-cid-37fxchfa>联系 Jordan</a> </p> </div> </footer> <!-- 浮动联系按钮 --> <a href="/contact" class="contact-fab" aria-label="联系 Jordan" data-astro-cid-37fxchfa>
+✉
+</a> <script type="module">const c=document.querySelector("[data-theme-toggle]"),o=document.querySelector("[data-theme-icon]"),n=()=>{const t=document.documentElement.getAttribute("data-theme");o.textContent=t==="dark"?"☼":"☾"};n();c?.addEventListener("click",()=>{const e=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",e),localStorage.setItem("theme",e),n()});</script> </body> </html>  

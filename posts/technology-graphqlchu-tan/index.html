@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="GraphQL 入门：为什么需要它，跟 REST 比有什么优势，怎么上手。"><meta name="theme-color" content="#F5EFE0"><link rel="icon" type="image/png" href="/favicon.png"><link rel="manifest" href="/manifest.json"><link rel="canonical" href="https://jordan-home.github.io/posts/technology-graphqlchu-tan/"><title>GraphQL 初探 · Jordan の Words</title><!-- JSON-LD: Person schema（站点作者信息） --><script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Jordan","url":"https://jordan-home.github.io/","description":"Jordan 的个人站点 — 记录技术、文学、哲学、AI 与生活的痕迹。","knowsAbout":["Web Development","AI","Writing","Psychology","Design"],"sameAs":["https://github.com/jordan-home","https://www.sweet-novel.net","https://petmona.app"]}</script><!-- 字体：衬线中文 + 衬线英文 + 题花 --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Ma+Shan+Zheng&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"><!-- 主题持久化（避免闪烁） --><script>
+      (function () {
+        const t = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script><!-- Open Graph --><meta property="og:title" content="GraphQL 初探 · Jordan の Words"><meta property="og:description" content="GraphQL 入门：为什么需要它，跟 REST 比有什么优势，怎么上手。"><meta property="og:image" content="https://jordan-home.github.io/illustrations/hero-shanhui.webp"><meta property="og:type" content="website"><meta property="og:url" content="https://jordan-home.github.io/posts/technology-graphqlchu-tan/"><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="GraphQL 初探 · Jordan の Words"><meta name="twitter:description" content="GraphQL 入门：为什么需要它，跟 REST 比有什么优势，怎么上手。"><meta name="twitter:image" content="https://jordan-home.github.io/illustrations/hero-shanhui.webp"><link rel="stylesheet" href="/assets/about.n2tu8J8j.css">
+<style>.post[data-astro-cid-egg7nqdx]{padding:var(--sp-8) 0}.post__head[data-astro-cid-egg7nqdx]{text-align:center;margin-bottom:var(--sp-7)}.post__meta[data-astro-cid-egg7nqdx]{display:flex;gap:var(--sp-4);justify-content:center;font-size:var(--fs-xs);color:var(--ink-fade);margin:0 0 var(--sp-5)}.post__cat[data-astro-cid-egg7nqdx]{padding:2px 10px;background:var(--cinnabar);color:var(--paper);border-radius:var(--r-sm)}.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-3xl);margin:0 0 var(--sp-4);line-height:var(--lh-snug)}.post__desc[data-astro-cid-egg7nqdx]{font-size:var(--fs-md);color:var(--ink-soft);line-height:var(--lh-loose);margin:0 0 var(--sp-5);font-style:italic}.post__rule[data-astro-cid-egg7nqdx]{width:80px;height:28px;border:0;background:url(/illustrations/divider-bamboo.svg) no-repeat center / contain;margin:var(--sp-6) auto 0}.post__tags[data-astro-cid-egg7nqdx]{margin-top:var(--sp-7);display:flex;flex-wrap:wrap;gap:var(--sp-2)}.post__tags[data-astro-cid-egg7nqdx] .tag[data-astro-cid-egg7nqdx]{font-size:var(--fs-xs);padding:4px 12px;background:var(--paper-warm);border:1px solid var(--line);border-radius:var(--r-sm);color:var(--ink-soft)}.post-nav[data-astro-cid-egg7nqdx]{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);margin-top:var(--sp-7);padding-top:var(--sp-7);border-top:1px solid var(--line)}.post-nav__link[data-astro-cid-egg7nqdx]{display:block;padding:var(--sp-4);background:var(--paper-warm);border:1px solid var(--line);border-radius:var(--r-md);color:var(--ink);transition:all var(--dur-fast) var(--ease-soft)}.post-nav__link[data-astro-cid-egg7nqdx]:hover{border-color:var(--cinnabar);background:var(--paper)}.post-nav__link--next[data-astro-cid-egg7nqdx]{text-align:right}.post-nav__kicker[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-xs);color:var(--ink-fade);margin-bottom:var(--sp-2)}.post-nav__title[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-base);font-weight:500}@media(max-width:860px){.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-2xl)}.post__body[data-astro-cid-egg7nqdx] h2{font-size:var(--fs-lg)}.post__body[data-astro-cid-egg7nqdx] h3{font-size:var(--fs-md)}.post__desc[data-astro-cid-egg7nqdx]{font-size:var(--fs-base)}}@media(max-width:640px){.post[data-astro-cid-egg7nqdx]{padding:var(--sp-6) 0}.post__head[data-astro-cid-egg7nqdx]{margin-bottom:var(--sp-5)}.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-xl)}.post__meta[data-astro-cid-egg7nqdx]{flex-wrap:wrap;gap:var(--sp-2)}.post-nav[data-astro-cid-egg7nqdx]{grid-template-columns:1fr}.post__body[data-astro-cid-egg7nqdx] pre{font-size:var(--fs-xs);padding:var(--sp-4)}}@media(max-width:480px){.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-lg)}.post__rule[data-astro-cid-egg7nqdx]{width:60px;height:20px;margin-top:var(--sp-5)}.post__body[data-astro-cid-egg7nqdx] blockquote{padding:var(--sp-3) var(--sp-4)}}
+</style></head> <body data-astro-cid-37fxchfa> <a class="skip-link" href="#main" data-astro-cid-37fxchfa>跳到正文</a> <header class="site-header" data-astro-cid-37fxchfa> <div class="container site-header__inner" data-astro-cid-37fxchfa> <a href="/" class="brand" aria-label="Jordan の Words" data-astro-cid-37fxchfa> <img src="/illustrations/seal-red.webp" alt="" class="brand__seal" width="36" height="36" data-astro-cid-37fxchfa> <span class="brand__name" data-astro-cid-37fxchfa>Jordan <span class="brand__name-aux" data-astro-cid-37fxchfa>の</span> Words</span> </a> <nav class="nav" aria-label="主导航" data-astro-cid-37fxchfa> <ul data-astro-cid-37fxchfa> <li data-astro-cid-37fxchfa> <a href="/" class="nav__link" data-astro-cid-37fxchfa> 首页 </a> </li><li data-astro-cid-37fxchfa> <a href="/posts" class="nav__link is-active" data-astro-cid-37fxchfa> 文字 </a> </li><li data-astro-cid-37fxchfa> <a href="/projects" class="nav__link" data-astro-cid-37fxchfa> 作品 </a> </li><li data-astro-cid-37fxchfa> <a href="/about" class="nav__link" data-astro-cid-37fxchfa> 关于 </a> </li><li data-astro-cid-37fxchfa> <a href="/contact" class="nav__link" data-astro-cid-37fxchfa> 联系 </a> </li> </ul> </nav> <button class="theme-toggle" type="button" aria-label="切换主题" data-theme-toggle data-astro-cid-37fxchfa> <span class="theme-toggle__icon" data-theme-icon data-astro-cid-37fxchfa>☾</span> </button> </div> </header> <main id="main" data-astro-cid-37fxchfa>  <article class="post" data-astro-cid-egg7nqdx> <header class="post__head container" data-astro-cid-egg7nqdx> <p class="post__meta" data-astro-cid-egg7nqdx> <span class="post__cat" data-astro-cid-egg7nqdx>技术</span> <time datetime="2021-03-10T00:00:00.000Z" data-astro-cid-egg7nqdx>2021年3月10日</time> </p> <h1 class="post__title" data-astro-cid-egg7nqdx>GraphQL 初探</h1> <p class="post__desc deco" data-astro-cid-egg7nqdx>GraphQL 入门：为什么需要它，跟 REST 比有什么优势，怎么上手。</p> <hr class="post__rule" data-astro-cid-egg7nqdx> </header> <div class="post__body prose-container prose" data-astro-cid-egg7nqdx> <p>GraphQL 是 Facebook 2015 年开源的 API 查询语言。这篇文章记录初学的关键点。</p>
+<h2 id="什么是-graphql">什么是 GraphQL</h2>
+<p>一种 API 查询语言，让客户端按需请求数据，避免 REST 的 over-fetching / under-fetching 问题。</p>
+<h2 id="核心概念">核心概念</h2>
+<ul>
+<li><strong>Schema</strong>：用 SDL 写的数据类型定义</li>
+<li><strong>Query</strong>：客户端发起的读取请求</li>
+<li><strong>Mutation</strong>：客户端发起的写入请求</li>
+<li><strong>Resolver</strong>：服务端每个字段对应的取数函数</li>
+</ul>
+<h2 id="一个简单例子">一个简单例子</h2>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="graphql"><code><span class="line"><span style="color:#D73A49">type</span><span style="color:#005CC5"> User</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#E36209">  id</span><span style="color:#24292E">: </span><span style="color:#005CC5">ID</span><span style="color:#D73A49">!</span></span>
+<span class="line"><span style="color:#E36209">  name</span><span style="color:#24292E">: </span><span style="color:#005CC5">String</span><span style="color:#D73A49">!</span></span>
+<span class="line"><span style="color:#E36209">  email</span><span style="color:#24292E">: </span><span style="color:#005CC5">String</span><span style="color:#D73A49">!</span></span>
+<span class="line"><span style="color:#E36209">  posts</span><span style="color:#24292E">: [</span><span style="color:#005CC5">Post</span><span style="color:#D73A49">!</span><span style="color:#24292E">]</span><span style="color:#D73A49">!</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">type</span><span style="color:#005CC5"> Query</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#E36209">  user</span><span style="color:#24292E">(</span><span style="color:#E36209">id</span><span style="color:#24292E">: </span><span style="color:#005CC5">ID</span><span style="color:#D73A49">!</span><span style="color:#24292E">): </span><span style="color:#005CC5">User</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h2 id="跟-rest-比">跟 REST 比</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>维度</th><th>REST</th><th>GraphQL</th></tr></thead><tbody><tr><td>端点数</td><td>多</td><td>1 个</td></tr><tr><td>数据形状</td><td>服务端定</td><td>客户端定</td></tr><tr><td>版本管理</td><td>URL 加版本</td><td>Schema 演进</td></tr><tr><td>缓存</td><td>HTTP 缓存</td><td>按场景处理</td></tr></tbody></table>
+<h2 id="什么时候用">什么时候用</h2>
+<ul>
+<li>多端共用 API（Web / iOS / Android）</li>
+<li>字段组合复杂</li>
+<li>频繁迭代的字段</li>
+</ul>
+<h2 id="什么时候不用">什么时候不用</h2>
+<ul>
+<li>简单 CRUD</li>
+<li>文件下载等特殊请求</li>
+<li>团队没有学习时间</li>
+</ul>
+<p>入门不难，但要把 Schema 设计好需要时间。</p> </div> <footer class="post__tags prose-container" data-astro-cid-egg7nqdx> <span class="tag" data-astro-cid-egg7nqdx>#GraphQL</span><span class="tag" data-astro-cid-egg7nqdx>#API</span> </footer> </article> <nav class="post-nav container" data-astro-cid-egg7nqdx>  <a href="/posts/technology-react-hooks-shenru" class="post-nav__link post-nav__link--next" data-astro-cid-egg7nqdx> <span class="post-nav__kicker" data-astro-cid-egg7nqdx>下一篇 →</span> <span class="post-nav__title" data-astro-cid-egg7nqdx>React Hooks 深入理解</span> </a> </nav>  </main> <footer class="site-footer" data-astro-cid-37fxchfa> <div class="container site-footer__inner" data-astro-cid-37fxchfa> <p class="site-footer__sig deco" data-astro-cid-37fxchfa>每一个不曾起舞的日子，都是对生命的辜负</p> <p class="site-footer__meta fade" data-astro-cid-37fxchfa>© 2020 – 2026 Jordan · Built with Astro</p> <p class="site-footer__meta fade" data-astro-cid-37fxchfa> <a href="/contact" class="site-footer__contact" data-astro-cid-37fxchfa>联系 Jordan</a> </p> </div> </footer> <!-- 浮动联系按钮 --> <a href="/contact" class="contact-fab" aria-label="联系 Jordan" data-astro-cid-37fxchfa>
+✉
+</a> <script type="module">const c=document.querySelector("[data-theme-toggle]"),o=document.querySelector("[data-theme-icon]"),n=()=>{const t=document.documentElement.getAttribute("data-theme");o.textContent=t==="dark"?"☼":"☾"};n();c?.addEventListener("click",()=>{const e=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",e),localStorage.setItem("theme",e),n()});</script> </body> </html>  

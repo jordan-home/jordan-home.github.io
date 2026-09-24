@@ -1,0 +1,125 @@
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="前端面试最难的系统设计题：URL 缩短、Feed 流、抢票、限流 — 怎么拆解、怎么答题。"><meta name="theme-color" content="#F5EFE0"><link rel="icon" type="image/png" href="/favicon.png"><link rel="manifest" href="/manifest.json"><link rel="canonical" href="https://jordan-home.github.io/posts/technology-mianshi-jinjie/"><title>前端面试进阶：设计模式与系统设计实战指南 · Jordan の Words</title><!-- JSON-LD: Person schema（站点作者信息） --><script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Jordan","url":"https://jordan-home.github.io/","description":"Jordan 的个人站点 — 记录技术、文学、哲学、AI 与生活的痕迹。","knowsAbout":["Web Development","AI","Writing","Psychology","Design"],"sameAs":["https://github.com/jordan-home","https://www.sweet-novel.net","https://petmona.app"]}</script><!-- 字体：衬线中文 + 衬线英文 + 题花 --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Ma+Shan+Zheng&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"><!-- 主题持久化（避免闪烁） --><script>
+      (function () {
+        const t = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script><!-- Open Graph --><meta property="og:title" content="前端面试进阶：设计模式与系统设计实战指南 · Jordan の Words"><meta property="og:description" content="前端面试最难的系统设计题：URL 缩短、Feed 流、抢票、限流 — 怎么拆解、怎么答题。"><meta property="og:image" content="https://jordan-home.github.io/illustrations/hero-shanhui.webp"><meta property="og:type" content="website"><meta property="og:url" content="https://jordan-home.github.io/posts/technology-mianshi-jinjie/"><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="前端面试进阶：设计模式与系统设计实战指南 · Jordan の Words"><meta name="twitter:description" content="前端面试最难的系统设计题：URL 缩短、Feed 流、抢票、限流 — 怎么拆解、怎么答题。"><meta name="twitter:image" content="https://jordan-home.github.io/illustrations/hero-shanhui.webp"><link rel="stylesheet" href="/assets/about.n2tu8J8j.css">
+<style>.post[data-astro-cid-egg7nqdx]{padding:var(--sp-8) 0}.post__head[data-astro-cid-egg7nqdx]{text-align:center;margin-bottom:var(--sp-7)}.post__meta[data-astro-cid-egg7nqdx]{display:flex;gap:var(--sp-4);justify-content:center;font-size:var(--fs-xs);color:var(--ink-fade);margin:0 0 var(--sp-5)}.post__cat[data-astro-cid-egg7nqdx]{padding:2px 10px;background:var(--cinnabar);color:var(--paper);border-radius:var(--r-sm)}.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-3xl);margin:0 0 var(--sp-4);line-height:var(--lh-snug)}.post__desc[data-astro-cid-egg7nqdx]{font-size:var(--fs-md);color:var(--ink-soft);line-height:var(--lh-loose);margin:0 0 var(--sp-5);font-style:italic}.post__rule[data-astro-cid-egg7nqdx]{width:80px;height:28px;border:0;background:url(/illustrations/divider-bamboo.svg) no-repeat center / contain;margin:var(--sp-6) auto 0}.post__tags[data-astro-cid-egg7nqdx]{margin-top:var(--sp-7);display:flex;flex-wrap:wrap;gap:var(--sp-2)}.post__tags[data-astro-cid-egg7nqdx] .tag[data-astro-cid-egg7nqdx]{font-size:var(--fs-xs);padding:4px 12px;background:var(--paper-warm);border:1px solid var(--line);border-radius:var(--r-sm);color:var(--ink-soft)}.post-nav[data-astro-cid-egg7nqdx]{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);margin-top:var(--sp-7);padding-top:var(--sp-7);border-top:1px solid var(--line)}.post-nav__link[data-astro-cid-egg7nqdx]{display:block;padding:var(--sp-4);background:var(--paper-warm);border:1px solid var(--line);border-radius:var(--r-md);color:var(--ink);transition:all var(--dur-fast) var(--ease-soft)}.post-nav__link[data-astro-cid-egg7nqdx]:hover{border-color:var(--cinnabar);background:var(--paper)}.post-nav__link--next[data-astro-cid-egg7nqdx]{text-align:right}.post-nav__kicker[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-xs);color:var(--ink-fade);margin-bottom:var(--sp-2)}.post-nav__title[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-base);font-weight:500}@media(max-width:860px){.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-2xl)}.post__body[data-astro-cid-egg7nqdx] h2{font-size:var(--fs-lg)}.post__body[data-astro-cid-egg7nqdx] h3{font-size:var(--fs-md)}.post__desc[data-astro-cid-egg7nqdx]{font-size:var(--fs-base)}}@media(max-width:640px){.post[data-astro-cid-egg7nqdx]{padding:var(--sp-6) 0}.post__head[data-astro-cid-egg7nqdx]{margin-bottom:var(--sp-5)}.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-xl)}.post__meta[data-astro-cid-egg7nqdx]{flex-wrap:wrap;gap:var(--sp-2)}.post-nav[data-astro-cid-egg7nqdx]{grid-template-columns:1fr}.post__body[data-astro-cid-egg7nqdx] pre{font-size:var(--fs-xs);padding:var(--sp-4)}}@media(max-width:480px){.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-lg)}.post__rule[data-astro-cid-egg7nqdx]{width:60px;height:20px;margin-top:var(--sp-5)}.post__body[data-astro-cid-egg7nqdx] blockquote{padding:var(--sp-3) var(--sp-4)}}
+</style></head> <body data-astro-cid-37fxchfa> <a class="skip-link" href="#main" data-astro-cid-37fxchfa>跳到正文</a> <header class="site-header" data-astro-cid-37fxchfa> <div class="container site-header__inner" data-astro-cid-37fxchfa> <a href="/" class="brand" aria-label="Jordan の Words" data-astro-cid-37fxchfa> <img src="/illustrations/seal-red.webp" alt="" class="brand__seal" width="36" height="36" data-astro-cid-37fxchfa> <span class="brand__name" data-astro-cid-37fxchfa>Jordan <span class="brand__name-aux" data-astro-cid-37fxchfa>の</span> Words</span> </a> <nav class="nav" aria-label="主导航" data-astro-cid-37fxchfa> <ul data-astro-cid-37fxchfa> <li data-astro-cid-37fxchfa> <a href="/" class="nav__link" data-astro-cid-37fxchfa> 首页 </a> </li><li data-astro-cid-37fxchfa> <a href="/posts" class="nav__link is-active" data-astro-cid-37fxchfa> 文字 </a> </li><li data-astro-cid-37fxchfa> <a href="/projects" class="nav__link" data-astro-cid-37fxchfa> 作品 </a> </li><li data-astro-cid-37fxchfa> <a href="/about" class="nav__link" data-astro-cid-37fxchfa> 关于 </a> </li><li data-astro-cid-37fxchfa> <a href="/contact" class="nav__link" data-astro-cid-37fxchfa> 联系 </a> </li> </ul> </nav> <button class="theme-toggle" type="button" aria-label="切换主题" data-theme-toggle data-astro-cid-37fxchfa> <span class="theme-toggle__icon" data-theme-icon data-astro-cid-37fxchfa>☾</span> </button> </div> </header> <main id="main" data-astro-cid-37fxchfa>  <article class="post" data-astro-cid-egg7nqdx> <header class="post__head container" data-astro-cid-egg7nqdx> <p class="post__meta" data-astro-cid-egg7nqdx> <span class="post__cat" data-astro-cid-egg7nqdx>技术</span> <time datetime="2026-04-14T00:00:00.000Z" data-astro-cid-egg7nqdx>2026年4月14日</time> </p> <h1 class="post__title" data-astro-cid-egg7nqdx>前端面试进阶：设计模式与系统设计实战指南</h1> <p class="post__desc deco" data-astro-cid-egg7nqdx>前端面试最难的系统设计题：URL 缩短、Feed 流、抢票、限流 — 怎么拆解、怎么答题。</p> <hr class="post__rule" data-astro-cid-egg7nqdx> </header> <div class="post__body prose-container prose" data-astro-cid-egg7nqdx> <p>系统设计题是前端面试的高地。这篇文章梳理答题框架。</p>
+<h2 id="答题框架">答题框架</h2>
+<h3 id="1-明确需求">1. 明确需求</h3>
+<ul>
+<li>功能需求：要做什么</li>
+<li>非功能需求：性能、可用性、一致性、扩展性</li>
+</ul>
+<h3 id="2-估算规模">2. 估算规模</h3>
+<ul>
+<li>QPS：日活 * 每个用户每天请求数 / 86400</li>
+<li>存储：1 年数据量 / 单机容量</li>
+</ul>
+<h3 id="3-高层设计">3. 高层设计</h3>
+<ul>
+<li>画架构图：客户端 → API → 服务 → DB</li>
+<li>关键模块拆解</li>
+</ul>
+<h3 id="4-深入细节">4. 深入细节</h3>
+<ul>
+<li>关键算法</li>
+<li>数据模型</li>
+<li>性能瓶颈</li>
+</ul>
+<h3 id="5-权衡取舍">5. 权衡取舍</h3>
+<ul>
+<li>选 A 的理由</li>
+<li>替代方案 B、C 的优缺点</li>
+</ul>
+<h2 id="经典题">经典题</h2>
+<h3 id="1-url-缩短服务bitly">1. URL 缩短服务（bit.ly）</h3>
+<p>需求：</p>
+<ul>
+<li>长 URL → 短 URL</li>
+<li>短 URL → 302 跳转 / 直接渲染长 URL 内容</li>
+</ul>
+<p>设计：</p>
+<ul>
+<li>Hash 算法：长 URL → 6 位 base62</li>
+<li>DB 存短-长 + 创建时间 + 过期时间</li>
+<li>缓存：热门短 URL 进 cache</li>
+</ul>
+<p>深入：</p>
+<ul>
+<li>分布式 ID 生成（Snowflake）</li>
+<li>防刷（限流）</li>
+<li>统计点击数</li>
+</ul>
+<h3 id="2-feed-流推--拉">2. Feed 流（推 / 拉）</h3>
+<p>需求：</p>
+<ul>
+<li>用户关注的人的更新按时间倒序展示</li>
+</ul>
+<p>设计：</p>
+<ul>
+<li>拉模式：读时聚合</li>
+<li>推模式：写时 fanout</li>
+<li>混合：明星推 / 普通人拉</li>
+</ul>
+<p>深入：</p>
+<ul>
+<li>分页（游标 vs 偏移）</li>
+<li>缓存策略</li>
+<li>数据一致性</li>
+</ul>
+<h3 id="3-抢票--秒杀">3. 抢票 / 秒杀</h3>
+<p>需求：</p>
+<ul>
+<li>1000 库存，10 万人抢</li>
+</ul>
+<p>设计：</p>
+<ul>
+<li>限流：Nginx / Redis 漏桶</li>
+<li>库存预热到 Redis</li>
+<li>原子扣减：Redis Lua</li>
+<li>异步下单：消息队列</li>
+</ul>
+<p>深入：</p>
+<ul>
+<li>防超卖（数据库乐观锁 / Redis 原子操作）</li>
+<li>黄牛识别（IP / 设备指纹）</li>
+<li>公平性</li>
+</ul>
+<h3 id="4-限流">4. 限流</h3>
+<p>需求：</p>
+<ul>
+<li>单用户每秒最多 100 个请求</li>
+</ul>
+<p>设计：</p>
+<ul>
+<li>令牌桶：周期性发放令牌</li>
+<li>漏桶：固定速率流出</li>
+<li>滑动窗口：时间窗内计数</li>
+</ul>
+<p>深入：</p>
+<ul>
+<li>分布式限流（Redis + Lua）</li>
+<li>限流粒度（用户 / IP / 接口）</li>
+<li>熔断降级</li>
+</ul>
+<h2 id="实战建议">实战建议</h2>
+<h3 id="1-不要背答案">1. 不要背答案</h3>
+<p>理解问题本质，每个系统的设计都不同。</p>
+<h3 id="2-多画图">2. 多画图</h3>
+<p>白板画图能力 = 系统设计能力的体现。</p>
+<h3 id="3-主动说权衡">3. 主动说权衡</h3>
+<p>没有完美方案，每个选择都有代价。<strong>说出”为什么选 X 而不是 Y”</strong> 才是高分答案。</p>
+<h3 id="4-关注业务">4. 关注业务</h3>
+<p>脱离业务的系统设计 = 纸上谈兵。</p>
+<h2 id="准备方法">准备方法</h2>
+<ul>
+<li>自己画 5-10 个常见系统的架构图</li>
+<li>看完再默画一遍</li>
+<li>跟朋友讨论，互相提问</li>
+</ul>
+<p>系统设计是<strong>经验的语言化</strong>。设计过 10 个真实系统，比刷 100 道题有用。</p> </div> <footer class="post__tags prose-container" data-astro-cid-egg7nqdx> <span class="tag" data-astro-cid-egg7nqdx>#前端</span><span class="tag" data-astro-cid-egg7nqdx>#面试</span> </footer> </article> <nav class="post-nav container" data-astro-cid-egg7nqdx> <a href="/posts/technology-shuanggui-dao" class="post-nav__link post-nav__link--prev" data-astro-cid-egg7nqdx> <span class="post-nav__kicker" data-astro-cid-egg7nqdx>← 上一篇</span> <span class="post-nav__title" data-astro-cid-egg7nqdx>为什么我要同时打两份工：双轨道人生的实践笔记</span> </a> <a href="/posts/technology-fluxing-ms" class="post-nav__link post-nav__link--next" data-astro-cid-egg7nqdx> <span class="post-nav__kicker" data-astro-cid-egg7nqdx>下一篇 →</span> <span class="post-nav__title" data-astro-cid-egg7nqdx>代码中的设计模式：那些面试和工作都用得上的东西</span> </a> </nav>  </main> <footer class="site-footer" data-astro-cid-37fxchfa> <div class="container site-footer__inner" data-astro-cid-37fxchfa> <p class="site-footer__sig deco" data-astro-cid-37fxchfa>每一个不曾起舞的日子，都是对生命的辜负</p> <p class="site-footer__meta fade" data-astro-cid-37fxchfa>© 2020 – 2026 Jordan · Built with Astro</p> <p class="site-footer__meta fade" data-astro-cid-37fxchfa> <a href="/contact" class="site-footer__contact" data-astro-cid-37fxchfa>联系 Jordan</a> </p> </div> </footer> <!-- 浮动联系按钮 --> <a href="/contact" class="contact-fab" aria-label="联系 Jordan" data-astro-cid-37fxchfa>
+✉
+</a> <script type="module">const c=document.querySelector("[data-theme-toggle]"),o=document.querySelector("[data-theme-icon]"),n=()=>{const t=document.documentElement.getAttribute("data-theme");o.textContent=t==="dark"?"☼":"☾"};n();c?.addEventListener("click",()=>{const e=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",e),localStorage.setItem("theme",e),n()});</script> </body> </html>  

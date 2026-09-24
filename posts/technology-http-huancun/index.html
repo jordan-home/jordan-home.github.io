@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="强缓存 / 协商缓存 / Cache-Control / ETag / Last-Modified — 让 Web 真正快的缓存机制。"><meta name="theme-color" content="#F5EFE0"><link rel="icon" type="image/png" href="/favicon.png"><link rel="manifest" href="/manifest.json"><link rel="canonical" href="https://jordan-home.github.io/posts/technology-http-huancun/"><title>HTTP 缓存机制详解 · Jordan の Words</title><!-- JSON-LD: Person schema（站点作者信息） --><script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Jordan","url":"https://jordan-home.github.io/","description":"Jordan 的个人站点 — 记录技术、文学、哲学、AI 与生活的痕迹。","knowsAbout":["Web Development","AI","Writing","Psychology","Design"],"sameAs":["https://github.com/jordan-home","https://www.sweet-novel.net","https://petmona.app"]}</script><!-- 字体：衬线中文 + 衬线英文 + 题花 --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Ma+Shan+Zheng&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"><!-- 主题持久化（避免闪烁） --><script>
+      (function () {
+        const t = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script><!-- Open Graph --><meta property="og:title" content="HTTP 缓存机制详解 · Jordan の Words"><meta property="og:description" content="强缓存 / 协商缓存 / Cache-Control / ETag / Last-Modified — 让 Web 真正快的缓存机制。"><meta property="og:image" content="https://jordan-home.github.io/illustrations/hero-shanhui.webp"><meta property="og:type" content="website"><meta property="og:url" content="https://jordan-home.github.io/posts/technology-http-huancun/"><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="HTTP 缓存机制详解 · Jordan の Words"><meta name="twitter:description" content="强缓存 / 协商缓存 / Cache-Control / ETag / Last-Modified — 让 Web 真正快的缓存机制。"><meta name="twitter:image" content="https://jordan-home.github.io/illustrations/hero-shanhui.webp"><link rel="stylesheet" href="/assets/about.n2tu8J8j.css">
+<style>.post[data-astro-cid-egg7nqdx]{padding:var(--sp-8) 0}.post__head[data-astro-cid-egg7nqdx]{text-align:center;margin-bottom:var(--sp-7)}.post__meta[data-astro-cid-egg7nqdx]{display:flex;gap:var(--sp-4);justify-content:center;font-size:var(--fs-xs);color:var(--ink-fade);margin:0 0 var(--sp-5)}.post__cat[data-astro-cid-egg7nqdx]{padding:2px 10px;background:var(--cinnabar);color:var(--paper);border-radius:var(--r-sm)}.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-3xl);margin:0 0 var(--sp-4);line-height:var(--lh-snug)}.post__desc[data-astro-cid-egg7nqdx]{font-size:var(--fs-md);color:var(--ink-soft);line-height:var(--lh-loose);margin:0 0 var(--sp-5);font-style:italic}.post__rule[data-astro-cid-egg7nqdx]{width:80px;height:28px;border:0;background:url(/illustrations/divider-bamboo.svg) no-repeat center / contain;margin:var(--sp-6) auto 0}.post__tags[data-astro-cid-egg7nqdx]{margin-top:var(--sp-7);display:flex;flex-wrap:wrap;gap:var(--sp-2)}.post__tags[data-astro-cid-egg7nqdx] .tag[data-astro-cid-egg7nqdx]{font-size:var(--fs-xs);padding:4px 12px;background:var(--paper-warm);border:1px solid var(--line);border-radius:var(--r-sm);color:var(--ink-soft)}.post-nav[data-astro-cid-egg7nqdx]{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);margin-top:var(--sp-7);padding-top:var(--sp-7);border-top:1px solid var(--line)}.post-nav__link[data-astro-cid-egg7nqdx]{display:block;padding:var(--sp-4);background:var(--paper-warm);border:1px solid var(--line);border-radius:var(--r-md);color:var(--ink);transition:all var(--dur-fast) var(--ease-soft)}.post-nav__link[data-astro-cid-egg7nqdx]:hover{border-color:var(--cinnabar);background:var(--paper)}.post-nav__link--next[data-astro-cid-egg7nqdx]{text-align:right}.post-nav__kicker[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-xs);color:var(--ink-fade);margin-bottom:var(--sp-2)}.post-nav__title[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-base);font-weight:500}@media(max-width:860px){.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-2xl)}.post__body[data-astro-cid-egg7nqdx] h2{font-size:var(--fs-lg)}.post__body[data-astro-cid-egg7nqdx] h3{font-size:var(--fs-md)}.post__desc[data-astro-cid-egg7nqdx]{font-size:var(--fs-base)}}@media(max-width:640px){.post[data-astro-cid-egg7nqdx]{padding:var(--sp-6) 0}.post__head[data-astro-cid-egg7nqdx]{margin-bottom:var(--sp-5)}.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-xl)}.post__meta[data-astro-cid-egg7nqdx]{flex-wrap:wrap;gap:var(--sp-2)}.post-nav[data-astro-cid-egg7nqdx]{grid-template-columns:1fr}.post__body[data-astro-cid-egg7nqdx] pre{font-size:var(--fs-xs);padding:var(--sp-4)}}@media(max-width:480px){.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-lg)}.post__rule[data-astro-cid-egg7nqdx]{width:60px;height:20px;margin-top:var(--sp-5)}.post__body[data-astro-cid-egg7nqdx] blockquote{padding:var(--sp-3) var(--sp-4)}}
+</style></head> <body data-astro-cid-37fxchfa> <a class="skip-link" href="#main" data-astro-cid-37fxchfa>跳到正文</a> <header class="site-header" data-astro-cid-37fxchfa> <div class="container site-header__inner" data-astro-cid-37fxchfa> <a href="/" class="brand" aria-label="Jordan の Words" data-astro-cid-37fxchfa> <img src="/illustrations/seal-red.webp" alt="" class="brand__seal" width="36" height="36" data-astro-cid-37fxchfa> <span class="brand__name" data-astro-cid-37fxchfa>Jordan <span class="brand__name-aux" data-astro-cid-37fxchfa>の</span> Words</span> </a> <nav class="nav" aria-label="主导航" data-astro-cid-37fxchfa> <ul data-astro-cid-37fxchfa> <li data-astro-cid-37fxchfa> <a href="/" class="nav__link" data-astro-cid-37fxchfa> 首页 </a> </li><li data-astro-cid-37fxchfa> <a href="/posts" class="nav__link is-active" data-astro-cid-37fxchfa> 文字 </a> </li><li data-astro-cid-37fxchfa> <a href="/projects" class="nav__link" data-astro-cid-37fxchfa> 作品 </a> </li><li data-astro-cid-37fxchfa> <a href="/about" class="nav__link" data-astro-cid-37fxchfa> 关于 </a> </li><li data-astro-cid-37fxchfa> <a href="/contact" class="nav__link" data-astro-cid-37fxchfa> 联系 </a> </li> </ul> </nav> <button class="theme-toggle" type="button" aria-label="切换主题" data-theme-toggle data-astro-cid-37fxchfa> <span class="theme-toggle__icon" data-theme-icon data-astro-cid-37fxchfa>☾</span> </button> </div> </header> <main id="main" data-astro-cid-37fxchfa>  <article class="post" data-astro-cid-egg7nqdx> <header class="post__head container" data-astro-cid-egg7nqdx> <p class="post__meta" data-astro-cid-egg7nqdx> <span class="post__cat" data-astro-cid-egg7nqdx>技术</span> <time datetime="2026-02-14T00:00:00.000Z" data-astro-cid-egg7nqdx>2026年2月14日</time> </p> <h1 class="post__title" data-astro-cid-egg7nqdx>HTTP 缓存机制详解</h1> <p class="post__desc deco" data-astro-cid-egg7nqdx>强缓存 / 协商缓存 / Cache-Control / ETag / Last-Modified — 让 Web 真正快的缓存机制。</p> <hr class="post__rule" data-astro-cid-egg7nqdx> </header> <div class="post__body prose-container prose" data-astro-cid-egg7nqdx> <p>HTTP 缓存是 Web 性能优化的第一性原理。</p>
+<h2 id="缓存的两类">缓存的两类</h2>
+<h3 id="强缓存">强缓存</h3>
+<p>浏览器<strong>不发送请求</strong>到服务器，直接用本地缓存。</p>
+<p>由 <code>Cache-Control</code> 头控制：</p>
+<ul>
+<li><code>max-age=3600</code> — 缓存 1 小时</li>
+<li><code>no-cache</code> — 不直接用，强制协商</li>
+<li><code>no-store</code> — 完全不缓存</li>
+<li><code>private</code> / <code>public</code> — 谁可以缓存</li>
+</ul>
+<h3 id="协商缓存">协商缓存</h3>
+<p>浏览器还是要发请求，但带条件：</p>
+<ul>
+<li><code>If-None-Match: &#x3C;etag></code> — 服务器比较 ETag，匹配就 304</li>
+<li><code>If-Modified-Since: &#x3C;date></code> — 服务器比较时间</li>
+</ul>
+<p>服务器返回 304 Not Modified 表示缓存还能用。</p>
+<h2 id="etag-vs-last-modified">ETag vs Last-Modified</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th></th><th>ETag</th><th>Last-Modified</th></tr></thead><tbody><tr><td>精度</td><td>高（hash）</td><td>秒级</td></tr><tr><td>性能</td><td>略慢（要计算 hash）</td><td>快（只读文件时间）</td></tr><tr><td>多服务器同步</td><td>容易（自定义 hash）</td><td>难（文件时间不一致）</td></tr></tbody></table>
+<p><strong>优先用 ETag</strong>。</p>
+<h2 id="实战配置nginx">实战配置（Nginx）</h2>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="nginx"><code><span class="line"><span style="color:#D73A49">location</span><span style="color:#6F42C1"> /static/ </span><span style="color:#24292E">{</span></span>
+<span class="line"><span style="color:#D73A49">  expires </span><span style="color:#005CC5">30d</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">  add_header </span><span style="color:#24292E">Cache-Control </span><span style="color:#032F62">"public, immutable"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">location</span><span style="color:#6F42C1"> /api/ </span><span style="color:#24292E">{</span></span>
+<span class="line"><span style="color:#D73A49">  add_header </span><span style="color:#24292E">Cache-Control </span><span style="color:#032F62">"no-store"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h2 id="spa-静态资源的特殊处理">SPA 静态资源的特殊处理</h2>
+<p>HTML 文件应该 <code>no-cache</code>（总是问服务器确认）。
+HTML 文件则要 <code>immutable</code> + hash（永远缓存 + 文件名带 hash 保证更新）。</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="nginx"><code><span class="line"><span style="color:#D73A49">location</span><span style="color:#D73A49"> ~*</span><span style="color:#032F62"> \.(js|css|png|webp|woff2)$ </span><span style="color:#24292E">{</span></span>
+<span class="line"><span style="color:#D73A49">  expires </span><span style="color:#005CC5">365d</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">  add_header </span><span style="color:#24292E">Cache-Control </span><span style="color:#032F62">"public, immutable"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<p>设置得当，单页面应用加载时间能从 2s 降到 200ms。</p> </div> <footer class="post__tags prose-container" data-astro-cid-egg7nqdx> <span class="tag" data-astro-cid-egg7nqdx>#HTTP</span><span class="tag" data-astro-cid-egg7nqdx>#性能优化</span> </footer> </article> <nav class="post-nav container" data-astro-cid-egg7nqdx> <a href="/posts/technology-dongtai-guihua" class="post-nav__link post-nav__link--prev" data-astro-cid-egg7nqdx> <span class="post-nav__kicker" data-astro-cid-egg7nqdx>← 上一篇</span> <span class="post-nav__title" data-astro-cid-egg7nqdx>动态规划入门指南</span> </a> <a href="/posts/technology-prompt-engineering" class="post-nav__link post-nav__link--next" data-astro-cid-egg7nqdx> <span class="post-nav__kicker" data-astro-cid-egg7nqdx>下一篇 →</span> <span class="post-nav__title" data-astro-cid-egg7nqdx>Prompt Engineering 基础指南</span> </a> </nav>  </main> <footer class="site-footer" data-astro-cid-37fxchfa> <div class="container site-footer__inner" data-astro-cid-37fxchfa> <p class="site-footer__sig deco" data-astro-cid-37fxchfa>每一个不曾起舞的日子，都是对生命的辜负</p> <p class="site-footer__meta fade" data-astro-cid-37fxchfa>© 2020 – 2026 Jordan · Built with Astro</p> <p class="site-footer__meta fade" data-astro-cid-37fxchfa> <a href="/contact" class="site-footer__contact" data-astro-cid-37fxchfa>联系 Jordan</a> </p> </div> </footer> <!-- 浮动联系按钮 --> <a href="/contact" class="contact-fab" aria-label="联系 Jordan" data-astro-cid-37fxchfa>
+✉
+</a> <script type="module">const c=document.querySelector("[data-theme-toggle]"),o=document.querySelector("[data-theme-icon]"),n=()=>{const t=document.documentElement.getAttribute("data-theme");o.textContent=t==="dark"?"☼":"☾"};n();c?.addEventListener("click",()=>{const e=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";document.documentElement.setAttribute("data-theme",e),localStorage.setItem("theme",e),n()});</script> </body> </html>  
