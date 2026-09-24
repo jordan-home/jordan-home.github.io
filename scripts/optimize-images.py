@@ -19,7 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent / "public" / "illustrations"
 
 IMAGES = [
-    "hero-skin.webp",
+    "hero-shanhui.webp",
     "cover-default.webp",
     "cover-technology.webp",
     "cover-note.webp",
