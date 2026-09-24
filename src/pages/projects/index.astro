@@ -39,7 +39,7 @@ const sections = [
 
         <div class="works-grid">
           {section.items.map((proj, i) => (
-            <a href={`/projects/${proj.id}`} class="work-card reveal" style={`animation-delay: ${i * 60}ms`}>
+            <a href={`/projects/${proj.id.replace(/\.md$/, '')}`} class="work-card reveal" style={`animation-delay: ${i * 60}ms`}>
               {proj.data.cover && (
                 <div class="work-card__cover">
                   <img src={proj.data.cover} alt={proj.data.title} loading="lazy" />

@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="走丢了 · Jordan の Words" description="404 — 这条路走不通">
+  <section class="not-found container">
+    <figure class="not-found__art reveal">
+      <img src="/illustrations/404-lost-cat.webp" alt="走丢的小猫" />
+    </figure>
+    <p class="not-found__kicker deco">· 迷 · 路 ·</p>
+    <h1 class="not-found__title">走丢了</h1>
+    <p class="not-found__desc">
+      这条路已经不在这里了 —<br />
+      要不回到首页，或者翻翻文字？
+    </p>
+    <div class="not-found__nav">
+      <a href="/" class="btn btn--primary">回首页</a>
+      <a href="/posts" class="btn btn--ghost">看看文字</a>
+      <a href="/contact" class="btn btn--ghost">联系站长</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    padding: var(--sp-9) 0;
+    text-align: center;
+    max-width: 32rem;
+  }
+  .not-found__art {
+    width: 240px;
+    height: 240px;
+    margin: 0 auto var(--sp-6);
+  }
+  .not-found__art img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .not-found__kicker { margin: 0 0 var(--sp-4); font-size: var(--fs-md); }
+  .not-found__title { font-size: var(--fs-2xl); margin: 0 0 var(--sp-4); }
+  .not-found__desc {
+    font-size: var(--fs-md);
+    color: var(--ink-soft);
+    line-height: var(--lh-loose);
+    margin: 0 0 var(--sp-7);
+  }
+  .not-found__nav {
+    display: flex;
+    gap: var(--sp-3);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 640px) {
+    .not-found { padding: var(--sp-7) var(--sp-4); }
+    .not-found__art { width: 200px; height: 200px; }
+    .not-found__title { font-size: var(--fs-xl); }
+    .not-found__desc { font-size: var(--fs-sm); }
+  }
+  @media (max-width: 480px) {
+    .not-found__art { width: 160px; height: 160px; }
+    .not-found__title { font-size: var(--fs-lg); }
+  }
+</style>

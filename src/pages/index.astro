@@ -1,0 +1,319 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import { getCollection } from 'astro:content';
+
+// 最近文章（最新 5 篇，按发布日期倒序）
+const recent = (await getCollection('posts'))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 5);
+
+// 精选作品（按 featured + order）
+const featuredProjects = (await getCollection('projects'))
+  .filter(p => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const categoryLabels: Record<string, string> = {
+  technology: '技术',
+  note: '心理',
+  health: '健康',
+  lifes: '生活',
+  projects: '作品',
+  literature: '文学',
+  philosophy: '哲学',
+  misc: '随笔',
+};
+
+const coverMap: Record<string, string> = {
+  technology: '/illustrations/cover-technology.webp',
+  note:       '/illustrations/cover-note.webp',
+  health:     '/illustrations/cover-health.webp',
+  lifes:      '/illustrations/cover-lifes.webp',
+  projects:   '/illustrations/cover-default.webp',
+  literature: '/illustrations/cover-default.webp',
+  philosophy: '/illustrations/cover-default.webp',
+  misc:       '/illustrations/cover-default.webp',
+};
+---
+
+<BaseLayout title="Jordan の Words — 首页"
+            description="Jordan の Words — 记录技术、文学、哲学、AI 与生活的个人站点">
+  <Hero />
+
+  <!-- 近期笔墨 -->
+  <section class="section">
+    <div class="container">
+      <header class="section__head">
+        <h2 class="section__title">
+          <span class="section__title-deco deco">· 近 · 期 · 笔 · 墨 ·</span>
+          <span class="serif-en">Recent Words</span>
+        </h2>
+        <a href="/posts" class="section__more">查看全部 →</a>
+      </header>
+
+      <ul class="post-list">
+        {recent.map((post, i) => (
+          <li class="post-list__item reveal" style={`animation-delay: ${i * 80}ms`}>
+            <a href={`/posts/${post.id}`} class="post-list__link">
+              <img class="post-list__cover"
+                   src={post.data.cover || coverMap[post.data.category] || '/illustrations/cover-default.webp'}
+                   alt="" loading="lazy" />
+              <div class="post-list__body">
+                <span class="post-list__date">
+                  <time datetime={post.data.pubDate.toISOString()}>
+                    {post.data.pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
+                  </time>
+                  <span class="post-list__cat">{categoryLabels[post.data.category] || post.data.category}</span>
+                </span>
+                <h3 class="post-list__title">{post.data.title}</h3>
+                {post.data.description && (
+                  <p class="post-list__desc">{post.data.description}</p>
+                )}
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 案头展 -->
+  <section class="section section--deep">
+    <div class="container">
+      <header class="section__head">
+        <h2 class="section__title">
+          <span class="section__title-deco deco">· 案 · 头 · 展 ·</span>
+          <span class="serif-en">Selected Works</span>
+        </h2>
+        <a href="/projects" class="section__more">看全部作品 →</a>
+      </header>
+
+      <div class="project-grid">
+        {featuredProjects.map((proj, i) => (
+          <a href={`/projects/${proj.id.replace(/\.md$/, '')}`} class="project-card reveal" style={`animation-delay: ${i * 80}ms`}>
+            <div class="project-card__cover">
+              {proj.data.cover && <img src={proj.data.cover} alt={proj.data.title} loading="lazy" />}
+            </div>
+            <div class="project-card__body">
+              <h3 class="project-card__title">{proj.data.title}</h3>
+              <p class="project-card__summary">{proj.data.summary}</p>
+              {proj.data.stack.length > 0 && (
+                <ul class="project-card__tags">
+                  {proj.data.stack.slice(0, 4).map(t => <li>{t}</li>)}
+                </ul>
+              )}
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container container--narrow cta">
+      <p class="cta__kicker deco">· 一 · 封 · 信 ·</p>
+      <h2 class="cta__title">有话想说？</h2>
+      <p class="cta__desc">
+        合作、约稿、随便聊聊——都可以。<br />
+        我在这里等你。
+      </p>
+      <a href="/contact" class="btn btn--primary">写信给我</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .section {
+    padding: var(--sp-9) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .section--deep {
+    background: var(--paper-deep);
+  }
+  .section__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--sp-7);
+  }
+  .section__title {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    margin: 0;
+    font-size: var(--fs-xl);
+  }
+  .section__title-deco {
+    font-size: var(--fs-md);
+    color: var(--cinnabar);
+  }
+  .section__more {
+    color: var(--ink-fade);
+    font-size: var(--fs-sm);
+  }
+  .section__more:hover { color: var(--cinnabar); }
+
+  /* —— 文章列表 —— */
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .post-list__item {
+    border-bottom: 1px dashed var(--line);
+  }
+  .post-list__link {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: var(--sp-5);
+    align-items: start;
+    padding: var(--sp-5) 0;
+    color: var(--ink);
+    border: none;
+    transition: padding-left var(--dur-fast) var(--ease-soft);
+  }
+  .post-list__link:hover {
+    padding-left: var(--sp-4);
+    border: none;
+  }
+  .post-list__cover {
+    width: 140px;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--r-md);
+    background: var(--paper-deep);
+  }
+  .post-list__body { min-width: 0; }
+  .post-list__date {
+    display: flex;
+    gap: var(--sp-3);
+    font-size: var(--fs-xs);
+    color: var(--ink-fade);
+    font-family: var(--font-mono);
+    margin-bottom: var(--sp-2);
+  }
+  .post-list__cat {
+    padding: 2px 8px;
+    background: var(--paper-deep);
+    border-radius: var(--r-sm);
+    color: var(--cinnabar);
+  }
+  .post-list__title {
+    font-size: var(--fs-lg);
+    margin: 0 0 var(--sp-2);
+    font-weight: 500;
+  }
+  .post-list__desc {
+    color: var(--ink-soft);
+    line-height: var(--lh-snug);
+    margin: 0;
+    font-size: var(--fs-sm);
+  }
+
+  /* —— 作品卡片 —— */
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--sp-5);
+  }
+  .project-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    transition: all var(--dur-base) var(--ease-out);
+    overflow: hidden;
+  }
+  .project-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--cinnabar);
+    box-shadow: var(--sh-2);
+  }
+  .project-card__cover {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--paper-deep);
+  }
+  .project-card__cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur-slow) var(--ease-out);
+  }
+  .project-card:hover .project-card__cover img {
+    transform: scale(1.04);
+  }
+  .project-card__body {
+    padding: var(--sp-4) var(--sp-5);
+  }
+  .project-card__title {
+    font-size: var(--fs-lg);
+    margin: 0 0 var(--sp-2);
+    font-weight: 500;
+  }
+  .project-card__summary {
+    color: var(--ink-soft);
+    line-height: var(--lh-snug);
+    margin: 0 0 var(--sp-3);
+    font-size: var(--fs-sm);
+  }
+  .project-card__tags {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+  .project-card__tags li {
+    font-size: var(--fs-xs);
+    padding: 2px 8px;
+    background: var(--paper-deep);
+    border-radius: var(--r-sm);
+    color: var(--ink-soft);
+  }
+
+  /* —— CTA —— */
+  .cta {
+    text-align: center;
+    padding: var(--sp-8) 0;
+  }
+  .cta__kicker {
+    margin: 0 0 var(--sp-4);
+    font-size: var(--fs-md);
+  }
+  .cta__title {
+    font-size: var(--fs-2xl);
+    margin: 0 0 var(--sp-4);
+  }
+  .cta__desc {
+    font-size: var(--fs-md);
+    color: var(--ink-soft);
+    line-height: var(--lh-loose);
+    margin: 0 0 var(--sp-6);
+  }
+
+  @media (max-width: 860px) {
+    .section { padding: var(--sp-7) 0; }
+    .section__head { flex-direction: column; align-items: flex-start; gap: var(--sp-3); margin-bottom: var(--sp-5); }
+    .cta { padding: var(--sp-5) 0; }
+  }
+  @media (max-width: 640px) {
+    .post-list__link {
+      grid-template-columns: 80px 1fr;
+      gap: var(--sp-3);
+    }
+    .post-list__cover { width: 80px; }
+    .post-list__desc { display: none; }
+    .project-grid { gap: var(--sp-4); }
+  }
+  @media (max-width: 480px) {
+    .post-list__cover { width: 64px; }
+    .post-list__title { font-size: var(--fs-base); }
+    .post-list__date { font-size: 11px; gap: var(--sp-2); flex-wrap: wrap; }
+    .cta__title { font-size: var(--fs-xl); }
+    .cta__desc { font-size: var(--fs-base); }
+  }
+</style>

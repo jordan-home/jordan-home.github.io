@@ -1,0 +1,134 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="关于 · Jordan の Words" description="关于 Jordan 和这个站点">
+  <section class="about container">
+    <p class="about__kicker deco">· 卷 · 三 · 之 一 ·</p>
+
+    <div class="about__layout">
+      <figure class="about__portrait reveal">
+        <img src="/illustrations/about-portrait.webp" alt="窗前写字的 Jordan" />
+      </figure>
+
+      <div class="about__body">
+        <h1 class="about__title">关于</h1>
+        <p class="about__lede">
+          写代码、写字、读一些书。<br />
+          关心个体如何在算法时代活得清醒一点。
+        </p>
+
+        <ul class="about__list">
+          <li>技术是工具，写作是修行。</li>
+          <li>相信慢的东西，认真的人。</li>
+          <li>喜欢水墨、毛笔、不慌不忙的下午。</li>
+        </ul>
+
+        <blockquote class="about__quote">
+          “一个人知道自己为什么而活，<br />就能忍受任何一种生活。”
+          <cite class="about__quote-src">— 尼采</cite>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about { padding: var(--sp-9) 0 var(--sp-9); }
+
+  .about__kicker {
+    text-align: center;
+    margin: 0 0 var(--sp-7);
+    font-size: var(--fs-md);
+  }
+
+  .about__layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: var(--sp-7);
+    align-items: start;
+  }
+
+  .about__portrait {
+    margin: 0;
+    position: relative;
+  }
+  .about__portrait::after {
+    content: '';
+    position: absolute;
+    top: var(--sp-4);
+    left: var(--sp-4);
+    right: -8px;
+    bottom: -8px;
+    border: 1px solid var(--cinnabar);
+    border-radius: var(--r-md);
+    z-index: -1;
+  }
+  .about__portrait img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--r-md);
+    box-shadow: var(--sh-1);
+    background: var(--paper-deep);
+  }
+
+  .about__title {
+    font-size: var(--fs-3xl);
+    margin: 0 0 var(--sp-5);
+  }
+  .about__lede {
+    font-size: var(--fs-lg);
+    line-height: var(--lh-loose);
+    color: var(--ink-soft);
+    margin: 0 0 var(--sp-6);
+  }
+  .about__list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--sp-7);
+  }
+  .about__list li {
+    padding: var(--sp-3) 0 var(--sp-3) var(--sp-5);
+    border-bottom: 1px dashed var(--line);
+    position: relative;
+    color: var(--ink-soft);
+  }
+  .about__list li::before {
+    content: '·';
+    position: absolute;
+    left: var(--sp-2);
+    color: var(--cinnabar);
+    font-size: var(--fs-lg);
+  }
+
+  .about__quote {
+    margin: 0;
+    padding: var(--sp-5) var(--sp-6);
+    background: var(--paper-warm);
+    border-left: 3px solid var(--cinnabar);
+    border-radius: 0 var(--r-md) var(--r-md) 0;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: var(--fs-lg);
+    line-height: var(--lh-loose);
+  }
+  .about__quote-src {
+    display: block;
+    margin-top: var(--sp-3);
+    font-style: normal;
+    font-size: var(--fs-sm);
+    color: var(--ink-fade);
+  }
+
+  @media (max-width: 860px) {
+    .about__layout { grid-template-columns: 1fr; }
+    .about__portrait { max-width: 280px; margin: 0 auto; }
+  }
+  @media (max-width: 480px) {
+    .about { padding: var(--sp-7) 0 var(--sp-8); }
+    .about__title { font-size: var(--fs-2xl); }
+    .about__lede { font-size: var(--fs-md); }
+    .about__portrait { max-width: 220px; }
+    .about__quote { font-size: var(--fs-md); }
+  }
+</style>

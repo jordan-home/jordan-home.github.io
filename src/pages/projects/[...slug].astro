@@ -5,7 +5,8 @@ import { getCollection, render } from 'astro:content';
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
   return projects.map(proj => ({
-    params: { slug: proj.id },
+    // strip .md suffix from id so URLs are /projects/petmona/ not /projects/petmona.md/
+    params: { slug: proj.id.replace(/\.md$/, '') },
     props: { proj },
   }));
 }

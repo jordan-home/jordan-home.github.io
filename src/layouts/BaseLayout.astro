@@ -1,0 +1,274 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const {
+  title,
+  description = 'Jordan の Words — 记录技术、文学、哲学、AI 与生活的个人站点',
+  ogImage = '/illustrations/hero-shanhui.webp'
+} = Astro.props;
+
+const navItems = [
+  { href: '/', label: '首页' },
+  { href: '/posts', label: '文字' },
+  { href: '/projects', label: '作品' },
+  { href: '/about', label: '关于' },
+  { href: '/contact', label: '联系' },
+];
+
+// 当前路径用于激活态
+const currentPath = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#F5EFE0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site).href} />
+
+    <title>{title}</title>
+
+    <!-- JSON-LD: Person schema（站点作者信息） -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Jordan",
+      "url": Astro.site.href,
+      "description": "Jordan 的个人站点 — 记录技术、文学、哲学、AI 与生活的痕迹。",
+      "knowsAbout": ["Web Development", "AI", "Writing", "Psychology", "Design"],
+      "sameAs": [
+        "https://github.com/jordan-home",
+        "https://www.sweet-novel.net",
+        "https://petmona.app"
+      ]
+    })} />
+
+    <!-- 字体：衬线中文 + 衬线英文 + 题花 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Ma+Shan+Zheng&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+
+    <!-- 主题持久化（避免闪烁） -->
+    <script is:inline>
+      (function () {
+        const t = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script>
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site).href} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(ogImage, Astro.site).href} />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">跳到正文</a>
+
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a href="/" class="brand" aria-label="Jordan の Words">
+          <img src="/illustrations/seal-red.webp" alt="" class="brand__seal" width="36" height="36" />
+          <span class="brand__name">Jordan <span class="brand__name-aux">の</span> Words</span>
+        </a>
+
+        <nav class="nav" aria-label="主导航">
+          <ul>
+            {navItems.map(item => (
+              <li>
+                <a href={item.href} class:list={["nav__link", isActive(item.href) && "is-active"]}>
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <button class="theme-toggle" type="button" aria-label="切换主题" data-theme-toggle>
+          <span class="theme-toggle__icon" data-theme-icon>☾</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container site-footer__inner">
+        <p class="site-footer__sig deco">每一个不曾起舞的日子，都是对生命的辜负</p>
+        <p class="site-footer__meta fade">© 2020 – 2026 Jordan · Built with Astro</p>
+        <p class="site-footer__meta fade">
+          <a href="/contact" class="site-footer__contact">联系 Jordan</a>
+        </p>
+      </div>
+    </footer>
+
+    <!-- 浮动联系按钮 -->
+    <a href="/contact" class="contact-fab" aria-label="联系 Jordan">
+      ✉
+    </a>
+
+    <script>
+      // 主题切换
+      const btn = document.querySelector('[data-theme-toggle]');
+      const icon = document.querySelector('[data-theme-icon]');
+      const sync = () => {
+        const t = document.documentElement.getAttribute('data-theme');
+        icon.textContent = t === 'dark' ? '☼' : '☾';
+      };
+      sync();
+      btn?.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme');
+        const next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        sync();
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  /* ============ Header ============ */
+  .site-header {
+    position: sticky;
+    top: 0;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    z-index: 50;
+    backdrop-filter: blur(6px);
+  }
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-5);
+    padding: var(--sp-4) 0;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    color: var(--ink);
+  }
+  .brand__seal { width: 30px; height: 30px; }
+  .brand__name { font-family: var(--font-serif-cn); font-size: var(--fs-md); font-weight: 500; }
+  .brand__name-aux { font-size: var(--fs-xs); color: var(--ink-fade); margin: 0 2px; }
+
+  .nav ul { display: flex; list-style: none; padding: 0; margin: 0; gap: var(--sp-5); }
+  .nav__link {
+    font-size: var(--fs-sm);
+    color: var(--ink-soft);
+    padding: var(--sp-2) 0;
+    position: relative;
+    transition: color var(--dur-fast) var(--ease-soft);
+  }
+  .nav__link:hover { color: var(--cinnabar); }
+  .nav__link.is-active { color: var(--cinnabar); }
+  .nav__link.is-active::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 18px;
+    height: 1px;
+    background: var(--cinnabar);
+  }
+
+  .theme-toggle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--paper-warm);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--dur-fast) var(--ease-soft);
+  }
+  .theme-toggle:hover { border-color: var(--cinnabar); color: var(--cinnabar); }
+
+  /* ============ Footer ============ */
+  .site-footer {
+    border-top: 1px solid var(--line);
+    padding: var(--sp-8) 0 var(--sp-7);
+    margin-top: var(--sp-9);
+    text-align: center;
+  }
+  .site-footer__sig {
+    font-size: var(--fs-lg);
+    margin: 0 0 var(--sp-3);
+  }
+  .site-footer__meta {
+    font-size: var(--fs-xs);
+    margin: var(--sp-2) 0;
+  }
+  .site-footer__contact { color: var(--ink-fade); }
+  .site-footer__contact:hover { color: var(--cinnabar); }
+
+  /* ============ Contact FAB ============ */
+  .contact-fab {
+    position: fixed;
+    right: var(--sp-5);
+    bottom: var(--sp-6);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--cinnabar);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: var(--sh-2);
+    z-index: 40;
+    transition: all var(--dur-fast) var(--ease-soft);
+  }
+  .contact-fab:hover {
+    background: var(--cinnabar-deep);
+    color: var(--paper);
+    transform: scale(1.05);
+  }
+
+  /* ============ Responsive ============ */
+  @media (max-width: 860px) {
+    .site-header__inner { gap: var(--sp-3); }
+  }
+  @media (max-width: 640px) {
+    .site-header__inner { padding: var(--sp-3) 0; }
+    .nav ul { gap: var(--sp-3); }
+    .nav__link { font-size: var(--fs-xs); }
+    .brand__name { display: none; }
+    .site-footer { padding: var(--sp-6) 0 var(--sp-5); margin-top: var(--sp-8); }
+    .contact-fab { right: var(--sp-4); bottom: var(--sp-4); width: 44px; height: 44px; }
+  }
+  @media (max-width: 480px) {
+    .nav ul { gap: var(--sp-2); }
+    .nav__link { padding: var(--sp-1) 0; }
+    .theme-toggle { width: 32px; height: 32px; font-size: 14px; }
+  }
+</style>
