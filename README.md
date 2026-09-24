@@ -120,11 +120,42 @@ npx tsc --noEmit    # 严格模式 TS 检查
 
 ## 四、部署流程
 
+### 分支结构与关系
+
+| 分支 | 角色 | 谁在写 | GitHub Pages 源 |
+|---|---|---|---|
+| **`master`**（本地 + 远端）| **源码主分支** — 唯一人工维护的分支 | 你（开发者）| ❌ 不是 Pages 源 |
+| **`dev`**（远端）| **部署分支** — 只承载 `dist/` 编译产物 | `deploy.sh` 自动推送 | ✅ **Pages 源** |
+| `gh-pages`（远端，历史遗留）| 早期用过的部署分支 | 已废弃，可保留或删除 | ❌ 不是 Pages 源 |
+
+**核心关系**：
+
+```
+        你在本地编辑源码
+              ↓
+         git push origin:master
+              ↓
+   master ←  你 + git 协作的分支  ←  src/  public/illustrations/  package.json  …
+              ↓ (npm run deploy)
+         npm run build
+              ↓
+   dist/  (49 个页面 + assets)
+              ↓
+    deploy.sh: cd dist && git init && git push -f origin dev
+              ↓
+   dev  ←  dist 内容（force push 覆盖式更新）
+              ↓
+   GitHub Pages Source = dev 分支根目录
+              ↓
+   https://jordan-home.github.io
+```
+
 ### 默认部署链路
 
 ```
-本地 main  →  npm run build  →  dist/  →  git push -f dev  →  GitHub Pages
-                                       (origin: git@github.com:jordan-home/jordan-home.github.io.git)
+本地 master  →  npm run build  →  dist/  →  git push -f origin dev  →  GitHub Pages
+         ↑                                                       ↑
+      源码 (手动维护)                              编译产物 (deploy.sh 自动)
 ```
 
 ### 关键点
@@ -132,6 +163,12 @@ npx tsc --noEmit    # 严格模式 TS 检查
 1. **部署到 dev 分支**（不是 master）：`GitHub Pages` 设置里 Source = `Deploy from a branch` → Branch = `dev`
 2. **本地 master 分支是源码**，永远不要直接 push dist 到 master
 3. **`deploy.sh` 包含完整的 npm install + build + push 流程**
+4. **dev 和 master 是不同物种**：
+   - master 是 src/ + public/ + 配置文件的源码
+   - dev 是 dist/ 编译产物（无 .gitignore 也没有完整 Astro 项目结构）
+   - **绝对不要把 dev 合并到 master**，会污染源码；也不要 `git checkout dev` 然后开发，会丢失所有 Astro 工程
+5. **为什么不用 `gh-pages` 分支**：历史遗留，最初 GitHub Pages 配过它。本项目现在用 dev 分支，gh-pages 已废弃
+6. **为什么不用 GitHub Actions 自动部署**：我们用 `deploy.sh` 在本地构建完 push dev，Actions 路径依赖额外配置且会与 Source 分支模式抢资源
 
 ### 部署后多久生效
 
@@ -150,7 +187,56 @@ curl -s https://raw.githubusercontent.com/jordan-home/jordan-home.github.io/dev/
 curl -s https://jordan-home.github.io/sitemap-0.xml | head -3
 ```
 
+### 一次性配置（首次或换机器时）
+
+#### 在 GitHub 上配 Pages 源
+
+1. https://github.com/jordan-home/jordan-home.github.io/settings/pages
+2. **Source**：选 **Deploy from a branch**
+3. **Branch**：选 **`dev`**、Folder 选 **`/ (root)`**
+4. **Save**
+
+之后保持不动，每次 `npm run deploy` 推到 dev 后会自动重部署。
+
+#### 确认本地 SSH 部署权限
+
+```bash
+ssh -T git@github.com
+# 期望输出：Hi <your name>! You've been successfully authenticated...
+```
+
+无密码部署需要 SSH key 已加入 GitHub → Settings → SSH and GPG keys。
+
+#### （可选）删除废弃的 gh-pages 分支
+
+gh-pages 是历史遗留，本项目不再用。删掉避免混淆：
+
+```bash
+# 本地删
+git branch -d gh-pages 2>/dev/null || echo "(本地无 gh-pages)"
+
+# 远端删
+git push origin --delete gh-pages
+```
+
+#### 本地不要有 dev 分支（避免误操作）
+
+```bash
+git branch -d dev 2>/dev/null  # 仅本地
+# 如果报错 "cannot delete checked out branch"，先确认你在 master
+```
+
+`deploy.sh` 是 force push 到远端 dev，**本地 dev 不存在也没关系**。要追溯某次部署内容时用 `git ls-remote origin dev` 看远端 hash。
+
 ### 部署失败排查
+
+| 现象 | 原因 | 修复 |
+|---|---|---|
+| 线上还是旧版 | Pages Source 配错了 | Settings → Pages → Source → `dev` 分支 |
+| 部署脚本 push 失败 | SSH key 未配置 | `ssh -T git@github.com` 验证 |
+| deploy.sh 卡住 | `npm install` 慢 | 用 `npm install --prefer-offline` 或检查 node_modules |
+| build 报 schema 错误 | markdown frontmatter 不匹配 | 对照 `src/content.config.ts` 修字段 |
+| 改了 dev 分支但没生效 | Pages Source 还指着 master | Settings → Pages 检查 Source 配置 |
 
 | 现象 | 原因 | 修复 |
 |---|---|---|
