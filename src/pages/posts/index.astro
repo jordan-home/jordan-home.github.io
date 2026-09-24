@@ -1,0 +1,189 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// 按发布日期倒序
+const all = (await getCollection('posts'))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+// 按 category 分组
+const grouped: Record<string, typeof all> = {};
+for (const p of all) {
+  (grouped[p.data.category] ??= []).push(p);
+}
+
+const orderedCategories = ['technology', 'note', 'health', 'lifes', 'projects', 'literature', 'philosophy', 'misc'];
+
+const categoryLabels: Record<string, string> = {
+  technology: '技术',
+  note: '心理',
+  health: '健康',
+  lifes: '生活',
+  projects: '作品',
+  literature: '文学',
+  philosophy: '哲学',
+  misc: '随笔',
+};
+
+const categoryDescs: Record<string, string> = {
+  technology: '代码、工具、AI、算法 — 与机器共舞的笔记',
+  note:       '内在的觉察 — 一些关于心智的观察',
+  health:     '身体、节气、休息 — 好好安放肉身',
+  lifes:      '日常的吉光片羽',
+  projects:   '动手做的东西 —',
+  literature: '读到的、想写的、文学里的自己',
+  philosophy: '一条穿过哲学的路径',
+  misc:       '不成系列的小文',
+};
+
+const coverMap: Record<string, string> = {
+  technology: '/illustrations/cover-technology.webp',
+  note:       '/illustrations/cover-note.webp',
+  health:     '/illustrations/cover-health.webp',
+  lifes:      '/illustrations/cover-lifes.webp',
+  projects:   '/illustrations/cover-default.webp',
+  literature: '/illustrations/cover-default.webp',
+  philosophy: '/illustrations/cover-default.webp',
+  misc:       '/illustrations/cover-default.webp',
+};
+---
+
+<BaseLayout title="文字 · Jordan の Words" description="Jordan 的博客文章 — 按分类汇集">
+  <section class="page-head container">
+    <p class="page-head__kicker deco">· 卷 · 二 ·</p>
+    <h1 class="page-head__title">文字</h1>
+    <p class="page-head__title-en serif-en">All Words</p>
+    <p class="page-head__desc">共 {all.length} 篇。按分类汇集于此。</p>
+  </section>
+
+  <div class="container">
+    {orderedCategories.filter(cat => grouped[cat]?.length > 0).map(cat => (
+      <section class="cat-block" id={cat}>
+        <header class="cat-block__head">
+          <h2 class="cat-block__title">{categoryLabels[cat]}</h2>
+          <p class="cat-block__desc">{categoryDescs[cat]}</p>
+          <span class="cat-block__count">{grouped[cat].length} 篇</span>
+        </header>
+
+        <ul class="cat-list">
+          {grouped[cat]!.map(post => (
+            <li>
+              <a href={`/posts/${post.id}`} class="cat-list__item">
+                <img class="cat-list__cover"
+                     src={post.data.cover || coverMap[post.data.category] || '/illustrations/cover-default.webp'}
+                     alt="" loading="lazy" />
+                <div class="cat-list__body">
+                  <time datetime={post.data.pubDate.toISOString()} class="cat-list__date">
+                    {post.data.pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
+                  </time>
+                  <h3 class="cat-list__title">{post.data.title}</h3>
+                  {post.data.tags.length > 0 && (
+                    <span class="cat-list__tags">
+                      {post.data.tags.slice(0, 2).map(t => `#${t}`).join(' ')}
+                    </span>
+                  )}
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: var(--sp-9) 0 var(--sp-7);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: var(--sp-8);
+    text-align: center;
+  }
+  .page-head__kicker { color: var(--cinnabar); margin: 0 0 var(--sp-4); letter-spacing: 0.4em; }
+  .page-head__title { font-size: var(--fs-3xl); margin: 0 0 var(--sp-3); }
+  .page-head__title-en { font-size: var(--fs-lg); color: var(--ink-fade); margin: 0 0 var(--sp-5); display: block; }
+  .page-head__desc { color: var(--ink-soft); margin: 0; }
+
+  .cat-block { margin-bottom: var(--sp-8); }
+  .cat-block__head {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-4);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: var(--sp-3);
+    margin-bottom: var(--sp-3);
+    flex-wrap: wrap;
+  }
+  .cat-block__title {
+    margin: 0;
+    font-size: var(--fs-xl);
+    color: var(--cinnabar);
+  }
+  .cat-block__desc {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: var(--fs-sm);
+    font-style: italic;
+  }
+  .cat-block__count {
+    margin-left: auto;
+    color: var(--ink-fade);
+    font-size: var(--fs-xs);
+  }
+
+  .cat-list { list-style: none; padding: 0; margin: 0; }
+  .cat-list__item {
+    display: grid;
+    grid-template-columns: 80px 110px 1fr auto;
+    gap: var(--sp-5);
+    align-items: center;
+    padding: var(--sp-4) 0;
+    border-bottom: 1px dashed var(--line);
+    color: var(--ink);
+    transition: padding-left var(--dur-fast) var(--ease-soft);
+  }
+  .cat-list__item:hover { padding-left: var(--sp-3); }
+  .cat-list__cover {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: var(--r-md);
+    background: var(--paper-deep);
+  }
+  .cat-list__body {
+    grid-column: 2 / -1;
+    display: grid;
+    grid-template-columns: 110px 1fr auto;
+    gap: var(--sp-5);
+    align-items: baseline;
+  }
+  .cat-list__date {
+    font-size: var(--fs-xs);
+    color: var(--ink-fade);
+    font-family: var(--font-mono);
+  }
+  .cat-list__title { font-size: var(--fs-md); margin: 0; font-weight: 500; }
+  .cat-list__tags { font-size: var(--fs-xs); color: var(--ink-fade); }
+
+  @media (max-width: 860px) {
+    .page-head__title { font-size: var(--fs-2xl); }
+  }
+  @media (max-width: 640px) {
+    .page-head { padding: var(--sp-7) 0 var(--sp-5); margin-bottom: var(--sp-5); }
+    .cat-list__item { grid-template-columns: 60px 1fr; gap: var(--sp-3); }
+    .cat-list__cover { width: 60px; height: 60px; }
+    .cat-list__body {
+      grid-column: auto;
+      grid-template-columns: 1fr;
+      gap: var(--sp-1);
+    }
+    .cat-list__date { font-size: 11px; }
+    .cat-list__tags { display: none; }
+    .cat-block { margin-bottom: var(--sp-7); }
+  }
+  @media (max-width: 480px) {
+    .cat-list__item { padding: var(--sp-3) 0; gap: var(--sp-3); }
+    .cat-list__title { font-size: var(--fs-base); }
+    .cat-block__title { font-size: var(--fs-lg); }
+  }
+</style>
