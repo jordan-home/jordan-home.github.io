@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 32" fill="none" stroke="#2A2622" stroke-width="1.4" stroke-linecap="round" opacity="0.8">
-  <line x1="60" y1="6" x2="60" y2="28"/>
-  <path d="M 60 12 L 50 8"/>
-  <path d="M 60 18 L 70 14"/>
-  <path d="M 60 24 L 48 22"/>
-  <path d="M 60 14 Q 56 12 52 14 Q 50 16 52 18" fill="#2A2622" fill-opacity="0.15"/>
-  <path d="M 60 20 Q 64 18 68 20 Q 70 22 68 24" fill="#2A2622" fill-opacity="0.15"/>
-</svg>
