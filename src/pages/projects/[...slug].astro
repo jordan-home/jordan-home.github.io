@@ -1,0 +1,234 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map(proj => ({
+    params: { slug: proj.id },
+    props: { proj },
+  }));
+}
+
+const { proj } = Astro.props;
+const { Content } = await render(proj);
+
+const fallbackCover = '/illustrations/cover-default.webp';
+const coverSrc = proj.data.cover || fallbackCover;
+
+// 是否是外站 demo（绝对 URL）
+const isExternalDemo = proj.data.demo?.startsWith('http');
+const ctaText = isExternalDemo ? '访问站点 →' : '在新窗口体验 →';
+---
+
+<BaseLayout title={`${proj.data.title} · Jordan の Words`}
+            description={proj.data.summary}>
+  <article class="proj">
+    <header class="proj__head container">
+      <a href="/projects" class="proj__back">← 回到作品</a>
+      <h1 class="proj__title">{proj.data.title}</h1>
+      <p class="proj__summary">{proj.data.summary}</p>
+
+      <dl class="proj__facts">
+        {proj.data.role && (<><dt>角色</dt><dd>{proj.data.role}</dd></>)}
+        {proj.data.year && (<><dt>时间</dt><dd>{proj.data.year}</dd></>)}
+        {proj.data.demo && (<><dt>{isExternalDemo ? '在线' : '体验'}</dt><dd><a href={proj.data.demo} target="_blank" rel="noopener">{ctaText}</a></dd></>)}
+        {proj.data.repo && (<><dt>代码</dt><dd><a href={proj.data.repo} target="_blank" rel="noopener">查看仓库 →</a></dd></>)}
+      </dl>
+    </header>
+
+    {/* 封面大图 + CTA */}
+    <figure class="proj__cover container">
+      <img src={coverSrc} alt={proj.data.title} loading="eager" />
+      {proj.data.demo && (
+        <a href={proj.data.demo} target="_blank" rel="noopener" class="proj__cta">
+          {ctaText}
+        </a>
+      )}
+    </figure>
+
+    {/* Highlights — 工程项目的关键指标 */}
+    {proj.data.highlights.length > 0 && (
+      <section class="proj__highlights container">
+        <h2 class="proj__highlights-title deco">· 项目亮点 ·</h2>
+        <ul class="proj__highlights-list">
+          {proj.data.highlights.map(h => <li>{h}</li>)}
+        </ul>
+      </section>
+    )}
+
+    {/* 技术栈 */}
+    {proj.data.stack.length > 0 && (
+      <section class="proj__stack container">
+        <h2 class="proj__stack-title deco">· 技术栈 ·</h2>
+        <ul class="proj__stack-list">
+          {proj.data.stack.map(t => <li>{t}</li>)}
+        </ul>
+      </section>
+    )}
+
+    <div class="proj__body prose-container prose">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .proj { padding: var(--sp-7) 0; }
+  .proj__back {
+    display: inline-block;
+    font-size: var(--fs-sm);
+    color: var(--ink-soft);
+    margin-bottom: var(--sp-5);
+  }
+  .proj__title {
+    font-size: var(--fs-3xl);
+    margin: 0 0 var(--sp-4);
+  }
+  .proj__summary {
+    font-size: var(--fs-md);
+    color: var(--ink-soft);
+    line-height: var(--lh-loose);
+    margin: 0 0 var(--sp-6);
+  }
+
+  .proj__facts {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: var(--sp-3) var(--sp-5);
+    margin: 0 0 var(--sp-7);
+    padding: var(--sp-5);
+    background: var(--paper-warm);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    font-size: var(--fs-sm);
+  }
+  .proj__facts dt {
+    color: var(--ink-fade);
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+  }
+  .proj__facts dd { margin: 0; color: var(--ink-soft); }
+
+  .proj__cover {
+    position: relative;
+    margin: 0 auto var(--sp-7);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    box-shadow: var(--sh-2);
+    aspect-ratio: 16 / 9;
+    background: var(--paper-deep);
+  }
+  .proj__cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .proj__cta {
+    position: absolute;
+    right: var(--sp-5);
+    bottom: var(--sp-5);
+    display: inline-flex;
+    align-items: center;
+    padding: 0.7em 1.6em;
+    font-family: var(--font-serif-cn);
+    font-size: var(--fs-sm);
+    background: var(--cinnabar);
+    color: var(--paper);
+    border: 1px solid var(--cinnabar);
+    border-radius: var(--r-md);
+    box-shadow: var(--sh-1);
+    transition: background var(--dur-fast) var(--ease-soft),
+                transform var(--dur-fast) var(--ease-out);
+  }
+  .proj__cta:hover {
+    background: var(--cinnabar-deep);
+    border-color: var(--cinnabar-deep);
+    transform: translateY(-1px);
+  }
+
+  /* Highlights 块 — 项目亮点 */
+  .proj__highlights {
+    margin: 0 auto var(--sp-7);
+  }
+  .proj__highlights-title {
+    color: var(--cinnabar);
+    font-size: var(--fs-md);
+    letter-spacing: 0.3em;
+    margin: 0 0 var(--sp-4);
+  }
+  .proj__highlights-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--sp-3);
+  }
+  .proj__highlights-list li {
+    padding: var(--sp-4) var(--sp-5);
+    background: var(--paper-warm);
+    border-left: 2px solid var(--cinnabar);
+    border-radius: 0 var(--r-md) var(--r-md) 0;
+    font-size: var(--fs-base);
+    color: var(--ink);
+    line-height: var(--lh-snug);
+  }
+
+  /* Stack 块 — 技术栈 */
+  .proj__stack {
+    margin: 0 auto var(--sp-7);
+  }
+  .proj__stack-title {
+    color: var(--cinnabar);
+    font-size: var(--fs-md);
+    letter-spacing: 0.3em;
+    margin: 0 0 var(--sp-4);
+  }
+  .proj__stack-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+  .proj__stack-list li {
+    font-size: var(--fs-sm);
+    padding: 4px 12px;
+    background: var(--paper-deep);
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    color: var(--ink-soft);
+  }
+
+  .proj__body { margin-top: var(--sp-3); }
+
+  @media (max-width: 860px) {
+    .proj__title { font-size: var(--fs-2xl); }
+    .proj__cover { aspect-ratio: 4 / 3; }
+    .proj__highlights-list { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .proj { padding: var(--sp-6) 0; }
+    .proj__title { font-size: var(--fs-xl); }
+    .proj__facts {
+      grid-template-columns: 70px 1fr;
+      gap: var(--sp-2) var(--sp-4);
+      padding: var(--sp-4);
+    }
+    .proj__cta {
+      right: var(--sp-3);
+      bottom: var(--sp-3);
+      padding: 0.6em 1.2em;
+      font-size: var(--fs-xs);
+    }
+  }
+  @media (max-width: 480px) {
+    .proj__title { font-size: var(--fs-lg); }
+    .proj__summary { font-size: var(--fs-base); }
+    .proj__facts { font-size: var(--fs-xs); }
+    .proj__highlights-list li { font-size: var(--fs-sm); padding: var(--sp-3) var(--sp-4); }
+  }
+</style>

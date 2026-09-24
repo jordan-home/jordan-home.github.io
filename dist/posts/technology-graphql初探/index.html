@@ -1,0 +1,440 @@
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="GraphQL 入门教程：查询语言、Schema 定义、Resolver 实现，以及 REST 与 GraphQL 的对比分析，快速构建现代 API。"><meta name="theme-color" content="#F5EFE0"><link rel="icon" type="image/png" href="/favicon.png"><link rel="manifest" href="/manifest.json"><link rel="canonical" href="https://jordan-home.github.io/posts/technology-graphql%E5%88%9D%E6%8E%A2/"><meta property="og:title" content="GraphQL初探 · Jordan の Words"><meta property="og:description" content="GraphQL 入门教程：查询语言、Schema 定义、Resolver 实现，以及 REST 与 GraphQL 的对比分析，快速构建现代 API。"><meta property="og:image" content="/illustrations/hero-shanhui.webp"><meta property="og:type" content="website"><title>GraphQL初探 · Jordan の Words</title><!-- JSON-LD: Person schema（站点作者信息） --><script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Jordan","url":"https://jordan-home.github.io/","description":"Jordan 的个人站点 — 记录技术、文学、哲学、AI 与生活的痕迹。","knowsAbout":["Web Development","AI","Writing","Psychology","Design"],"sameAs":["https://github.com/jordan-home","https://www.sweet-novel.net","https://petmona.app"]}</script><!-- 字体：衬线中文 + 衬线英文 + 题花 --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Ma+Shan+Zheng&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"><script>
+      // 主题持久化
+      (function () {
+        const t = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script><link rel="stylesheet" href="/assets/about.CzyaUa3F.css">
+<style>.post[data-astro-cid-egg7nqdx]{padding:var(--sp-8) 0}.post__head[data-astro-cid-egg7nqdx]{text-align:center;margin-bottom:var(--sp-7)}.post__meta[data-astro-cid-egg7nqdx]{display:flex;gap:var(--sp-4);justify-content:center;font-size:var(--fs-xs);color:var(--ink-fade);margin:0 0 var(--sp-5)}.post__cat[data-astro-cid-egg7nqdx]{padding:2px 10px;background:var(--cinnabar);color:var(--paper);border-radius:var(--r-sm)}.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-3xl);line-height:var(--lh-tight);margin:0 0 var(--sp-5);letter-spacing:.02em}.post__desc[data-astro-cid-egg7nqdx]{font-size:var(--fs-md);color:var(--ink-soft);line-height:var(--lh-loose);margin:0}.post__rule[data-astro-cid-egg7nqdx]{width:80px;height:24px;margin:var(--sp-6) auto 0;background:url(/illustrations/divider-cloud.svg) no-repeat center / contain;border:none}.post__body[data-astro-cid-egg7nqdx] p{line-height:var(--lh-loose)}.post__body[data-astro-cid-egg7nqdx] h2{margin-top:var(--sp-7);padding-top:var(--sp-4);border-top:1px solid var(--line);font-size:var(--fs-xl)}.post__body[data-astro-cid-egg7nqdx] h2:before{content:"· ";color:var(--cinnabar)}.post__body[data-astro-cid-egg7nqdx] h3{margin-top:var(--sp-6);color:var(--ink);font-size:var(--fs-lg)}.post__body[data-astro-cid-egg7nqdx] img{margin:var(--sp-6) auto;border-radius:var(--r-md);box-shadow:var(--sh-1)}.post__body[data-astro-cid-egg7nqdx] ul,.post__body[data-astro-cid-egg7nqdx] ol{line-height:var(--lh-loose);padding-left:var(--sp-5)}.post__tags[data-astro-cid-egg7nqdx]{margin-top:var(--sp-7);padding-top:var(--sp-5);border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:var(--sp-3)}.tag[data-astro-cid-egg7nqdx]{font-size:var(--fs-xs);color:var(--ink-soft);padding:4px 10px;border:1px solid var(--line);border-radius:var(--r-sm)}.post-nav[data-astro-cid-egg7nqdx]{margin:var(--sp-8) auto var(--sp-7);display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-5)}.post-nav__link[data-astro-cid-egg7nqdx]{display:block;padding:var(--sp-5);background:var(--paper-warm);border-radius:var(--r-md);color:var(--ink);border:1px solid var(--line)}.post-nav__link[data-astro-cid-egg7nqdx]:hover{border-color:var(--cinnabar)}.post-nav__link--next[data-astro-cid-egg7nqdx]{text-align:right}.post-nav__kicker[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-xs);color:var(--ink-fade);margin-bottom:var(--sp-2)}.post-nav__title[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-sm);font-weight:500}@media(max-width:860px){.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-2xl)}.post__body[data-astro-cid-egg7nqdx] h2{font-size:var(--fs-lg)}.post__body[data-astro-cid-egg7nqdx] h3{font-size:var(--fs-md)}.post__desc[data-astro-cid-egg7nqdx]{font-size:var(--fs-base)}}@media(max-width:640px){.post[data-astro-cid-egg7nqdx]{padding:var(--sp-6) 0}.post__head[data-astro-cid-egg7nqdx]{margin-bottom:var(--sp-5)}.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-xl)}.post__meta[data-astro-cid-egg7nqdx]{flex-wrap:wrap;gap:var(--sp-2)}.post-nav[data-astro-cid-egg7nqdx]{grid-template-columns:1fr}.post__body[data-astro-cid-egg7nqdx] pre{font-size:var(--fs-xs);padding:var(--sp-4)}}@media(max-width:480px){.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-lg)}.post__rule[data-astro-cid-egg7nqdx]{width:60px;height:20px;margin-top:var(--sp-5)}.post__body[data-astro-cid-egg7nqdx] blockquote{padding:var(--sp-3) var(--sp-4)}}
+</style></head> <body data-astro-cid-37fxchfa> <a class="skip-link" href="#main" data-astro-cid-37fxchfa>跳到正文</a> <header class="site-header" data-astro-cid-37fxchfa> <div class="container site-header__inner" data-astro-cid-37fxchfa> <a href="/" class="brand" aria-label="Jordan の Words" data-astro-cid-37fxchfa> <img src="/illustrations/seal-red.webp" alt="" class="brand__seal" width="36" height="36" data-astro-cid-37fxchfa> <span class="brand__name" data-astro-cid-37fxchfa>Jordan <span class="brand__name-aux" data-astro-cid-37fxchfa>の</span> Words</span> </a> <nav class="nav" aria-label="主导航" data-astro-cid-37fxchfa> <ul data-astro-cid-37fxchfa> <li data-astro-cid-37fxchfa> <a href="/" class="nav__link" data-astro-cid-37fxchfa> 首页 </a> </li><li data-astro-cid-37fxchfa> <a href="/posts" class="nav__link is-active" data-astro-cid-37fxchfa> 文字 </a> </li><li data-astro-cid-37fxchfa> <a href="/projects" class="nav__link" data-astro-cid-37fxchfa> 作品 </a> </li><li data-astro-cid-37fxchfa> <a href="/about" class="nav__link" data-astro-cid-37fxchfa> 关于 </a> </li><li data-astro-cid-37fxchfa> <a href="/contact" class="nav__link" data-astro-cid-37fxchfa> 联系 </a> </li> </ul> </nav> <button class="theme-toggle" type="button" aria-label="切换主题" data-theme-toggle data-astro-cid-37fxchfa> <span class="theme-toggle__icon" data-theme-icon data-astro-cid-37fxchfa>☾</span> </button> </div> </header> <main id="main" data-astro-cid-37fxchfa>  <article class="post" data-astro-cid-egg7nqdx> <header class="post__head container" data-astro-cid-egg7nqdx> <p class="post__meta" data-astro-cid-egg7nqdx> <span class="post__cat" data-astro-cid-egg7nqdx>技术</span> <time datetime="2021-03-10T00:00:00.000Z" data-astro-cid-egg7nqdx>2021年3月10日</time> </p> <h1 class="post__title" data-astro-cid-egg7nqdx>GraphQL初探</h1> <p class="post__desc deco" data-astro-cid-egg7nqdx>GraphQL 入门教程：查询语言、Schema 定义、Resolver 实现，以及 REST 与 GraphQL 的对比分析，快速构建现代 API。</p> <hr class="post__rule" data-astro-cid-egg7nqdx> </header> <div class="post__body prose-container prose" data-astro-cid-egg7nqdx> <h2 id="1-互联网永恒的主题">1 互联网永恒的主题</h2>
+<p>加载数据，越快越好。精准快速的从服务端获取数据</p>
+<h2 id="2-简单的定义">2 简单的定义</h2>
+<ol>
+<li>一种API查询语言，基于HTTP协议。也叫做声明式数据获取语言。</li>
+</ol>
+<p>开发者根据需求列举出请求的字段，而无需关注如何获取这些数据。</p>
+<p>使用GraphQL,只要一次请求就可以获取所需的所有数据。</p>
+<ol start="2">
+<li>客户端与服务器之间通信的规范</li>
+</ol>
+<p>向GraphQL服务端请求数据时，自动通过类型检测系统（服务器在GraphQL Schema中定义的数据类型）进行验证。</p>
+<ol start="3">
+<li>GraphQL仅仅是一个规范，不关心使用的react,vue乃至浏览器。</li>
+</ol>
+<h2 id="3-graphql设计原则">3 GraphQL设计原则</h2>
+<ul>
+<li>
+<p>分层</p>
+<p>查询的字段层次分明，类似于树形结构（对象类型）。查询字段的结果与返回的数据结构一致</p>
+</li>
+<li>
+<p>以产品为中心</p>
+<p>客户端所需的数据，以及客户端支持的语言和运行时</p>
+</li>
+<li>
+<p>强类型</p>
+<p>在服务端由GraphQL类型检测系统提供支持，每个数据都在模版中有对应的类型，并均会验证</p>
+</li>
+<li>
+<p>客户端指定查询</p>
+</li>
+<li>
+<p>类型自查</p>
+</li>
+</ul>
+<h2 id="4-简单的了解一下rest">4 简单的了解一下REST</h2>
+<p>表述性状态传递（REST, Representational State Transfer): 面向资源，借助GET POST PUT DELETE等操作服务端数据。不同的路由产生不同的响应，没有强制规定数据响应的格式。</p>
+<h2 id="5-从rest到graphql">5 从REST到GraphQL</h2>
+<ol>
+<li>过量获取，获取了大量不需要的数据。</li>
+<li>获取不足。新增了一项功能，需要其他的数据，此时就借口无法满足，不得不调用其他接口请求数据。</li>
+<li>管理REST接口。缺乏灵活性，需求发生变化，不得不修改接口或者创建新的接口，这也意味着前后端需要再一次沟通。</li>
+</ol>
+<p>值得注意的是，许多公司同时使用GraphQL和REST。设置GraphQL接口从RESTful API获取数据是使用GraphQL的有效办法，GitHub发现“能够精准定义你想要的数据（且只有你想要的数据）”</p>
+<h2 id="6-graphql客户端库">6 GraphQL客户端库</h2>
+<p>作用：处理诸如网络请求、数据缓存以及数据注入页面等任务。</p>
+<p>常见的客户端库：</p>
+<ol>
+<li>
+<p>Relay(<a href="https://relay.dev/">https://relay.dev/</a>)</p>
+<p>搭配React和React Native使用，帮助React组件从GraphQL服务端获取数据</p>
+</li>
+<li>
+<p>Apollo(<a href="https://www.apollographql.com/">https://www.apollographql.com/</a>)</p>
+</li>
+<li>
+<p>…</p>
+</li>
+</ol>
+<h2 id="7-graphql查询语言">7 GraphQL查询语言</h2>
+<p>SQL中可以运行的命令增(INSERT)删(DELETE)改(UPDATE)查(SELECT),对应到GraphQL就是查询(Query)和变更(Mutation),此外，GraphQL还新增了一个订阅功能。</p>
+<p>操作信息一般放在POST请求体中。</p>
+<p>如：</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>data: '{"query": "{allFlowers { name }}"}'</span></span></code></pre>
+<h3 id="1-查询">1 查询</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">query {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  allStudents</span><span style="color:#B31D28;font-style:italic"> {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  	name</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  	age</span></span>
+<span class="line"><span style="color:#24292E">	}</span></span>
+<span class="line"><span style="color:#24292E">	teachers: allTeachers {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">    name</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">    gender</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">	teacherCount(gender: MALE)</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<p>以上为一个查询操作,此处为具名的，比如<code>allStudents</code></p>
+<p>响应如下：</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">{</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  'data'</span><span style="color:#24292E">: {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">    'allStudents'</span><span style="color:#24292E">: [</span></span>
+<span class="line"><span style="color:#24292E">      {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">        'name'</span><span style="color:#24292E">: </span><span style="color:#B31D28;font-style:italic">'Tom'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">        'age'</span><span style="color:#24292E">: </span><span style="color:#005CC5">21</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">      },</span></span>
+<span class="line"><span style="color:#24292E">      {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">        'name'</span><span style="color:#24292E">: </span><span style="color:#B31D28;font-style:italic">'Sun'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">        'age'</span><span style="color:#24292E">: </span><span style="color:#005CC5">18</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">      }</span></span>
+<span class="line"><span style="color:#24292E">    ],</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">    teachers</span><span style="color:#24292E">: [</span></span>
+<span class="line"><span style="color:#24292E">      {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">        'name'</span><span style="color:#24292E">: </span><span style="color:#B31D28;font-style:italic">'Kate'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">        'gender'</span><span style="color:#24292E">: </span><span style="color:#032F62">"FEMALE"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">      },</span></span>
+<span class="line"><span style="color:#24292E">      {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">        'name'</span><span style="color:#24292E">: </span><span style="color:#B31D28;font-style:italic">'Marry'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">        'gender'</span><span style="color:#24292E">: </span><span style="color:#032F62">"FEMALE"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">      },</span></span>
+<span class="line"><span style="color:#24292E">      {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">        'name'</span><span style="color:#24292E">: </span><span style="color:#B31D28;font-style:italic">'Mark'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">        'gender'</span><span style="color:#24292E">: </span><span style="color:#032F62">"Male"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">      },</span></span>
+<span class="line"><span style="color:#24292E">    ],</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">    'teacherCount'</span><span style="color:#24292E">: </span><span style="color:#005CC5">1</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h4 id="片段">片段</h4>
+<p>GraphQL查询文档还可以定义片段，片段（fragment)指可以在多个操作中重复使用的代码。</p>
+<p>举例如下：</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">fragment liftInfo on Lift {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  name</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  status</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  height</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#24292E">query {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  Lift(id</span><span style="color:#24292E">: </span><span style="color:#B31D28;font-style:italic">'test')</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">    ...liftInfo</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">    others</span><span style="color:#B31D28;font-style:italic"> {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">      history</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">      name</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<p>等价于</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">query {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  Lift</span><span style="color:#B31D28;font-style:italic"> {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  	name</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  	status</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  	height</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  	others</span><span style="color:#B31D28;font-style:italic"> {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">   		history</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">   		name</span></span>
+<span class="line"><span style="color:#24292E">  	}</span></span>
+<span class="line"><span style="color:#24292E"> 	}</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<p>使用有点类似ES6的扩展运算符,需要注意的是该查询是不具名的</p>
+<h4 id="联合类型">联合类型</h4>
+<p>一般来说，查询返回的是单一类型的对象列表。但是当我们需要返回的列表项不止一种类型，比如同时请求教师和学生信息时，此时可以创建联合类型（union type), 它可以把多个不同类型的对象关联起来。</p>
+<p>举例如下：</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">query schedule {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  studentAndTeacher</span><span style="color:#B31D28;font-style:italic"> {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  	...on</span><span style="color:#B31D28;font-style:italic"> Student</span><span style="color:#B31D28;font-style:italic"> {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  		name</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  		age</span></span>
+<span class="line"><span style="color:#24292E">		}</span></span>
+<span class="line"><span style="color:#24292E">		...on Teacher {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">      name</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">      subject</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">	}</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<p>响应如下：</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">{</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  'data'</span><span style="color:#24292E">: [</span></span>
+<span class="line"><span style="color:#24292E">    {</span><span style="color:#B31D28;font-style:italic">'name'</span><span style="color:#24292E">: </span><span style="color:#B31D28;font-style:italic">'Kate'</span><span style="color:#24292E">, </span><span style="color:#B31D28;font-style:italic">age</span><span style="color:#24292E">: </span><span style="color:#005CC5">31</span><span style="color:#24292E">},</span></span>
+<span class="line"><span style="color:#24292E">    {</span><span style="color:#B31D28;font-style:italic">'name'</span><span style="color:#24292E">: </span><span style="color:#B31D28;font-style:italic">'Ben'</span><span style="color:#24292E">, </span><span style="color:#B31D28;font-style:italic">age</span><span style="color:#24292E">: </span><span style="color:#005CC5">29</span><span style="color:#24292E">},</span></span>
+<span class="line"><span style="color:#24292E">    {</span><span style="color:#B31D28;font-style:italic">'name'</span><span style="color:#24292E">: </span><span style="color:#B31D28;font-style:italic">'Kun'</span><span style="color:#24292E">, </span><span style="color:#B31D28;font-style:italic">subject</span><span style="color:#24292E">: </span><span style="color:#B31D28;font-style:italic">'English'</span><span style="color:#24292E">},</span></span>
+<span class="line"><span style="color:#24292E">    {</span><span style="color:#B31D28;font-style:italic">'name'</span><span style="color:#24292E">: </span><span style="color:#B31D28;font-style:italic">'Ben'</span><span style="color:#24292E">, </span><span style="color:#B31D28;font-style:italic">subject</span><span style="color:#24292E">: </span><span style="color:#B31D28;font-style:italic">'Art'</span><span style="color:#24292E">},</span></span>
+<span class="line"><span style="color:#24292E">    {</span><span style="color:#B31D28;font-style:italic">'name'</span><span style="color:#24292E">: </span><span style="color:#B31D28;font-style:italic">'Sun'</span><span style="color:#24292E">, </span><span style="color:#B31D28;font-style:italic">age</span><span style="color:#24292E">: </span><span style="color:#005CC5">29</span><span style="color:#24292E">},</span></span>
+<span class="line"><span style="color:#24292E">  ]</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h4 id="接口">接口</h4>
+<p>处理单个字段返回的多个对象类型时使用接口（interface)</p>
+<p>举例如下</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">query schedule {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  student</span><span style="color:#B31D28;font-style:italic"> {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  	name</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  	age</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  	...on</span><span style="color:#B31D28;font-style:italic"> Boy</span><span style="color:#B31D28;font-style:italic"> {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  		sports</span></span>
+<span class="line"><span style="color:#24292E">		}</span></span>
+<span class="line"><span style="color:#24292E">	}</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<p>该查询操作主要查询所有的学生（name、a ge),如果是男生类型，还要另外返回喜欢的运动（sports)信息</p>
+<h3 id="2-变更">2 变更</h3>
+<p>当需要变更数据时，就要用到变更操作(mutation)，写法和查询操作类似。</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">mutation updateStudentInfo {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  deleteAllStudent</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  addStudent(name,</span><span style="color:#B31D28;font-style:italic"> age,</span><span style="color:#B31D28;font-style:italic"> gender)</span><span style="color:#B31D28;font-style:italic"> {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">    id</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">    name</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">	updateStudent(id: '</span><span style="color:#005CC5">01</span><span style="color:#24292E">ax', name: 'Sun') {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">    name</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">    age</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<p>上述操作的作用分别是删除、新增、更新。</p>
+<h3 id="3-订阅">3 订阅</h3>
+<p>订阅功能顾名思义，就是监听GraphQL API以进行实时的数据更改。举个例子，比如实时点赞作为一个由订阅支持的用例，且客户端订阅了该点赞事件，则每当发生点赞操作时，客户端可以在不刷新页面的情况下获得当前点赞信息。</p>
+<p>代码示例如下：</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">subscription {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  thumbsUp</span><span style="color:#B31D28;font-style:italic"> {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  	count</span></span>
+<span class="line"><span style="color:#24292E">	}</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">mutation articleOperation {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  giveThumbsUp(id</span><span style="color:#24292E">: </span><span style="color:#B31D28;font-style:italic">'x-x</span><span style="color:#005CC5">-12</span><span style="color:#B31D28;font-style:italic">')</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">    count</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<p>当操作giveThumbsUp时，此时thumbsUp触发，实时拿到最新count信息</p>
+<h2 id="8-graphql-api工具">8 GraphQL API工具</h2>
+<p>针对GraphQL API的GraphQL查询字段测试工具。常见如下：</p>
+<p>GraphiQL</p>
+<p>GraphQL Playground</p>
+<h2 id="9-设计schema">9 设计schema</h2>
+<p>在设计GraphQL API之前，我们需要先对数据类型进行设计并确定下来。这种类型的集合就是schema。</p>
+<p>schema优先，可以使团队拥有一致的数据类型。后段可以清晰的了解需要存储和交付的数据，前端可以更方便的构建页面。简而言之，在确定了schema之后，前后端可以并行开始工作。</p>
+<p>为了方便的定义类型，GraphQL附带了一种语言——模版定义语言（SDL).</p>
+<p>GraphQL schema文档是定义可用类型的文本文档，客户端和服务端通过它来验证GraphQL请求。</p>
+<p>代码如下：</p>
+<p>文档.   xxxx.graphql</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#032F62">"""</span></span>
+<span class="line"><span style="color:#032F62">注释</span></span>
+<span class="line"><span style="color:#032F62">"""</span></span>
+<span class="line"><span style="color:#24292E">type User {</span></span>
+<span class="line"><span style="color:#005CC5">  """</span></span>
+<span class="line"><span style="color:#005CC5">  用户的名字</span></span>
+<span class="line"><span style="color:#005CC5">  """</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  name</span><span style="color:#24292E">: </span><span style="color:#B31D28;font-style:italic">String</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  photos:</span><span style="color:#24292E"> [</span><span style="color:#B31D28;font-style:italic">Photo!</span><span style="color:#24292E">]</span><span style="color:#B31D28;font-style:italic">!</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h3 id="类型-type">类型 type</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">type Photo {</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  id</span><span style="color:#24292E">: </span><span style="color:#B31D28;font-style:italic">ID!</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  url:</span><span style="color:#B31D28;font-style:italic"> String!</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  description:</span><span style="color:#B31D28;font-style:italic"> String</span></span>
+<span class="line"><span style="color:#B31D28;font-style:italic">  name:</span><span style="color:#B31D28;font-style:italic"> String!</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<p>感叹号！表示非空，上面自定义了一个GraphQL对象类型——Photo类型</p>
+<h3 id="标量类型">标量类型</h3>
+<p>GraphQL内置了一些标量类型类型，包括： Int, Float, String, Boolean, ID。标量类型不是对象类型，所以它没有字段，可以理解为没有属性。ID是表现为值唯一的字符串。</p>
+<p>我们也可以自定义一些标量类型，或者引入第三方库。</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>scalar DateTime</span></span>
+<span class="line"><span>type Son {</span></span>
+<span class="line"><span>	birthday: DateTime!</span></span>
+<span class="line"><span>}</span></span></code></pre>
+<p>枚举类型（enum)也属于标量类型</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>enum PhotoCategory {</span></span>
+<span class="line"><span>	HUMAN</span></span>
+<span class="line"><span>	ANIMAL</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span>type Photo {</span></span>
+<span class="line"><span>	id: ID!</span></span>
+<span class="line"><span>	category: PhotoCategory!</span></span>
+<span class="line"><span>}</span></span></code></pre>
+<h3 id="连接和列表">连接和列表</h3>
+<p>连接数据和查询多种类型相关数据的能力是GraphQL的一个重要特征。借助这个特征，可以把多个对象关联起来。</p>
+<h4 id="连接">连接</h4>
+<ol>
+<li>
+<p>一对一连接</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>type User {</span></span>
+<span class="line"><span> id: ID!</span></span>
+<span class="line"><span> name: String</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span>type Photo {</span></span>
+<span class="line"><span>  id: ID!</span></span>
+<span class="line"><span>  name: String</span></span>
+<span class="line"><span>  postedBy: User!</span></span>
+<span class="line"><span>}</span></span></code></pre>
+<p>此时<code>User</code>和<code>Photo</code>就通过<code>postedBy</code>连接起来</p>
+</li>
+<li>
+<p>一对多连接</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>type User {</span></span>
+<span class="line"><span>	id: ID!</span></span>
+<span class="line"><span>	name: String</span></span>
+<span class="line"><span>	photos: [Photo!]!</span></span>
+<span class="line"><span>}</span></span></code></pre>
+<p>一个人可以发多张图片，也就是一对多</p>
+</li>
+<li>
+<p>多对多连接</p>
+<p>多对多的场景举例：10个人，10张图片，每个人可以喜欢多张图片。</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>type User {</span></span>
+<span class="line"><span>	likePhotos: [Photo!]!</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span>type Photo {</span></span>
+<span class="line"><span>	beLikedUser: [User!]!	</span></span>
+<span class="line"><span>}</span></span></code></pre>
+</li>
+</ol>
+<h4 id="列表">列表</h4>
+<p>在列表中返回的数据不一定需要相同的类型。之前在第7节中有说到联合类型与接口，结合起来看：</p>
+<ol>
+<li>
+<p>联合类型</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>union Item = Student | Teacher</span></span>
+<span class="line"><span>type Student {}</span></span>
+<span class="line"><span>type Teacher {}</span></span>
+<span class="line"><span>type Query {</span></span>
+<span class="line"><span>	item: [Item!]!</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>query schedule {</span></span>
+<span class="line"><span> item {</span></span>
+<span class="line"><span> 	...on Student {}</span></span>
+<span class="line"><span> 	...on Teacher {}</span></span>
+<span class="line"><span> }</span></span>
+<span class="line"><span>}</span></span></code></pre>
+</li>
+<li>
+<p>接口类型</p>
+</li>
+</ol>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>interface Male { name: String! }</span></span>
+<span class="line"><span>type Father implements Male {</span></span>
+<span class="line"><span>	name: String!</span></span>
+<span class="line"><span>	work: String!</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span>type Son implements Male { name: String! }</span></span>
+<span class="line"><span>type Query { item: [Male!]!}</span></span>
+<span class="line"><span>quey schedule {</span></span>
+<span class="line"><span>	item {</span></span>
+<span class="line"><span>		name</span></span>
+<span class="line"><span>		...on Father {</span></span>
+<span class="line"><span>			work: String</span></span>
+<span class="line"><span>		}</span></span>
+<span class="line"><span>	}</span></span>
+<span class="line"><span>}</span></span></code></pre>
+<h3 id="参数">参数</h3>
+<p>定义</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>type Query {</span></span>
+<span class="line"><span>	People(id: ID!, city: City): People!</span></span>
+<span class="line"><span>}</span></span></code></pre>
+<p>用户发送</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>query {</span></span>
+<span class="line"><span> People(id: '123456x') {</span></span>
+<span class="line"><span> 		name</span></span>
+<span class="line"><span> 		gender</span></span>
+<span class="line"><span> }</span></span>
+<span class="line"><span>}</span></span></code></pre>
+<p>上述表示查询一个身份证（id) 为123456x的人的姓名和性别。也可以加上City条件。city和id即是参数，id必传。</p>
+<ol>
+<li>
+<p>筛选</p>
+<p>参数可以非必传，此时非必传的参数可以对结果进行筛选。</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>query {</span></span>
+<span class="line"><span>	Flower(color: 'red') {}</span></span>
+<span class="line"><span>}</span></span></code></pre>
+<p>查询所有为红色的花朵</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>quey {</span></span>
+<span class="line"><span>	Flower(color: 'red', months: 1)</span></span>
+<span class="line"><span>}</span></span></code></pre>
+<p>可以用来查询红色且花龄1个月的花</p>
+</li>
+<li>
+<p>变更</p>
+<p>变更的类型也要定义在schema中。</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>type Mutation {</span></span>
+<span class="line"><span>	updateInfo(</span></span>
+<span class="line"><span>		id: ID!</span></span>
+<span class="line"><span>		name: String</span></span>
+<span class="line"><span>	): Info!</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span>schema {</span></span>
+<span class="line"><span>	query: Query</span></span>
+<span class="line"><span>	mutation: Mutation</span></span>
+<span class="line"><span>}</span></span></code></pre>
+<p>用户发送以下变更</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>mutation {</span></span>
+<span class="line"><span> updateInfo(id: 'xc120ii', name: 'Tom') {</span></span>
+<span class="line"><span> 		id</span></span>
+<span class="line"><span> 		name</span></span>
+<span class="line"><span> 		age</span></span>
+<span class="line"><span> 		gender</span></span>
+<span class="line"><span> }</span></span>
+<span class="line"><span>}</span></span></code></pre>
+</li>
+</ol>
+<h3 id="输入类型">输入类型</h3>
+<p>当查询和变更中用的参数较多时，我们可以定义输入类型。定义输入类型和查询操作</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>input ClothesInput {</span></span>
+<span class="line"><span>	brand: String</span></span>
+<span class="line"><span>	owner: Person!</span></span>
+<span class="line"><span>	color: String</span></span>
+<span class="line"><span>	season: String</span></span>
+<span class="line"><span>}</span></span>
+<span class="line"><span>type Query {</span></span>
+<span class="line"><span>	findClothes(input: ClothesInput!): Clothes</span></span>
+<span class="line"><span>}</span></span></code></pre>
+<p>定义操作：</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49">let</span><span style="color:#24292E"> myQuery </span><span style="color:#D73A49">=</span><span style="color:#032F62"> "query findClothes($input: ClothesInput!) </span><span style="color:#B31D28;font-style:italic">{</span></span>
+<span class="line"><span style="color:#6F42C1">	findClothes</span><span style="color:#24292E">(input: $input) {</span></span>
+<span class="line"><span style="color:#24292E">		brand</span></span>
+<span class="line"><span style="color:#24292E">		owner</span></span>
+<span class="line"><span style="color:#24292E">		color</span></span>
+<span class="line"><span style="color:#24292E">		price</span></span>
+<span class="line"><span style="color:#24292E">	}</span></span>
+<span class="line"><span style="color:#24292E">}</span><span style="color:#032F62">"</span></span></code></pre>
+<p>输入参数</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49">let</span><span style="color:#24292E"> myInput </span><span style="color:#D73A49">=</span><span style="color:#032F62"> "</span><span style="color:#B31D28;font-style:italic">{</span></span>
+<span class="line"><span style="color:#032F62">	'input'</span><span style="color:#24292E">: {</span></span>
+<span class="line"><span style="color:#032F62">		'owner'</span><span style="color:#24292E">: </span><span style="color:#032F62">'Mary'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">		'color'</span><span style="color:#24292E">: </span><span style="color:#032F62">'red'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">	}</span></span>
+<span class="line"><span style="color:#24292E">}</span><span style="color:#032F62">"</span></span></code></pre>
+<p>发送请求</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#6F42C1">gRequest</span><span style="color:#24292E">(url, myQuery, myInput).</span><span style="color:#6F42C1">then</span><span style="color:#24292E">(</span><span style="color:#D73A49">function</span><span style="color:#24292E"> (</span><span style="color:#E36209">data</span><span style="color:#24292E">) {});</span></span></code></pre>
+<h3 id="返回类型">返回类型</h3>
+<p>返回类型就是进行查询操作或变更操作后响应参数的类型，如上，Clothes就是查询操作findClothes的返回类型</p>
+<h3 id="订阅类型">订阅类型</h3>
+<p>定义和使用的方法和其他对象类型没有区别。</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>type Subscription {}</span></span>
+<span class="line"><span>schema {</span></span>
+<span class="line"><span>	query: Query</span></span>
+<span class="line"><span>	subscription: Subscription</span></span>
+<span class="line"><span>}</span></span></code></pre> </div> <footer class="post__tags prose-container" data-astro-cid-egg7nqdx> <span class="tag" data-astro-cid-egg7nqdx>#GraphQL</span><span class="tag" data-astro-cid-egg7nqdx>#API</span><span class="tag" data-astro-cid-egg7nqdx>#HTTP</span> </footer> </article> <nav class="post-nav container" data-astro-cid-egg7nqdx>  <a href="/posts/technology-react-hooks-shenru-lijie" class="post-nav__link post-nav__link--next" data-astro-cid-egg7nqdx> <span class="post-nav__kicker" data-astro-cid-egg7nqdx>下一篇 →</span> <span class="post-nav__title" data-astro-cid-egg7nqdx>React Hooks深入理解</span> </a> </nav>  </main> <footer class="site-footer" data-astro-cid-37fxchfa> <div class="container site-footer__inner" data-astro-cid-37fxchfa> <p class="site-footer__sig deco" data-astro-cid-37fxchfa>每一个不曾起舞的日子，都是对生命的辜负</p> <p class="site-footer__meta fade" data-astro-cid-37fxchfa>
+© 2020 – 2026 Jordan · Built with Astro
+</p> </div> </footer> <!-- 浮动联系按钮 --> <a href="/contact" class="contact-fab" aria-label="联系 Jordan" data-astro-cid-37fxchfa> <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-37fxchfa> <path d="M4 6h16v12H4z" data-astro-cid-37fxchfa></path> <path d="M4 6l8 7 8-7" data-astro-cid-37fxchfa></path> </svg> </a> <script>
+      // 主题切换
+      const btn = document.querySelector('[data-theme-toggle]');
+      const icon = document.querySelector('[data-theme-icon]');
+      function updateIcon() {
+        const t = document.documentElement.getAttribute('data-theme');
+        if (icon) icon.textContent = t === 'dark' ? '☀' : '☾';
+      }
+      updateIcon();
+      btn?.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme') || 'light';
+        const next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateIcon();
+      });
+    </script>  </body> </html> 

@@ -1,0 +1,168 @@
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="前端面试准备：设计模式（单例、工厂、观察者等）与系统设计（高并发、微服务、分布式）核心概念与实战案例解析。"><meta name="theme-color" content="#F5EFE0"><link rel="icon" type="image/png" href="/favicon.png"><link rel="manifest" href="/manifest.json"><link rel="canonical" href="https://jordan-home.github.io/posts/technology-qian-duan-mian-shi-she-ji-moshi-yu-xi-tong-she-ji/"><meta property="og:title" content="前端面试进阶：设计模式与系统设计实战指南 · Jordan の Words"><meta property="og:description" content="前端面试准备：设计模式（单例、工厂、观察者等）与系统设计（高并发、微服务、分布式）核心概念与实战案例解析。"><meta property="og:image" content="/illustrations/hero-shanhui.webp"><meta property="og:type" content="website"><title>前端面试进阶：设计模式与系统设计实战指南 · Jordan の Words</title><!-- JSON-LD: Person schema（站点作者信息） --><script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Jordan","url":"https://jordan-home.github.io/","description":"Jordan 的个人站点 — 记录技术、文学、哲学、AI 与生活的痕迹。","knowsAbout":["Web Development","AI","Writing","Psychology","Design"],"sameAs":["https://github.com/jordan-home","https://www.sweet-novel.net","https://petmona.app"]}</script><!-- 字体：衬线中文 + 衬线英文 + 题花 --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Ma+Shan+Zheng&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"><script>
+      // 主题持久化
+      (function () {
+        const t = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script><link rel="stylesheet" href="/assets/about.CzyaUa3F.css">
+<style>.post[data-astro-cid-egg7nqdx]{padding:var(--sp-8) 0}.post__head[data-astro-cid-egg7nqdx]{text-align:center;margin-bottom:var(--sp-7)}.post__meta[data-astro-cid-egg7nqdx]{display:flex;gap:var(--sp-4);justify-content:center;font-size:var(--fs-xs);color:var(--ink-fade);margin:0 0 var(--sp-5)}.post__cat[data-astro-cid-egg7nqdx]{padding:2px 10px;background:var(--cinnabar);color:var(--paper);border-radius:var(--r-sm)}.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-3xl);line-height:var(--lh-tight);margin:0 0 var(--sp-5);letter-spacing:.02em}.post__desc[data-astro-cid-egg7nqdx]{font-size:var(--fs-md);color:var(--ink-soft);line-height:var(--lh-loose);margin:0}.post__rule[data-astro-cid-egg7nqdx]{width:80px;height:24px;margin:var(--sp-6) auto 0;background:url(/illustrations/divider-cloud.svg) no-repeat center / contain;border:none}.post__body[data-astro-cid-egg7nqdx] p{line-height:var(--lh-loose)}.post__body[data-astro-cid-egg7nqdx] h2{margin-top:var(--sp-7);padding-top:var(--sp-4);border-top:1px solid var(--line);font-size:var(--fs-xl)}.post__body[data-astro-cid-egg7nqdx] h2:before{content:"· ";color:var(--cinnabar)}.post__body[data-astro-cid-egg7nqdx] h3{margin-top:var(--sp-6);color:var(--ink);font-size:var(--fs-lg)}.post__body[data-astro-cid-egg7nqdx] img{margin:var(--sp-6) auto;border-radius:var(--r-md);box-shadow:var(--sh-1)}.post__body[data-astro-cid-egg7nqdx] ul,.post__body[data-astro-cid-egg7nqdx] ol{line-height:var(--lh-loose);padding-left:var(--sp-5)}.post__tags[data-astro-cid-egg7nqdx]{margin-top:var(--sp-7);padding-top:var(--sp-5);border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:var(--sp-3)}.tag[data-astro-cid-egg7nqdx]{font-size:var(--fs-xs);color:var(--ink-soft);padding:4px 10px;border:1px solid var(--line);border-radius:var(--r-sm)}.post-nav[data-astro-cid-egg7nqdx]{margin:var(--sp-8) auto var(--sp-7);display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-5)}.post-nav__link[data-astro-cid-egg7nqdx]{display:block;padding:var(--sp-5);background:var(--paper-warm);border-radius:var(--r-md);color:var(--ink);border:1px solid var(--line)}.post-nav__link[data-astro-cid-egg7nqdx]:hover{border-color:var(--cinnabar)}.post-nav__link--next[data-astro-cid-egg7nqdx]{text-align:right}.post-nav__kicker[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-xs);color:var(--ink-fade);margin-bottom:var(--sp-2)}.post-nav__title[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-sm);font-weight:500}@media(max-width:860px){.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-2xl)}.post__body[data-astro-cid-egg7nqdx] h2{font-size:var(--fs-lg)}.post__body[data-astro-cid-egg7nqdx] h3{font-size:var(--fs-md)}.post__desc[data-astro-cid-egg7nqdx]{font-size:var(--fs-base)}}@media(max-width:640px){.post[data-astro-cid-egg7nqdx]{padding:var(--sp-6) 0}.post__head[data-astro-cid-egg7nqdx]{margin-bottom:var(--sp-5)}.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-xl)}.post__meta[data-astro-cid-egg7nqdx]{flex-wrap:wrap;gap:var(--sp-2)}.post-nav[data-astro-cid-egg7nqdx]{grid-template-columns:1fr}.post__body[data-astro-cid-egg7nqdx] pre{font-size:var(--fs-xs);padding:var(--sp-4)}}@media(max-width:480px){.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-lg)}.post__rule[data-astro-cid-egg7nqdx]{width:60px;height:20px;margin-top:var(--sp-5)}.post__body[data-astro-cid-egg7nqdx] blockquote{padding:var(--sp-3) var(--sp-4)}}
+</style></head> <body data-astro-cid-37fxchfa> <a class="skip-link" href="#main" data-astro-cid-37fxchfa>跳到正文</a> <header class="site-header" data-astro-cid-37fxchfa> <div class="container site-header__inner" data-astro-cid-37fxchfa> <a href="/" class="brand" aria-label="Jordan の Words" data-astro-cid-37fxchfa> <img src="/illustrations/seal-red.webp" alt="" class="brand__seal" width="36" height="36" data-astro-cid-37fxchfa> <span class="brand__name" data-astro-cid-37fxchfa>Jordan <span class="brand__name-aux" data-astro-cid-37fxchfa>の</span> Words</span> </a> <nav class="nav" aria-label="主导航" data-astro-cid-37fxchfa> <ul data-astro-cid-37fxchfa> <li data-astro-cid-37fxchfa> <a href="/" class="nav__link" data-astro-cid-37fxchfa> 首页 </a> </li><li data-astro-cid-37fxchfa> <a href="/posts" class="nav__link is-active" data-astro-cid-37fxchfa> 文字 </a> </li><li data-astro-cid-37fxchfa> <a href="/projects" class="nav__link" data-astro-cid-37fxchfa> 作品 </a> </li><li data-astro-cid-37fxchfa> <a href="/about" class="nav__link" data-astro-cid-37fxchfa> 关于 </a> </li><li data-astro-cid-37fxchfa> <a href="/contact" class="nav__link" data-astro-cid-37fxchfa> 联系 </a> </li> </ul> </nav> <button class="theme-toggle" type="button" aria-label="切换主题" data-theme-toggle data-astro-cid-37fxchfa> <span class="theme-toggle__icon" data-theme-icon data-astro-cid-37fxchfa>☾</span> </button> </div> </header> <main id="main" data-astro-cid-37fxchfa>  <article class="post" data-astro-cid-egg7nqdx> <header class="post__head container" data-astro-cid-egg7nqdx> <p class="post__meta" data-astro-cid-egg7nqdx> <span class="post__cat" data-astro-cid-egg7nqdx>技术</span> <time datetime="2026-04-14T00:00:00.000Z" data-astro-cid-egg7nqdx>2026年4月14日</time> </p> <h1 class="post__title" data-astro-cid-egg7nqdx>前端面试进阶：设计模式与系统设计实战指南</h1> <p class="post__desc deco" data-astro-cid-egg7nqdx>前端面试准备：设计模式（单例、工厂、观察者等）与系统设计（高并发、微服务、分布式）核心概念与实战案例解析。</p> <hr class="post__rule" data-astro-cid-egg7nqdx> </header> <div class="post__body prose-container prose" data-astro-cid-egg7nqdx> <h2 id="前言">前言</h2>
+<p>前端面试的难点不在于你会多少 API，而在于<strong>能不能把零散的知识点连成线</strong>，在面试中讲出一个完整的故事。</p>
+<p>这篇文章是基于我在准备面试过程中的实战笔记整理，重点覆盖高频考点：设计模式、系统设计、浏览器原理。</p>
+<h2 id="设计模式不是为了背是为了理解">设计模式：不是为了背，是为了理解</h2>
+<h3 id="为什么面试必问设计模式">为什么面试必问设计模式</h3>
+<p>面试官问设计模式，不是想听你背教科书，而是：</p>
+<ol>
+<li><strong>看你有没有架构思维</strong>——能不能从具体代码里抽象出通用结构</li>
+<li><strong>看你能不能说清楚 trade-off</strong>——知道这个模式好，也知道它什么时候不该用</li>
+<li><strong>看你有没有读过源码</strong>——Vue3、React、Redux 里面全是设计模式</li>
+</ol>
+<h3 id="代理模式-vs-装饰器模式最常被问的对比">代理模式 vs 装饰器模式：最常被问的对比</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>代理模式：控制访问（你不知道真实对象存在）</span></span>
+<span class="line"><span>装饰器模式：增强功能（你知道并主动扩展）</span></span></code></pre>
+<p><strong>实战理解：</strong></p>
+<p>Vue3 的 reactive 是代理——你访问 <code>obj.name</code>，实际上是 <code>Proxy</code> 在中间拦截，你不知道 Proxy 做了什么处理。</p>
+<p>React 的 HOC（高阶组件）是装饰器——你把 <code>Button</code> 传进去，出来是 <code>withLogger(Button)</code>，你知道你在增强它。</p>
+<p><strong>面试话术：</strong></p>
+<blockquote>
+<p>“代理模式适合做拦截和控制，比如 Vue3 的响应式；装饰器模式适合做功能增强，比如 React 的 HOC。两者区别在于访问者是否知道被包装。”</p>
+</blockquote>
+<h3 id="观察者模式vue-和-react-的事件基石">观察者模式：Vue 和 React 的事件基石</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Subject（被观察者）</span></span>
+<span class="line"><span>  ↓ 订阅</span></span>
+<span class="line"><span>Observer（观察者）</span></span>
+<span class="line"><span>  ↓ 状态变化通知</span></span>
+<span class="line"><span>多个 Observer 收到更新</span></span></code></pre>
+<p><strong>实际应用：</strong></p>
+<ul>
+<li>Vue3 的依赖收集：data 变化 → 自动通知所有使用处</li>
+<li>EventBus：组件间通信</li>
+<li>Redux：状态变化 → 通知所有 subscriber</li>
+</ul>
+<p><strong>实现一个简化版：</strong></p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">class</span><span style="color:#6F42C1"> EventBus</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#D73A49">  constructor</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#005CC5">    this</span><span style="color:#24292E">.subscribers </span><span style="color:#D73A49">=</span><span style="color:#24292E"> {}</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#6F42C1">  on</span><span style="color:#24292E">(</span><span style="color:#E36209">event</span><span style="color:#24292E">, </span><span style="color:#E36209">callback</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#24292E">    (</span><span style="color:#005CC5">this</span><span style="color:#24292E">.subscribers[event] </span><span style="color:#D73A49">||</span><span style="color:#24292E"> (</span><span style="color:#005CC5">this</span><span style="color:#24292E">.subscribers[event] </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [])).</span><span style="color:#6F42C1">push</span><span style="color:#24292E">(callback)</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#6F42C1">  emit</span><span style="color:#24292E">(</span><span style="color:#E36209">event</span><span style="color:#24292E">, </span><span style="color:#E36209">data</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#24292E">    (</span><span style="color:#005CC5">this</span><span style="color:#24292E">.subscribers[event] </span><span style="color:#D73A49">||</span><span style="color:#24292E"> []).</span><span style="color:#6F42C1">forEach</span><span style="color:#24292E">(</span><span style="color:#E36209">cb</span><span style="color:#D73A49"> =></span><span style="color:#6F42C1"> cb</span><span style="color:#24292E">(data))</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#6F42C1">  off</span><span style="color:#24292E">(</span><span style="color:#E36209">event</span><span style="color:#24292E">, </span><span style="color:#E36209">callback</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">    const</span><span style="color:#005CC5"> cbs</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> this</span><span style="color:#24292E">.subscribers[event]</span></span>
+<span class="line"><span style="color:#D73A49">    if</span><span style="color:#24292E"> (cbs) </span><span style="color:#005CC5">this</span><span style="color:#24292E">.subscribers[event] </span><span style="color:#D73A49">=</span><span style="color:#24292E"> cbs.</span><span style="color:#6F42C1">filter</span><span style="color:#24292E">(</span><span style="color:#E36209">cb</span><span style="color:#D73A49"> =></span><span style="color:#24292E"> cb </span><span style="color:#D73A49">!==</span><span style="color:#24292E"> callback)</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h2 id="系统设计从组件到架构">系统设计：从组件到架构</h2>
+<h3 id="前端架构的三个层次">前端架构的三个层次</h3>
+<p><strong>1. 组件设计：单个组件的内部结构</strong></p>
+<ul>
+<li>状态管理：组件自己管理 vs 全局共享</li>
+<li>副作用处理：useEffect 的依赖设计</li>
+<li>复用抽象：HOC vs Render Props vs Hooks</li>
+</ul>
+<p><strong>2. 页面设计：多个组件的组合</strong></p>
+<ul>
+<li>数据流：自上而下 props drilling vs Context vs 状态管理</li>
+<li>副作用边界：哪些在客户端，哪些在服务端</li>
+<li>路由设计：按业务域分还是按页面分</li>
+</ul>
+<p><strong>3. 应用架构：整体技术选型和模块划分</strong></p>
+<ul>
+<li>构建工具：Vite vs Webpack</li>
+<li>状态管理：Redux vs Zustand vs Jotai</li>
+<li>服务端方案：SSR vs SSG vs CSR</li>
+</ul>
+<h3 id="性能优化的本质">性能优化的本质</h3>
+<p>性能优化不是炫技，而是回答一个问题：</p>
+<blockquote>
+<p><strong>用户感知到卡顿的瓶颈在哪里？</strong></p>
+</blockquote>
+<p>常见瓶颈和解决方案：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>瓶颈</th><th>诊断</th><th>解决</th></tr></thead><tbody><tr><td>首屏慢</td><td>网络请求多/大</td><td>代码分割、CDN、压缩</td></tr><tr><td>操作卡</td><td>JS 主线程阻塞</td><td>Web Worker、requestIdleCallback</td></tr><tr><td>白屏</td><td>SSR/SSG 不够</td><td>预渲染、静态化</td></tr><tr><td>重排/重绘</td><td>频繁 DOM 操作</td><td>虚拟列表、will-change</td></tr></tbody></table>
+<h2 id="浏览器原理说不清楚不算真的会">浏览器原理：说不清楚不算真的会</h2>
+<h3 id="渲染流程">渲染流程</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>HTML → DOM Tree</span></span>
+<span class="line"><span>CSS  → CSSOM Tree</span></span>
+<span class="line"><span>↓</span></span>
+<span class="line"><span>Render Tree（合并）</span></span>
+<span class="line"><span>↓</span></span>
+<span class="line"><span>Layout（布局）</span></span>
+<span class="line"><span>↓</span></span>
+<span class="line"><span>Paint（绘制）</span></span>
+<span class="line"><span>↓</span></span>
+<span class="line"><span>Composite（合成）</span></span></code></pre>
+<p>理解这个流程才能理解为什么 <code>transform</code> 比 <code>top/left</code> 性能好——因为 <code>transform</code> 跳过了 Layout，直接到 Composite。</p>
+<h3 id="事件循环说清楚不容易">事件循环：说清楚不容易</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>执行栈 → 所有同步任务</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>MicroTask（Promise.then, MutationObserver）</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>RAF（requestAnimationFrame）</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>Task（setTimeout, setInterval）</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>渲染</span></span></code></pre>
+<p>一个常考的问题：<strong>宏任务和微任务的区别</strong>？</p>
+<p>微任务是<strong>对本轮任务结果的补充</strong>，比如 Promise.then 在本轮事件循环结束前执行；宏任务是<strong>下一轮事件循环</strong>才执行。</p>
+<h2 id="准备面试的策略">准备面试的策略</h2>
+<p><strong>不要背，要练。</strong></p>
+<p>我的做法：</p>
+<ol>
+<li>每个知识点，先自己实现一遍（比如自己写一个 EventBus）</li>
+<li>每次面试结束后，把被问到的题目记下来，下次重点复习</li>
+<li>对着镜子或录音讲出来——能讲清楚才是真的理解</li>
+</ol>
+<hr>
+<p><em>本文是我在前端面试准备过程中的实战笔记，欢迎交流。</em></p> </div> <footer class="post__tags prose-container" data-astro-cid-egg7nqdx> <span class="tag" data-astro-cid-egg7nqdx>#前端</span><span class="tag" data-astro-cid-egg7nqdx>#面试</span><span class="tag" data-astro-cid-egg7nqdx>#设计模式</span> </footer> </article> <nav class="post-nav container" data-astro-cid-egg7nqdx> <a href="/posts/technology-shidai-gentrification-why-building-is-the-way-out" class="post-nav__link post-nav__link--prev" data-astro-cid-egg7nqdx> <span class="post-nav__kicker" data-astro-cid-egg7nqdx>← 上一篇</span> <span class="post-nav__title" data-astro-cid-egg7nqdx>为什么我要同时打两份工：双轨道人生的实践笔记</span> </a> <a href="/posts/technology-cai-wu-zi-you-zhi-lu-reading-notes" class="post-nav__link post-nav__link--next" data-astro-cid-egg7nqdx> <span class="post-nav__kicker" data-astro-cid-egg7nqdx>下一篇 →</span> <span class="post-nav__title" data-astro-cid-egg7nqdx>《财务自由之路》读书笔记：致富不是运气，是系统</span> </a> </nav>  </main> <footer class="site-footer" data-astro-cid-37fxchfa> <div class="container site-footer__inner" data-astro-cid-37fxchfa> <p class="site-footer__sig deco" data-astro-cid-37fxchfa>每一个不曾起舞的日子，都是对生命的辜负</p> <p class="site-footer__meta fade" data-astro-cid-37fxchfa>
+© 2020 – 2026 Jordan · Built with Astro
+</p> </div> </footer> <!-- 浮动联系按钮 --> <a href="/contact" class="contact-fab" aria-label="联系 Jordan" data-astro-cid-37fxchfa> <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-37fxchfa> <path d="M4 6h16v12H4z" data-astro-cid-37fxchfa></path> <path d="M4 6l8 7 8-7" data-astro-cid-37fxchfa></path> </svg> </a> <script>
+      // 主题切换
+      const btn = document.querySelector('[data-theme-toggle]');
+      const icon = document.querySelector('[data-theme-icon]');
+      function updateIcon() {
+        const t = document.documentElement.getAttribute('data-theme');
+        if (icon) icon.textContent = t === 'dark' ? '☀' : '☾';
+      }
+      updateIcon();
+      btn?.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme') || 'light';
+        const next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateIcon();
+      });
+    </script>  </body> </html> 

@@ -1,0 +1,85 @@
+0 verbose cli /Users/macmini/.nvm/versions/node/v22.22.3/bin/node /Users/macmini/.nvm/versions/node/v22.22.3/bin/npm
+1 info using npm@10.9.8
+2 info using node@v22.22.3
+3 silly config load:file:/Users/macmini/.nvm/versions/node/v22.22.3/lib/node_modules/npm/npmrc
+4 silly config load:file:/Users/macmini/Documents/Codex/git-pro/jordan-home.github.io/.npmrc
+5 silly config load:file:/Users/macmini/.npmrc
+6 silly config load:file:/Users/macmini/.nvm/versions/node/v22.22.3/etc/npmrc
+7 verbose title npm install astro@^5 @astrojs/sitemap @astrojs/rss @astrojs/mdx
+8 verbose argv "install" "--cache" "./.npm-cache" "--prefix" "." "astro@^5" "@astrojs/sitemap" "@astrojs/rss" "@astrojs/mdx" "--save"
+9 verbose logfile logs-max:10 dir:/Users/macmini/Documents/Codex/git-pro/jordan-home.github.io/.npm-cache/_logs/2026-09-23T10_19_53_602Z-
+10 verbose logfile /Users/macmini/Documents/Codex/git-pro/jordan-home.github.io/.npm-cache/_logs/2026-09-23T10_19_53_602Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
+13 silly idealTree buildDeps
+14 silly fetch manifest astro@^5
+15 silly packumentCache full:https://registry.npmmirror.com/astro cache-miss
+16 http fetch GET 200 https://registry.npmmirror.com/npm 271ms
+17 http fetch GET 200 https://registry.npmmirror.com/astro 308ms (cache miss)
+18 silly packumentCache full:https://registry.npmmirror.com/astro set size:1196561 disposed:false
+19 silly fetch manifest @astrojs/sitemap@*
+20 silly packumentCache full:https://registry.npmmirror.com/@astrojs%2fsitemap cache-miss
+21 http fetch GET 200 https://registry.npmmirror.com/@astrojs%2fsitemap 31ms (cache miss)
+22 silly packumentCache full:https://registry.npmmirror.com/@astrojs%2fsitemap set size:55192 disposed:false
+23 silly fetch manifest @astrojs/rss@*
+24 silly packumentCache full:https://registry.npmmirror.com/@astrojs%2frss cache-miss
+25 http fetch GET 200 https://registry.npmmirror.com/@astrojs%2frss 26ms (cache miss)
+26 silly packumentCache full:https://registry.npmmirror.com/@astrojs%2frss set size:64293 disposed:false
+27 silly fetch manifest @astrojs/mdx@*
+28 silly packumentCache full:https://registry.npmmirror.com/@astrojs%2fmdx cache-miss
+29 http fetch GET 200 https://registry.npmmirror.com/@astrojs%2fmdx 38ms (cache miss)
+30 silly packumentCache full:https://registry.npmmirror.com/@astrojs%2fmdx set size:171074 disposed:false
+31 silly fetch manifest @astrojs/markdown-remark@^7.3.0
+32 silly packumentCache full:https://registry.npmmirror.com/@astrojs%2fmarkdown-remark cache-miss
+33 http fetch GET 200 https://registry.npmmirror.com/@astrojs%2fmarkdown-remark 1513ms (cache miss)
+34 silly packumentCache full:https://registry.npmmirror.com/@astrojs%2fmarkdown-remark set size:119505 disposed:false
+35 silly fetch manifest astro@^7.2.10
+36 silly packumentCache full:https://registry.npmmirror.com/astro cache-miss
+37 http cache https://registry.npmmirror.com/astro 22ms (cache hit)
+38 silly packumentCache full:https://registry.npmmirror.com/astro set size:9524631 disposed:false
+39 verbose stack Error: unable to resolve dependency tree
+39 verbose stack     at #failPeerConflict (/Users/macmini/.nvm/versions/node/v22.22.3/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/build-ideal-tree.js:1363:25)
+39 verbose stack     at #loadPeerSet (/Users/macmini/.nvm/versions/node/v22.22.3/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/build-ideal-tree.js:1329:33)
+39 verbose stack     at async #buildDepStep (/Users/macmini/.nvm/versions/node/v22.22.3/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/build-ideal-tree.js:904:11)
+39 verbose stack     at async Arborist.buildIdealTree (/Users/macmini/.nvm/versions/node/v22.22.3/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/build-ideal-tree.js:181:7)
+39 verbose stack     at async Promise.all (index 1)
+39 verbose stack     at async Arborist.reify (/Users/macmini/.nvm/versions/node/v22.22.3/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:133:5)
+39 verbose stack     at async Install.exec (/Users/macmini/.nvm/versions/node/v22.22.3/lib/node_modules/npm/lib/commands/install.js:150:5)
+39 verbose stack     at async Npm.exec (/Users/macmini/.nvm/versions/node/v22.22.3/lib/node_modules/npm/lib/npm.js:207:9)
+39 verbose stack     at async module.exports (/Users/macmini/.nvm/versions/node/v22.22.3/lib/node_modules/npm/lib/cli/entry.js:74:5)
+40 error code ERESOLVE
+41 error ERESOLVE unable to resolve dependency tree
+42 error
+43 error While resolving: jordan-home.github.io@1.0.0
+43 error Found: astro@5.18.2
+43 error node_modules/astro
+43 error   astro@"^5" from the root project
+43 error
+43 error Could not resolve dependency:
+43 error peer astro@"^7.2.10" from @astrojs/mdx@8.0.2
+43 error node_modules/@astrojs/mdx
+43 error   @astrojs/mdx@"*" from the root project
+43 error
+43 error Fix the upstream dependency conflict, or retry
+43 error this command with --force or --legacy-peer-deps
+43 error to accept an incorrect (and potentially broken) dependency resolution.
+44 error
+44 error
+44 error For a full report see:
+44 error /Users/macmini/Documents/Codex/git-pro/jordan-home.github.io/.npm-cache/_logs/2026-09-23T10_19_53_602Z-eresolve-report.txt
+45 silly unfinished npm timer reify 1790158793927
+46 silly unfinished npm timer reify:loadTrees 1790158793928
+47 silly unfinished npm timer idealTree:buildDeps 1790158793939
+48 silly unfinished npm timer idealTree:#root 1790158793939
+49 verbose cwd /Users/macmini/Documents/Codex/git-pro/jordan-home.github.io
+50 verbose os Darwin 25.4.0
+51 verbose node v22.22.3
+52 verbose npm  v10.9.8
+53 notice
+53 notice New major version of npm available! 10.9.8 -> 12.1.0
+53 notice Changelog: https://github.com/npm/cli/releases/tag/v12.1.0
+53 notice To update run: npm install -g npm@12.1.0
+53 notice  { force: true, [Symbol(proc-log.meta)]: true }
+54 verbose exit 1
+55 verbose code 1
+56 error A complete log of this run can be found in: /Users/macmini/Documents/Codex/git-pro/jordan-home.github.io/.npm-cache/_logs/2026-09-23T10_19_53_602Z-debug-0.log

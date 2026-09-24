@@ -1,0 +1,269 @@
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-37fxchfa> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="OpenAI ChatGPT API 完整调用指南：获取 API Key、构建请求参数、流式响应处理、成本控制与最佳实践。"><meta name="theme-color" content="#F5EFE0"><link rel="icon" type="image/png" href="/favicon.png"><link rel="manifest" href="/manifest.json"><link rel="canonical" href="https://jordan-home.github.io/posts/technology-chatgpt-api-rumen/"><meta property="og:title" content="ChatGPT API 调用入门 · Jordan の Words"><meta property="og:description" content="OpenAI ChatGPT API 完整调用指南：获取 API Key、构建请求参数、流式响应处理、成本控制与最佳实践。"><meta property="og:image" content="/illustrations/hero-shanhui.webp"><meta property="og:type" content="website"><title>ChatGPT API 调用入门 · Jordan の Words</title><!-- JSON-LD: Person schema（站点作者信息） --><script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Jordan","url":"https://jordan-home.github.io/","description":"Jordan 的个人站点 — 记录技术、文学、哲学、AI 与生活的痕迹。","knowsAbout":["Web Development","AI","Writing","Psychology","Design"],"sameAs":["https://github.com/jordan-home","https://www.sweet-novel.net","https://petmona.app"]}</script><!-- 字体：衬线中文 + 衬线英文 + 题花 --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Ma+Shan+Zheng&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"><script>
+      // 主题持久化
+      (function () {
+        const t = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script><link rel="stylesheet" href="/assets/about.CzyaUa3F.css">
+<style>.post[data-astro-cid-egg7nqdx]{padding:var(--sp-8) 0}.post__head[data-astro-cid-egg7nqdx]{text-align:center;margin-bottom:var(--sp-7)}.post__meta[data-astro-cid-egg7nqdx]{display:flex;gap:var(--sp-4);justify-content:center;font-size:var(--fs-xs);color:var(--ink-fade);margin:0 0 var(--sp-5)}.post__cat[data-astro-cid-egg7nqdx]{padding:2px 10px;background:var(--cinnabar);color:var(--paper);border-radius:var(--r-sm)}.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-3xl);line-height:var(--lh-tight);margin:0 0 var(--sp-5);letter-spacing:.02em}.post__desc[data-astro-cid-egg7nqdx]{font-size:var(--fs-md);color:var(--ink-soft);line-height:var(--lh-loose);margin:0}.post__rule[data-astro-cid-egg7nqdx]{width:80px;height:24px;margin:var(--sp-6) auto 0;background:url(/illustrations/divider-cloud.svg) no-repeat center / contain;border:none}.post__body[data-astro-cid-egg7nqdx] p{line-height:var(--lh-loose)}.post__body[data-astro-cid-egg7nqdx] h2{margin-top:var(--sp-7);padding-top:var(--sp-4);border-top:1px solid var(--line);font-size:var(--fs-xl)}.post__body[data-astro-cid-egg7nqdx] h2:before{content:"· ";color:var(--cinnabar)}.post__body[data-astro-cid-egg7nqdx] h3{margin-top:var(--sp-6);color:var(--ink);font-size:var(--fs-lg)}.post__body[data-astro-cid-egg7nqdx] img{margin:var(--sp-6) auto;border-radius:var(--r-md);box-shadow:var(--sh-1)}.post__body[data-astro-cid-egg7nqdx] ul,.post__body[data-astro-cid-egg7nqdx] ol{line-height:var(--lh-loose);padding-left:var(--sp-5)}.post__tags[data-astro-cid-egg7nqdx]{margin-top:var(--sp-7);padding-top:var(--sp-5);border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:var(--sp-3)}.tag[data-astro-cid-egg7nqdx]{font-size:var(--fs-xs);color:var(--ink-soft);padding:4px 10px;border:1px solid var(--line);border-radius:var(--r-sm)}.post-nav[data-astro-cid-egg7nqdx]{margin:var(--sp-8) auto var(--sp-7);display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-5)}.post-nav__link[data-astro-cid-egg7nqdx]{display:block;padding:var(--sp-5);background:var(--paper-warm);border-radius:var(--r-md);color:var(--ink);border:1px solid var(--line)}.post-nav__link[data-astro-cid-egg7nqdx]:hover{border-color:var(--cinnabar)}.post-nav__link--next[data-astro-cid-egg7nqdx]{text-align:right}.post-nav__kicker[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-xs);color:var(--ink-fade);margin-bottom:var(--sp-2)}.post-nav__title[data-astro-cid-egg7nqdx]{display:block;font-size:var(--fs-sm);font-weight:500}@media(max-width:860px){.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-2xl)}.post__body[data-astro-cid-egg7nqdx] h2{font-size:var(--fs-lg)}.post__body[data-astro-cid-egg7nqdx] h3{font-size:var(--fs-md)}.post__desc[data-astro-cid-egg7nqdx]{font-size:var(--fs-base)}}@media(max-width:640px){.post[data-astro-cid-egg7nqdx]{padding:var(--sp-6) 0}.post__head[data-astro-cid-egg7nqdx]{margin-bottom:var(--sp-5)}.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-xl)}.post__meta[data-astro-cid-egg7nqdx]{flex-wrap:wrap;gap:var(--sp-2)}.post-nav[data-astro-cid-egg7nqdx]{grid-template-columns:1fr}.post__body[data-astro-cid-egg7nqdx] pre{font-size:var(--fs-xs);padding:var(--sp-4)}}@media(max-width:480px){.post__title[data-astro-cid-egg7nqdx]{font-size:var(--fs-lg)}.post__rule[data-astro-cid-egg7nqdx]{width:60px;height:20px;margin-top:var(--sp-5)}.post__body[data-astro-cid-egg7nqdx] blockquote{padding:var(--sp-3) var(--sp-4)}}
+</style></head> <body data-astro-cid-37fxchfa> <a class="skip-link" href="#main" data-astro-cid-37fxchfa>跳到正文</a> <header class="site-header" data-astro-cid-37fxchfa> <div class="container site-header__inner" data-astro-cid-37fxchfa> <a href="/" class="brand" aria-label="Jordan の Words" data-astro-cid-37fxchfa> <img src="/illustrations/seal-red.webp" alt="" class="brand__seal" width="36" height="36" data-astro-cid-37fxchfa> <span class="brand__name" data-astro-cid-37fxchfa>Jordan <span class="brand__name-aux" data-astro-cid-37fxchfa>の</span> Words</span> </a> <nav class="nav" aria-label="主导航" data-astro-cid-37fxchfa> <ul data-astro-cid-37fxchfa> <li data-astro-cid-37fxchfa> <a href="/" class="nav__link" data-astro-cid-37fxchfa> 首页 </a> </li><li data-astro-cid-37fxchfa> <a href="/posts" class="nav__link is-active" data-astro-cid-37fxchfa> 文字 </a> </li><li data-astro-cid-37fxchfa> <a href="/projects" class="nav__link" data-astro-cid-37fxchfa> 作品 </a> </li><li data-astro-cid-37fxchfa> <a href="/about" class="nav__link" data-astro-cid-37fxchfa> 关于 </a> </li><li data-astro-cid-37fxchfa> <a href="/contact" class="nav__link" data-astro-cid-37fxchfa> 联系 </a> </li> </ul> </nav> <button class="theme-toggle" type="button" aria-label="切换主题" data-theme-toggle data-astro-cid-37fxchfa> <span class="theme-toggle__icon" data-theme-icon data-astro-cid-37fxchfa>☾</span> </button> </div> </header> <main id="main" data-astro-cid-37fxchfa>  <article class="post" data-astro-cid-egg7nqdx> <header class="post__head container" data-astro-cid-egg7nqdx> <p class="post__meta" data-astro-cid-egg7nqdx> <span class="post__cat" data-astro-cid-egg7nqdx>技术</span> <time datetime="2026-01-22T00:00:00.000Z" data-astro-cid-egg7nqdx>2026年1月22日</time> </p> <h1 class="post__title" data-astro-cid-egg7nqdx>ChatGPT API 调用入门</h1> <p class="post__desc deco" data-astro-cid-egg7nqdx>OpenAI ChatGPT API 完整调用指南：获取 API Key、构建请求参数、流式响应处理、成本控制与最佳实践。</p> <hr class="post__rule" data-astro-cid-egg7nqdx> </header> <div class="post__body prose-container prose" data-astro-cid-egg7nqdx> <h2 id="前言">前言</h2>
+<p>OpenAI API 为开发者提供了访问 GPT 模型的能力。本文介绍如何调用 ChatGPT API，包括环境配置、请求格式和实际应用。</p>
+<h2 id="准备工作">准备工作</h2>
+<h3 id="1-获取-api-key">1. 获取 API Key</h3>
+<ol>
+<li>访问 <a href="https://platform.openai.com/">OpenAI Platform</a></li>
+<li>注册账号并绑定支付方式</li>
+<li>在 API Keys 页面创建新的密钥</li>
+</ol>
+<p><strong>注意</strong>：API Key 只显示一次，请妥善保存！</p>
+<h3 id="2-安装-openai-sdk">2. 安装 OpenAI SDK</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6F42C1">npm</span><span style="color:#032F62"> install</span><span style="color:#032F62"> openai</span></span>
+<span class="line"><span style="color:#6A737D"># 或</span></span>
+<span class="line"><span style="color:#6F42C1">yarn</span><span style="color:#032F62"> add</span><span style="color:#032F62"> openai</span></span></code></pre>
+<h2 id="基本调用">基本调用</h2>
+<h3 id="1-nodejs-调用">1. Node.js 调用</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> OpenAI</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> require</span><span style="color:#24292E">(</span><span style="color:#032F62">'openai'</span><span style="color:#24292E">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> client</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> OpenAI</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#24292E">  apiKey: </span><span style="color:#032F62">'your-api-key'</span></span>
+<span class="line"><span style="color:#24292E">});</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">async</span><span style="color:#D73A49"> function</span><span style="color:#6F42C1"> chat</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> response</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> await</span><span style="color:#24292E"> client.chat.completions.</span><span style="color:#6F42C1">create</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#24292E">    model: </span><span style="color:#032F62">'gpt-4o'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    messages: [</span></span>
+<span class="line"><span style="color:#24292E">      {</span></span>
+<span class="line"><span style="color:#24292E">        role: </span><span style="color:#032F62">'system'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">        content: </span><span style="color:#032F62">'你是一个专业的程序员助手'</span></span>
+<span class="line"><span style="color:#24292E">      },</span></span>
+<span class="line"><span style="color:#24292E">      {</span></span>
+<span class="line"><span style="color:#24292E">        role: </span><span style="color:#032F62">'user'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">        content: </span><span style="color:#032F62">'用 JavaScript 写一个快速排序函数'</span></span>
+<span class="line"><span style="color:#24292E">      }</span></span>
+<span class="line"><span style="color:#24292E">    ],</span></span>
+<span class="line"><span style="color:#24292E">    temperature: </span><span style="color:#005CC5">0.7</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    max_tokens: </span><span style="color:#005CC5">1000</span></span>
+<span class="line"><span style="color:#24292E">  });</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#24292E">  console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(response.choices[</span><span style="color:#005CC5">0</span><span style="color:#24292E">].message.content);</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1">chat</span><span style="color:#24292E">();</span></span></code></pre>
+<h3 id="2-使用环境变量">2. 使用环境变量</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># .env 文件</span></span>
+<span class="line"><span style="color:#24292E">OPENAI_API_KEY</span><span style="color:#D73A49">=</span><span style="color:#032F62">your-api-key</span></span></code></pre>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#6F42C1">require</span><span style="color:#24292E">(</span><span style="color:#032F62">'dotenv'</span><span style="color:#24292E">).</span><span style="color:#6F42C1">config</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> OpenAI</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> require</span><span style="color:#24292E">(</span><span style="color:#032F62">'openai'</span><span style="color:#24292E">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> client</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> new</span><span style="color:#6F42C1"> OpenAI</span><span style="color:#24292E">();</span></span></code></pre>
+<h3 id="3-curl-调用">3. cURL 调用</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6F42C1">curl</span><span style="color:#032F62"> https://api.openai.com/v1/chat/completions</span><span style="color:#005CC5"> \</span></span>
+<span class="line"><span style="color:#005CC5">  -H</span><span style="color:#032F62"> "Content-Type: application/json"</span><span style="color:#005CC5"> \</span></span>
+<span class="line"><span style="color:#005CC5">  -H</span><span style="color:#032F62"> "Authorization: Bearer </span><span style="color:#24292E">$OPENAI_API_KEY</span><span style="color:#032F62">"</span><span style="color:#005CC5"> \</span></span>
+<span class="line"><span style="color:#005CC5">  -d</span><span style="color:#032F62"> '{</span></span>
+<span class="line"><span style="color:#032F62">    "model": "gpt-4o",</span></span>
+<span class="line"><span style="color:#032F62">    "messages": [{"role": "user", "content": "Hello!"}]</span></span>
+<span class="line"><span style="color:#032F62">  }'</span></span></code></pre>
+<h2 id="参数详解">参数详解</h2>
+<h3 id="model">model</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#6A737D">// 推荐模型</span></span>
+<span class="line"><span style="color:#6F42C1">model</span><span style="color:#24292E">: </span><span style="color:#032F62">'gpt-4o'</span><span style="color:#6A737D">        // 最新版 GPT-4</span></span>
+<span class="line"><span style="color:#6F42C1">model</span><span style="color:#24292E">: </span><span style="color:#032F62">'gpt-4-turbo'</span><span style="color:#6A737D">   // GPT-4 快速版</span></span>
+<span class="line"><span style="color:#6F42C1">model</span><span style="color:#24292E">: </span><span style="color:#032F62">'gpt-3.5-turbo'</span><span style="color:#6A737D"> // 性价比高</span></span></code></pre>
+<h3 id="messages">messages</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#6F42C1">messages</span><span style="color:#24292E">: [</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    role: </span><span style="color:#032F62">'system'</span><span style="color:#24292E">,     </span><span style="color:#6A737D">// 系统提示词</span></span>
+<span class="line"><span style="color:#24292E">    content: </span><span style="color:#032F62">'你是一个有帮助的助手'</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    role: </span><span style="color:#032F62">'user'</span><span style="color:#24292E">,      </span><span style="color:#6A737D">// 用户消息</span></span>
+<span class="line"><span style="color:#24292E">    content: </span><span style="color:#032F62">'问题内容'</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    role: </span><span style="color:#032F62">'assistant'</span><span style="color:#24292E">,  </span><span style="color:#6A737D">// AI 回复（用于对话历史）</span></span>
+<span class="line"><span style="color:#24292E">    content: </span><span style="color:#032F62">'回复内容'</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">]</span></span></code></pre>
+<h3 id="temperature">temperature</h3>
+<p>控制输出的随机性：</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#6F42C1">temperature</span><span style="color:#24292E">: </span><span style="color:#005CC5">0</span><span style="color:#6A737D">  // 确定性输出</span></span>
+<span class="line"><span style="color:#6F42C1">temperature</span><span style="color:#24292E">: </span><span style="color:#005CC5">0.7</span><span style="color:#6A737D">  // 平衡（推荐）</span></span>
+<span class="line"><span style="color:#6F42C1">temperature</span><span style="color:#24292E">: </span><span style="color:#005CC5">2</span><span style="color:#6A737D">  // 高度随机</span></span></code></pre>
+<h3 id="max_tokens">max_tokens</h3>
+<p>限制输出长度：</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#6F42C1">max_tokens</span><span style="color:#24292E">: </span><span style="color:#005CC5">100</span><span style="color:#6A737D">   // 最多 100 个 token</span></span>
+<span class="line"><span style="color:#6F42C1">max_tokens</span><span style="color:#24292E">: </span><span style="color:#D73A49">-</span><span style="color:#005CC5">1</span><span style="color:#6A737D">    // 不限制</span></span></code></pre>
+<h3 id="top_p">top_p</h3>
+<p>与 temperature 类似，控制采样：</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#6F42C1">top_p</span><span style="color:#24292E">: </span><span style="color:#005CC5">0.1</span><span style="color:#6A737D">   // 更保守</span></span>
+<span class="line"><span style="color:#6F42C1">top_p</span><span style="color:#24292E">: </span><span style="color:#005CC5">1</span><span style="color:#6A737D">     // 不限制（默认）</span></span></code></pre>
+<h3 id="functions函数调用">functions（函数调用）</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> response</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> await</span><span style="color:#24292E"> client.chat.completions.</span><span style="color:#6F42C1">create</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#24292E">  model: </span><span style="color:#032F62">'gpt-4o'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  messages: [{role: </span><span style="color:#032F62">'user'</span><span style="color:#24292E">, content: </span><span style="color:#032F62">'北京今天天气如何？'</span><span style="color:#24292E">}],</span></span>
+<span class="line"><span style="color:#24292E">  tools: [</span></span>
+<span class="line"><span style="color:#24292E">    {</span></span>
+<span class="line"><span style="color:#24292E">      type: </span><span style="color:#032F62">'function'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">      function: {</span></span>
+<span class="line"><span style="color:#24292E">        name: </span><span style="color:#032F62">'get_weather'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">        description: </span><span style="color:#032F62">'获取指定城市的天气'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">        parameters: {</span></span>
+<span class="line"><span style="color:#24292E">          type: </span><span style="color:#032F62">'object'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">          properties: {</span></span>
+<span class="line"><span style="color:#24292E">            city: {</span></span>
+<span class="line"><span style="color:#24292E">              type: </span><span style="color:#032F62">'string'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">              description: </span><span style="color:#032F62">'城市名称'</span></span>
+<span class="line"><span style="color:#24292E">            }</span></span>
+<span class="line"><span style="color:#24292E">          },</span></span>
+<span class="line"><span style="color:#24292E">          required: [</span><span style="color:#032F62">'city'</span><span style="color:#24292E">]</span></span>
+<span class="line"><span style="color:#24292E">        }</span></span>
+<span class="line"><span style="color:#24292E">      }</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">  ]</span></span>
+<span class="line"><span style="color:#24292E">});</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// 返回结果</span></span>
+<span class="line"><span style="color:#24292E">console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(response.choices[</span><span style="color:#005CC5">0</span><span style="color:#24292E">].message.tool_calls);</span></span></code></pre>
+<h2 id="实际应用示例">实际应用示例</h2>
+<h3 id="1-智能客服机器人">1. 智能客服机器人</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> conversation</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#24292E">  {role: </span><span style="color:#032F62">'system'</span><span style="color:#24292E">, content: </span><span style="color:#032F62">'你是电商客服，请友好地回答用户问题'</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#24292E">];</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">async</span><span style="color:#D73A49"> function</span><span style="color:#6F42C1"> handleMessage</span><span style="color:#24292E">(</span><span style="color:#E36209">userMessage</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#24292E">  conversation.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">({role: </span><span style="color:#032F62">'user'</span><span style="color:#24292E">, content: userMessage});</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> response</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> await</span><span style="color:#24292E"> client.chat.completions.</span><span style="color:#6F42C1">create</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#24292E">    model: </span><span style="color:#032F62">'gpt-4o'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    messages: conversation,</span></span>
+<span class="line"><span style="color:#24292E">    temperature: </span><span style="color:#005CC5">0.7</span></span>
+<span class="line"><span style="color:#24292E">  });</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> reply</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> response.choices[</span><span style="color:#005CC5">0</span><span style="color:#24292E">].message.content;</span></span>
+<span class="line"><span style="color:#24292E">  conversation.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">({role: </span><span style="color:#032F62">'assistant'</span><span style="color:#24292E">, content: reply});</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> reply;</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h3 id="2-代码审查">2. 代码审查</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">async</span><span style="color:#D73A49"> function</span><span style="color:#6F42C1"> reviewCode</span><span style="color:#24292E">(</span><span style="color:#E36209">code</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> response</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> await</span><span style="color:#24292E"> client.chat.completions.</span><span style="color:#6F42C1">create</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#24292E">    model: </span><span style="color:#032F62">'gpt-4o'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    messages: [</span></span>
+<span class="line"><span style="color:#24292E">      {</span></span>
+<span class="line"><span style="color:#24292E">        role: </span><span style="color:#032F62">'system'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">        content: </span><span style="color:#032F62">'你是一个资深代码审查员，请审查代码并提出改进建议'</span></span>
+<span class="line"><span style="color:#24292E">      },</span></span>
+<span class="line"><span style="color:#24292E">      {</span></span>
+<span class="line"><span style="color:#24292E">        role: </span><span style="color:#032F62">'user'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">        content: </span><span style="color:#032F62">`请审查以下代码：</span><span style="color:#005CC5">\n\n</span><span style="color:#032F62">${</span><span style="color:#24292E">code</span><span style="color:#032F62">}`</span></span>
+<span class="line"><span style="color:#24292E">      }</span></span>
+<span class="line"><span style="color:#24292E">    ],</span></span>
+<span class="line"><span style="color:#24292E">    temperature: </span><span style="color:#005CC5">0.3</span></span>
+<span class="line"><span style="color:#24292E">  });</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> response.choices[</span><span style="color:#005CC5">0</span><span style="color:#24292E">].message.content;</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h3 id="3-内容生成">3. 内容生成</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">async</span><span style="color:#D73A49"> function</span><span style="color:#6F42C1"> generateBlogPost</span><span style="color:#24292E">(</span><span style="color:#E36209">topic</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> response</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> await</span><span style="color:#24292E"> client.chat.completions.</span><span style="color:#6F42C1">create</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#24292E">    model: </span><span style="color:#032F62">'gpt-4o'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    messages: [</span></span>
+<span class="line"><span style="color:#24292E">      {</span></span>
+<span class="line"><span style="color:#24292E">        role: </span><span style="color:#032F62">'system'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">        content: </span><span style="color:#032F62">'你是一个专业博主，擅长写技术文章'</span></span>
+<span class="line"><span style="color:#24292E">      },</span></span>
+<span class="line"><span style="color:#24292E">      {</span></span>
+<span class="line"><span style="color:#24292E">        role: </span><span style="color:#032F62">'user'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">        content: </span><span style="color:#032F62">`请写一篇关于 "${</span><span style="color:#24292E">topic</span><span style="color:#032F62">}" 的技术博客，不少于 1000 字`</span></span>
+<span class="line"><span style="color:#24292E">      }</span></span>
+<span class="line"><span style="color:#24292E">    ],</span></span>
+<span class="line"><span style="color:#24292E">    temperature: </span><span style="color:#005CC5">0.8</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    max_tokens: </span><span style="color:#005CC5">2000</span></span>
+<span class="line"><span style="color:#24292E">  });</span></span>
+<span class="line"><span style="color:#24292E">  </span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> response.choices[</span><span style="color:#005CC5">0</span><span style="color:#24292E">].message.content;</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h2 id="流式输出streaming">流式输出（Streaming）</h2>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> stream</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> await</span><span style="color:#24292E"> client.chat.completions.</span><span style="color:#6F42C1">create</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#24292E">  model: </span><span style="color:#032F62">'gpt-4o'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  messages: [{role: </span><span style="color:#032F62">'user'</span><span style="color:#24292E">, content: </span><span style="color:#032F62">'写一个故事'</span><span style="color:#24292E">}],</span></span>
+<span class="line"><span style="color:#24292E">  stream: </span><span style="color:#005CC5">true</span></span>
+<span class="line"><span style="color:#24292E">});</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">for</span><span style="color:#D73A49"> await</span><span style="color:#24292E"> (</span><span style="color:#D73A49">const</span><span style="color:#005CC5"> chunk</span><span style="color:#D73A49"> of</span><span style="color:#24292E"> stream) {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> content</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> chunk.choices[</span><span style="color:#005CC5">0</span><span style="color:#24292E">]?.delta?.content </span><span style="color:#D73A49">||</span><span style="color:#032F62"> ''</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">  process.stdout.</span><span style="color:#6F42C1">write</span><span style="color:#24292E">(content);</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h2 id="错误处理">错误处理</h2>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#D73A49">async</span><span style="color:#D73A49"> function</span><span style="color:#6F42C1"> safeChat</span><span style="color:#24292E">(</span><span style="color:#E36209">prompt</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">  try</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#D73A49">    const</span><span style="color:#005CC5"> response</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> await</span><span style="color:#24292E"> client.chat.completions.</span><span style="color:#6F42C1">create</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#24292E">      model: </span><span style="color:#032F62">'gpt-4o'</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">      messages: [{role: </span><span style="color:#032F62">'user'</span><span style="color:#24292E">, content: prompt}]</span></span>
+<span class="line"><span style="color:#24292E">    });</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#24292E"> response.choices[</span><span style="color:#005CC5">0</span><span style="color:#24292E">].message.content;</span></span>
+<span class="line"><span style="color:#24292E">  } </span><span style="color:#D73A49">catch</span><span style="color:#24292E"> (error) {</span></span>
+<span class="line"><span style="color:#D73A49">    if</span><span style="color:#24292E"> (error.code </span><span style="color:#D73A49">===</span><span style="color:#032F62"> 'insufficient_quota'</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">      return</span><span style="color:#032F62"> 'API 配额不足，请检查账户余额'</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#D73A49">    if</span><span style="color:#24292E"> (error.code </span><span style="color:#D73A49">===</span><span style="color:#032F62"> 'rate_limit_exceeded'</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#6A737D">      // 等待后重试</span></span>
+<span class="line"><span style="color:#D73A49">      await</span><span style="color:#6F42C1"> sleep</span><span style="color:#24292E">(</span><span style="color:#005CC5">5000</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#D73A49">      return</span><span style="color:#6F42C1"> safeChat</span><span style="color:#24292E">(prompt);</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">    console.</span><span style="color:#6F42C1">error</span><span style="color:#24292E">(</span><span style="color:#032F62">'Error:'</span><span style="color:#24292E">, error.message);</span></span>
+<span class="line"><span style="color:#D73A49">    throw</span><span style="color:#24292E"> error;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> sleep</span><span style="color:#24292E">(</span><span style="color:#E36209">ms</span><span style="color:#24292E">) {</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#D73A49"> new</span><span style="color:#005CC5"> Promise</span><span style="color:#24292E">(</span><span style="color:#E36209">resolve</span><span style="color:#D73A49"> =></span><span style="color:#6F42C1"> setTimeout</span><span style="color:#24292E">(resolve, ms));</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre>
+<h2 id="成本优化">成本优化</h2>
+<h3 id="token-计算">Token 计算</h3>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#6A737D">// 估算成本</span></span>
+<span class="line"><span style="color:#6A737D">// GPT-4o: $5/1M 输入，$15/1M 输出</span></span>
+<span class="line"><span style="color:#6A737D">// GPT-3.5-turbo: $0.5/1M 输入，$1.5/1M 输出</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> inputTokens</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> 1000</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> outputTokens</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> 500</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> cost</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> (inputTokens </span><span style="color:#D73A49">/</span><span style="color:#005CC5"> 1000000</span><span style="color:#24292E">) </span><span style="color:#D73A49">*</span><span style="color:#005CC5"> 0.5</span><span style="color:#D73A49"> +</span><span style="color:#24292E"> </span></span>
+<span class="line"><span style="color:#24292E">             (outputTokens </span><span style="color:#D73A49">/</span><span style="color:#005CC5"> 1000000</span><span style="color:#24292E">) </span><span style="color:#D73A49">*</span><span style="color:#005CC5"> 1.5</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">console.</span><span style="color:#6F42C1">log</span><span style="color:#24292E">(</span><span style="color:#032F62">`预估成本: $${</span><span style="color:#24292E">cost</span><span style="color:#032F62">.</span><span style="color:#6F42C1">toFixed</span><span style="color:#032F62">(</span><span style="color:#005CC5">4</span><span style="color:#032F62">)</span><span style="color:#032F62">}`</span><span style="color:#24292E">);</span></span></code></pre>
+<h3 id="优化建议">优化建议</h3>
+<ol>
+<li><strong>精简提示词</strong>：删除冗余内容</li>
+<li><strong>使用摘要</strong>：对长对话进行摘要</li>
+<li><strong>选择合适模型</strong>：简单任务用 GPT-3.5</li>
+<li><strong>设置 max_tokens</strong>：避免过度输出</li>
+</ol>
+<h2 id="总结">总结</h2>
+<ul>
+<li><strong>API Key</strong>：从 OpenAI 平台获取</li>
+<li><strong>基本调用</strong>：model + messages + response</li>
+<li><strong>参数</strong>：temperature、max_tokens 等</li>
+<li><strong>流式输出</strong>：提升用户体验</li>
+<li><strong>成本控制</strong>：选择合适模型，精简提示词</li>
+</ul>
+<p>掌握这些基础，你就可以开始构建 AI 应用了！</p> </div> <footer class="post__tags prose-container" data-astro-cid-egg7nqdx> <span class="tag" data-astro-cid-egg7nqdx>#AI</span><span class="tag" data-astro-cid-egg7nqdx>#API</span><span class="tag" data-astro-cid-egg7nqdx>#OpenAI</span> </footer> </article> <nav class="post-nav container" data-astro-cid-egg7nqdx> <a href="/posts/technology-liulanqi-xuanran-yuanli" class="post-nav__link post-nav__link--prev" data-astro-cid-egg7nqdx> <span class="post-nav__kicker" data-astro-cid-egg7nqdx>← 上一篇</span> <span class="post-nav__title" data-astro-cid-egg7nqdx>浏览器渲染原理详解</span> </a> <a href="/posts/technology-zhan-he-duilie" class="post-nav__link post-nav__link--next" data-astro-cid-egg7nqdx> <span class="post-nav__kicker" data-astro-cid-egg7nqdx>下一篇 →</span> <span class="post-nav__title" data-astro-cid-egg7nqdx>栈与队列：数据结构基础</span> </a> </nav>  </main> <footer class="site-footer" data-astro-cid-37fxchfa> <div class="container site-footer__inner" data-astro-cid-37fxchfa> <p class="site-footer__sig deco" data-astro-cid-37fxchfa>每一个不曾起舞的日子，都是对生命的辜负</p> <p class="site-footer__meta fade" data-astro-cid-37fxchfa>
+© 2020 – 2026 Jordan · Built with Astro
+</p> </div> </footer> <!-- 浮动联系按钮 --> <a href="/contact" class="contact-fab" aria-label="联系 Jordan" data-astro-cid-37fxchfa> <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-37fxchfa> <path d="M4 6h16v12H4z" data-astro-cid-37fxchfa></path> <path d="M4 6l8 7 8-7" data-astro-cid-37fxchfa></path> </svg> </a> <script>
+      // 主题切换
+      const btn = document.querySelector('[data-theme-toggle]');
+      const icon = document.querySelector('[data-theme-icon]');
+      function updateIcon() {
+        const t = document.documentElement.getAttribute('data-theme');
+        if (icon) icon.textContent = t === 'dark' ? '☀' : '☾';
+      }
+      updateIcon();
+      btn?.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme') || 'light';
+        const next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateIcon();
+      });
+    </script>  </body> </html> 

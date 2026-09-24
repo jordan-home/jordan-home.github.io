@@ -1,0 +1,247 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allProjects = (await getCollection('projects'))
+  .sort((a, b) => a.data.order - b.data.order || b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const engineering = allProjects.filter(p => p.data.category === 'engineering');
+const studio = allProjects.filter(p => p.data.category === 'studio');
+
+const sections = [
+  { id: 'engineering', title: '工程', desc: '真实产品的端到端工程经验 — 商业项目、独立站、长期维护的代码。', items: engineering, count: engineering.length },
+  { id: 'studio', title: '案头', desc: '个人小品 — 工具、试验、好玩的小物。', items: studio, count: studio.length },
+].filter(s => s.items.length > 0);
+---
+
+<BaseLayout title="作品 · Jordan の Words" description="工程类项目 + 个人案头小品">
+  <section class="page-head container">
+    <p class="page-head__kicker deco">· 卷 · 三 ·</p>
+    <h1 class="page-head__title">作品</h1>
+    <p class="page-head__desc">
+      真实项目的工程经验 + 个人动手的小品。
+      <br />
+      {allProjects.length} 件作品，按"工程"和"案头"两个抽屉分开。
+    </p>
+  </section>
+
+  <div class="container">
+    {sections.map(section => (
+      <section class="works-section" id={section.id}>
+        <header class="works-section__head">
+          <h2 class="works-section__title">
+            <span class="works-section__num deco">{String(sections.indexOf(section) + 1).padStart(2, '0')}</span>
+            {section.title}
+          </h2>
+          <p class="works-section__desc">{section.desc}</p>
+          <span class="works-section__count">{section.count} 件</span>
+        </header>
+
+        <div class="works-grid">
+          {section.items.map((proj, i) => (
+            <a href={`/projects/${proj.id}`} class="work-card reveal" style={`animation-delay: ${i * 60}ms`}>
+              {proj.data.cover && (
+                <div class="work-card__cover">
+                  <img src={proj.data.cover} alt={proj.data.title} loading="lazy" />
+                </div>
+              )}
+              <div class="work-card__body">
+                <div class="work-card__meta">
+                  {proj.data.year && <span class="work-card__year">{proj.data.year}</span>}
+                  {proj.data.role && <span class="work-card__role">{proj.data.role}</span>}
+                </div>
+                <h3 class="work-card__title">{proj.data.title}</h3>
+                <p class="work-card__summary">{proj.data.summary}</p>
+                {proj.data.stack.length > 0 && (
+                  <ul class="work-card__tags">
+                    {proj.data.stack.slice(0, 6).map(t => <li>{t}</li>)}
+                    {proj.data.stack.length > 6 && <li class="work-card__tags-more">+{proj.data.stack.length - 6}</li>}
+                  </ul>
+                )}
+              </div>
+              <div class="work-card__arrow">→</div>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    {allProjects.length === 0 && (
+      <p class="empty fade">作品正在整理中。</p>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .page-head {
+    padding: var(--sp-9) 0 var(--sp-7);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: var(--sp-8);
+  }
+  .page-head__kicker {
+    color: var(--cinnabar);
+    letter-spacing: 0.4em;
+    margin: 0 0 var(--sp-4);
+  }
+  .page-head__title {
+    font-size: var(--fs-3xl);
+    margin: 0 0 var(--sp-4);
+  }
+  .page-head__desc {
+    color: var(--ink-soft);
+    font-size: var(--fs-md);
+    line-height: var(--lh-loose);
+    max-width: 36em;
+  }
+
+  .works-section { margin-bottom: var(--sp-9); }
+  .works-section__head {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-4);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: var(--sp-3);
+    margin-bottom: var(--sp-5);
+    flex-wrap: wrap;
+  }
+  .works-section__title {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-3);
+    margin: 0;
+    font-size: var(--fs-xl);
+  }
+  .works-section__num {
+    color: var(--cinnabar);
+    font-size: var(--fs-md);
+    letter-spacing: 0.2em;
+  }
+  .works-section__desc {
+    color: var(--ink-soft);
+    font-size: var(--fs-sm);
+    font-style: italic;
+    margin: 0;
+  }
+  .works-section__count {
+    margin-left: auto;
+    color: var(--ink-fade);
+    font-size: var(--fs-xs);
+  }
+
+  .works-grid {
+    display: grid;
+    gap: var(--sp-5);
+  }
+
+  .work-card {
+    display: grid;
+    grid-template-columns: 200px 1fr 40px;
+    gap: var(--sp-6);
+    align-items: center;
+    padding: var(--sp-5);
+    background: var(--paper-warm);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    color: var(--ink);
+    transition: all var(--dur-base) var(--ease-out);
+  }
+  .work-card:hover {
+    background: var(--paper);
+    border-color: var(--cinnabar);
+    transform: translateX(4px);
+    box-shadow: var(--sh-2);
+  }
+  .work-card__cover {
+    width: 200px;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: var(--r-md);
+    background: var(--paper-deep);
+  }
+  .work-card__cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur-slow) var(--ease-out);
+  }
+  .work-card:hover .work-card__cover img {
+    transform: scale(1.04);
+  }
+  .work-card__body { min-width: 0; }
+  .work-card__meta {
+    display: flex;
+    gap: var(--sp-3);
+    font-size: var(--fs-xs);
+    color: var(--ink-fade);
+    margin-bottom: var(--sp-2);
+    font-family: var(--font-mono);
+  }
+  .work-card__year { color: var(--cinnabar); }
+  .work-card__role { color: var(--ink-soft); }
+  .work-card__title {
+    font-size: var(--fs-xl);
+    margin: 0 0 var(--sp-2);
+  }
+  .work-card__summary {
+    color: var(--ink-soft);
+    line-height: var(--lh-snug);
+    margin: 0 0 var(--sp-3);
+    font-size: var(--fs-base);
+  }
+  .work-card__tags {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+  .work-card__tags li {
+    font-size: var(--fs-xs);
+    padding: 2px 8px;
+    background: var(--paper-deep);
+    border-radius: var(--r-sm);
+    color: var(--ink-soft);
+  }
+  .work-card__tags-more {
+    background: transparent !important;
+    color: var(--ink-fade) !important;
+  }
+  .work-card__arrow {
+    font-size: 1.5rem;
+    color: var(--ink-fade);
+    transition: transform var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-soft);
+  }
+  .work-card:hover .work-card__arrow {
+    transform: translateX(6px);
+    color: var(--cinnabar);
+  }
+
+  .empty { text-align: center; padding: var(--sp-9) 0; }
+
+  @media (max-width: 860px) {
+    .page-head { padding: var(--sp-7) 0 var(--sp-5); }
+    .page-head__title { font-size: var(--fs-2xl); }
+    .work-card {
+      grid-template-columns: 120px 1fr 30px;
+      gap: var(--sp-4);
+    }
+    .work-card__cover { width: 120px; }
+    .work-card__title { font-size: var(--fs-lg); }
+  }
+  @media (max-width: 640px) {
+    .work-card {
+      grid-template-columns: 80px 1fr;
+      gap: var(--sp-3);
+      padding: var(--sp-4);
+    }
+    .work-card__cover { width: 80px; }
+    .work-card__arrow { display: none; }
+    .works-section__desc { display: none; }
+  }
+  @media (max-width: 480px) {
+    .work-card__title { font-size: var(--fs-md); }
+    .work-card__summary { font-size: var(--fs-xs); }
+    .work-card__tags { display: none; }
+  }
+</style>
